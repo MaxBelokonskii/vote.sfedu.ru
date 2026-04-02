@@ -3,25 +3,23 @@
     <div class="stage-teacher">
       <div class="stage-teacher__name">{{ name }}</div>
       <div class="stage-teacher__action">
-        <check-mark v-if="participated" />
-        <el-button @click="$router.push({ path: `/stages/${stageId}/teachers/${id}` })" v-else>Заполнить анкету</el-button>
+        <CheckMark v-if="participated" />
+        <el-button @click="router.push({ path: `/stages/${stageId}/teachers/${id}` })" v-else>Заполнить анкету</el-button>
       </div>
     </div>
   </el-card>
 </template>
 
-<script>
-import CheckMark from "../../components/CheckMark";
+<script setup>
+import { useRouter } from 'vue-router'
+import CheckMark from "../../components/CheckMark.vue"
 
-export default {
-  props: {
-    id: Number,
-    stageId: Number,
-    name: String,
-    participated: Boolean
-  },
-  components: {
-    CheckMark
-  }
-}
+const router = useRouter()
+
+defineProps({
+  id: Number,
+  stageId: Number,
+  name: String,
+  participated: Boolean
+})
 </script>
