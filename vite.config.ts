@@ -7,4 +7,9 @@ export default defineConfig({
     RubyPlugin(),
     vue(),
   ],
+  resolve: {
+    alias: {
+      vue: 'vue/dist/vue.esm-bundler.js',
+    },
+  },
 })
