@@ -1,11 +1,12 @@
-import Vue from 'vue';
-import router from '../student_account/router';
+import { createApp } from 'vue'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+import router from '../student_account/router'
+import App from '../student_account/App.vue'
 
-import ElementUI from 'element-ui';
-import locale from 'element-ui/lib/locale/lang/en';
-Vue.use(ElementUI, { locale });
+const app = createApp(App)
+app.use(ElementPlus)
+app.use(router)
+app.mount('#application')
 
-import App from '../student_account/App.vue';
-
-const app = new Vue({el: '#application', router, render: h => h(App)});
-export {app, router}
+export { app, router }
