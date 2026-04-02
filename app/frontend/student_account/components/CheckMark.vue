@@ -1,11 +1,9 @@
 <template>
   <div class="check-mark">
-    <i class="el-icon-check"></i>
+    <el-icon><Check /></el-icon>
   </div>
 </template>
 
-<script>
-export default {
-
-}
+<script setup>
+import { Check } from '@element-plus/icons-vue'
 </script>

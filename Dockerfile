@@ -1,15 +1,11 @@
-FROM ruby:2.7.5-alpine3.13
+FROM ruby:3.4.3-alpine
 
 ENV PATH /root/.yarn/bin:$PATH
 
 RUN apk update && apk upgrade && \
     apk add --no-cache binutils tar gnupg \
-                       curl jq python3 py3-pip bash openssh \
-                       build-base nodejs tzdata postgresql-dev
-
-RUN /bin/bash \
-  && touch ~/.bashrc \
-  && curl -o- -L https://yarnpkg.com/install.sh | bash
+                       curl jq python3 bash openssh \
+                       build-base nodejs npm tzdata postgresql-dev gcompat
 
 WORKDIR /app
 
@@ -18,6 +14,9 @@ COPY Gemfile Gemfile.lock ./
 
 RUN bundle config set without 'development test' && \
     bundle install -j "$(getconf _NPROCESSORS_ONLN)" --retry 5
+
+COPY package.json package-lock.json ./
+RUN npm ci --production=false && npx vite build
 
 ENV NODE_ENV production
 ENV RAILS_ENV production

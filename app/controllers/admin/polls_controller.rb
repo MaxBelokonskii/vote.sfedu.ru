@@ -64,7 +64,7 @@ module Admin
     end
 
     def create_params
-      parameters = params.require(:poll).permit!
+      parameters = params.require(:poll).permit(:name, :starts_at, :ends_at, faculty_ids: [])
 
       parameters[:faculty_ids] = parameters[:faculty_ids].map(&:presence).compact.map(&:to_i)
 

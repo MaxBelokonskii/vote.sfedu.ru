@@ -5,16 +5,16 @@
     <el-divider></el-divider>
     <div class="stage-teachers-list">
       <div class="stage-teachers-list__actions">
-        <el-button size="mini" v-if="stageAttendee.fetchingStatus !== 'in_progress'" @click="refreshTeachers">
+        <el-button size="small" v-if="stageAttendee.fetchingStatus !== 'in_progress'" @click="refreshTeachers">
           Обновить список преподавателей
         </el-button>
-        <el-button size="mini" @click="$router.push({ path: `/stages/${stageId}/teachers` })">
+        <el-button size="small" @click="router.push({ path: `/stages/${stageId}/teachers` })">
           Выбрать преподавателей из списка
         </el-button>
       </div>
 
       <template v-if="stageAttendee.fetchingStatus === 'done'">
-        <stage-teacher
+        <StageTeacher
           class="stage-teachers-list__item"
           v-for="item in items"
           :key="item.id"
@@ -26,7 +26,7 @@
       </template>
       <template v-else-if="stageAttendee.fetchingStatus === 'in_progress'">
         <div class="stage-teachers-list__message">
-          <div :v-loading="true">
+          <div v-loading="true">
             <h1>Загрузка...</h1>
           </div>
           <p>Загружаем список преподавателей. Это может занять некоторое время (от одной до десяти минут).</p>
@@ -48,67 +48,61 @@
   </div>
 </template>
 
-<script>
-import StageTeacher from "./StageTeacher";
-import stagesTeachersService from "../../api/stagesTeachersService";
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import StageTeacher from "./StageTeacher.vue"
+import stagesTeachersService from "../../api/stagesTeachersService"
 
-export default {
-  mounted() {
-    this.fetchTeachers();
-  },
-  data() {
-    return {
-      items: [],
-      stageAttendee: {
-        fetchingStatus: 'fresh',
-        choosingStatus: 'not_selected'
-      },
-      attempts: 10
+const route = useRoute()
+const router = useRouter()
+
+const items = ref([])
+const stageAttendee = ref({
+  fetchingStatus: 'fresh',
+  choosingStatus: 'not_selected'
+})
+const attempts = ref(10)
+
+const stageId = computed(() => route.params.id)
+const needToRepeatQuery = computed(() => stageAttendee.value.fetchingStatus === 'in_progress')
+
+function fetchTeachers() {
+  stagesTeachersService.index(stageId.value).then((response) => {
+    items.value = items.value.concat(response.data.available)
+    items.value = items.value.concat(response.data.evaluated)
+
+    stageAttendee.value.fetchingStatus = response.data.stageAttendee.fetchingStatus
+    stageAttendee.value.choosingStatus = response.data.stageAttendee.choosingStatus
+
+    if (needToRepeatQuery.value) {
+      repeatFetching()
     }
-  },
-  methods: {
-    fetchTeachers() {
-      stagesTeachersService.index(this.stageId).then((response) => {
-        this.items = this.items.concat(response.data.available);
-        this.items = this.items.concat(response.data.evaluated);
-
-        this.stageAttendee.fetchingStatus = response.data.stageAttendee.fetchingStatus;
-        this.stageAttendee.choosingStatus = response.data.stageAttendee.choosingStatus;
-
-        if(this.needToRepeatQuery) {
-          this.repeatFetching();
-        }
-      });
-    },
-    refreshTeachers() {
-      stagesTeachersService.refreshTeachers(this.stageId).then((response) => {
-        this.stageAttendee.fetchingStatus = 'in_progress';
-      }).catch((error) => {
-        this.$message({
-          message: error.response.data[0],
-          type: 'warning'
-        });
-      })
-    },
-    repeatFetching() {
-      if(this.attempts === 0) {
-        this.stageAttendee.fetchingStatus = 'failed';
-        return;
-      }
-
-      setTimeout(() => { this.fetchTeachers(); this.attempts -= 1; }, 5000);
-    }
-  },
-  computed: {
-    stageId() {
-      return this.$route.params.id;
-    },
-    needToRepeatQuery() {
-      return this.stageAttendee.fetchingStatus === 'in_progress';
-    }
-  },
-  components: {
-    StageTeacher
-  }
+  })
 }
+
+function refreshTeachers() {
+  stagesTeachersService.refreshTeachers(stageId.value).then(() => {
+    stageAttendee.value.fetchingStatus = 'in_progress'
+  }).catch((error) => {
+    ElMessage({
+      message: error.response.data[0],
+      type: 'warning'
+    })
+  })
+}
+
+function repeatFetching() {
+  if (attempts.value === 0) {
+    stageAttendee.value.fetchingStatus = 'failed'
+    return
+  }
+
+  setTimeout(() => { fetchTeachers(); attempts.value -= 1 }, 5000)
+}
+
+onMounted(() => {
+  fetchTeachers()
+})
 </script>

@@ -3,7 +3,7 @@ $medium-screen: 600px;
 $large-screen: 900px;
 
 // Typography
-$base-font-family: $font-stack-system;
+$base-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $heading-font-family: $base-font-family;
 
 // Font Sizes
@@ -35,7 +35,7 @@ $base-border: 1px solid $base-border-color;
 
 // Background Colors
 $base-background-color: #fff;
-$secondary-background-color: tint($base-border-color, 75%);
+$secondary-background-color: mix(#fff, $base-border-color, 75%);
 
 // Forms
 $form-box-shadow: inset 0 1px 3px rgba(#000, 0.06);

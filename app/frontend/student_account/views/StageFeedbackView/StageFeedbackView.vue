@@ -3,7 +3,7 @@
     <h1 class="page__title">{{ teacher.name }}</h1>
     <p class="page__subtitle">Дисциплины, которые связывают вас с преподавателем:</p>
     <ul class="page__subtitle">
-      <li v-for="discipline in teacher.disciplines">{{ discipline }}</li>
+      <li v-for="discipline in teacher.disciplines" :key="discipline">{{ discipline }}</li>
     </ul>
     <el-divider></el-divider>
     <div>
@@ -11,10 +11,10 @@
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
           <span style="margin-left: 8px;">Ваше мнение принято. Спасибо за участие!</span>
         </div>
-        <el-button @click="$router.push({ path: `/stages/${stage.id}` })" type="success">Вернуться к списку преподавателей</el-button>
+        <el-button @click="router.push({ path: `/stages/${stage.id}` })" type="success">Вернуться к списку преподавателей</el-button>
       </template>
       <template v-else>
-        <div :gutter="20" v-for="question in questions" class="feedback-control">
+        <div v-for="question in questions" :key="question.id" class="feedback-control">
           <div class="feedback-control__question">{{ question.text }}</div>
           <div class="feedback-control__buttons">
             <el-rate
@@ -36,64 +36,59 @@
   </div>
 </template>
 
-<script>
-import stagesTeachersService from "../../api/stagesTeachersService";
+<script setup>
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import stagesTeachersService from "../../api/stagesTeachersService"
 
-export default {
-  mounted() {
-    stagesTeachersService
-      .newFeedback(this.$route.params.stageId, this.$route.params.id)
-      .then((response) => {
-        this.stage = response.data.stage;
-        this.teacher = response.data.teacher;
-        this.questions = response.data.questions.map((question) => (
-          {
-            id: question.id,
-            text: question.text,
-            rate: null
-          }
-        ));
-      });
-  },
-  data() {
-    return {
-      stage: {},
-      teacher: {},
-      questions: [],
-      formState: {
-        sent: false,
-        done: false
-      }
-    }
-  },
-  computed: {
-    isSubmitEnabled() {
-      return this.questions.map((question) => question.rate).every((v) => v !== 0);
-    }
-  },
-  methods: {
-    sendFeedback() {
-      const feedback = {
-        stageId: this.stage.id,
-        teacherId: this.teacher.id,
-        answers: this.questions.map((question) => ({ questionId: question.id, rate: question.rate }))
-      }
+const route = useRoute()
+const router = useRouter()
 
-      this.formState.sent = true;
+const stage = ref({})
+const teacher = ref({})
+const questions = ref([])
+const formState = reactive({
+  sent: false,
+  done: false
+})
 
-      stagesTeachersService
-        .leaveFeedback(feedback)
-        .then((_response) => (this.formState.done = true))
-        .catch((error) => {
-          this.formState.sent = false;
-          this.$message({
-            message: error.response.data[0],
-            type: 'warning'
-          });
-        });
-    }
-  },
-  components: {
+const isSubmitEnabled = computed(() => {
+  return questions.value.map((q) => q.rate).every((v) => v !== 0)
+})
+
+function sendFeedback() {
+  const feedback = {
+    stageId: stage.value.id,
+    teacherId: teacher.value.id,
+    answers: questions.value.map((q) => ({ questionId: q.id, rate: q.rate }))
   }
+
+  formState.sent = true
+
+  stagesTeachersService
+    .leaveFeedback(feedback)
+    .then(() => (formState.done = true))
+    .catch((error) => {
+      formState.sent = false
+      ElMessage({
+        message: error.response.data[0],
+        type: 'warning'
+      })
+    })
 }
+
+onMounted(() => {
+  stagesTeachersService
+    .newFeedback(route.params.stageId, route.params.id)
+    .then((response) => {
+      stage.value = response.data.stage
+      teacher.value = response.data.teacher
+      questions.value = response.data.questions.map((q) => ({
+        id: q.id,
+        text: q.text,
+        rate: null
+      }))
+    })
+})
 </script>

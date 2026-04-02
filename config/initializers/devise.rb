@@ -245,18 +245,18 @@ Devise.setup do |config|
   # config.navigational_formats = ['*/*', :html]
 
   # The default HTTP method used to sign out a resource. Default is :delete.
-  config.sign_out_via = :get
+  config.sign_out_via = :delete
 
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
-  config.omniauth :azure_oauth2,
+  config.omniauth :entra_id,
                   {
                     name: :azure_oauth2,
                     client_id: ENV['AZURE_CLIENT_ID'],
                     client_secret: ENV['AZURE_CLIENT_SECRET'],
                     tenant_id: ENV['AZURE_TENANT_ID'],
-                    strategy_class: OmniAuth::Strategies::AzureActivedirectoryV2
+                    strategy_class: OmniAuth::Strategies::EntraId
                   }
 
   # scope: %w[

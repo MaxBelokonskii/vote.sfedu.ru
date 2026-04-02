@@ -37,7 +37,7 @@ module VoteSfeduRu
     config.i18n.available_locales = [:ru, :en]
 
     config.action_controller.action_on_unpermitted_parameters = :raise
-    config.load_defaults 5.1
+    config.load_defaults 7.2
     config.generators.system_tests = nil
 
     config.exceptions_app = routes

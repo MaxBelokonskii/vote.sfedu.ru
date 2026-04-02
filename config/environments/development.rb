@@ -1,5 +1,5 @@
 Rails.application.configure do
-  config.cache_classes = false
+  config.enable_reloading = true
   config.eager_load = false
   config.consider_all_requests_local = true
   if Rails.root.join("tmp/caching-dev.txt").exist?
@@ -23,7 +23,6 @@ Rails.application.configure do
   config.active_record.migration_error = :page_load
   config.assets.debug = true
   config.assets.quiet = true
-  config.action_view.raise_on_missing_translations = true
-  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+  config.i18n.raise_on_missing_translations = true
   config.action_mailer.default_url_options = {host: "localhost:3000"}
 end
