@@ -1,9 +1,8 @@
 <template>
   <div class="check-mark">
-    <el-icon><Check /></el-icon>
+    <v-icon color="success">mdi-check-circle</v-icon>
   </div>
 </template>
 
 <script setup>
-import { Check } from '@element-plus/icons-vue'
 </script>

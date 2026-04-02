@@ -5,32 +5,35 @@
     <ul class="page__subtitle">
       <li v-for="discipline in teacher.disciplines" :key="discipline">{{ discipline }}</li>
     </ul>
-    <el-divider></el-divider>
+    <v-divider class="my-4"></v-divider>
     <div>
       <template v-if="formState.done">
-        <div style="display: flex; align-items: center; margin-bottom: 16px;">
-          <span style="margin-left: 8px;">Ваше мнение принято. Спасибо за участие!</span>
+        <div class="d-flex align-center mb-4">
+          <span class="ml-2">Ваше мнение принято. Спасибо за участие!</span>
         </div>
-        <el-button @click="router.push({ path: `/stages/${stage.id}` })" type="success">Вернуться к списку преподавателей</el-button>
+        <v-btn @click="router.push({ path: `/stages/${stage.id}` })" color="success">Вернуться к списку преподавателей</v-btn>
       </template>
       <template v-else>
         <div v-for="question in questions" :key="question.id" class="feedback-control">
           <div class="feedback-control__question">{{ question.text }}</div>
           <div class="feedback-control__buttons">
-            <el-rate
+            <v-rating
               v-model="question.rate"
-              :show-score="true"
-              :max="10"
+              :length="10"
+              color="primary"
+              active-color="primary"
+              hover
+              density="comfortable"
             />
           </div>
         </div>
 
-        <el-button
-          type="primary"
-          style="width: 100%;"
+        <v-btn
+          color="primary"
+          block
           @click="sendFeedback"
           :disabled="!isSubmitEnabled || formState.sent || formState.done"
-        >Проголосовать</el-button>
+        >Проголосовать</v-btn>
       </template>
     </div>
   </div>
@@ -39,11 +42,12 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { useSnackbar } from '../../composables/useSnackbar'
 import stagesTeachersService from "../../api/stagesTeachersService"
 
 const route = useRoute()
 const router = useRouter()
+const { showMessage } = useSnackbar()
 
 const stage = ref({})
 const teacher = ref({})
@@ -71,10 +75,7 @@ function sendFeedback() {
     .then(() => (formState.done = true))
     .catch((error) => {
       formState.sent = false
-      ElMessage({
-        message: error.response.data[0],
-        type: 'warning'
-      })
+      showMessage(error.response.data[0], 'warning')
     })
 }
 

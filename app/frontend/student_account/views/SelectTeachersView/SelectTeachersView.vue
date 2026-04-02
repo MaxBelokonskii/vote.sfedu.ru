@@ -2,46 +2,52 @@
   <div class="page">
     <h1 class="page__title">Добавление преподавателей в список</h1>
     <p class="page__subtitle">Ниже представлены анкеты преподавателей, которые можно свободно добавить в список.</p>
-    <el-divider></el-divider>
-    <el-table
-      :data="filteredData"
-      style="width: 100%">
-      <el-table-column
-        label="Фамилия, имя, отчество"
-        prop="name">
-      </el-table-column>
-      <el-table-column align="right">
-        <template #header>
-          <el-input
-            v-model="search"
-            size="small"
-            placeholder="Начните вводить для поиска..."/>
-        </template>
-        <template #default="scope">
-          <el-button
-            size="default"
-            :type="scope.row.selected ? 'danger' : 'default'"
-            @click="handleClick(scope.$index, scope.row)"
-            :disabled="scope.row.formState === 'sent'"
-          >
-            <el-icon v-if="scope.row.selected"><RemoveFilled /></el-icon>
-            <el-icon v-else><CirclePlusFilled /></el-icon>
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <v-divider class="my-4"></v-divider>
+    <v-text-field
+      v-model="search"
+      prepend-inner-icon="mdi-magnify"
+      label="Начните вводить для поиска..."
+      density="compact"
+      hide-details
+      class="mb-4"
+    />
+    <v-table>
+      <thead>
+        <tr>
+          <th>Фамилия, имя, отчество</th>
+          <th class="text-right">Действие</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(row, index) in filteredData" :key="row.id">
+          <td>{{ row.name }}</td>
+          <td class="text-right">
+            <v-btn
+              size="small"
+              :color="row.selected ? 'error' : 'default'"
+              :variant="row.selected ? 'flat' : 'outlined'"
+              @click="handleClick(index, row)"
+              :disabled="row.formState === 'sent'"
+              icon
+            >
+              <v-icon>{{ row.selected ? 'mdi-minus-circle' : 'mdi-plus-circle' }}</v-icon>
+            </v-btn>
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import { RemoveFilled, CirclePlusFilled } from '@element-plus/icons-vue'
+import { useSnackbar } from '../../composables/useSnackbar'
 import stagesTeachersService from "../../api/stagesTeachersService"
 import stagesTeachersRelationsService from "../../api/stagesTeachersRelationsService"
 
 const route = useRoute()
+const { showMessage } = useSnackbar()
 
 const tableData = ref([])
 const search = ref('')
@@ -63,20 +69,20 @@ function handleClick(index, row) {
     stagesTeachersRelationsService.addRelation(stageId.value, row.id).then(() => {
       row.selected = true
       row.formState = 'initial'
-      ElMessage({ message: `${row.name} успешно добавлен(а) в список для оценивания` })
+      showMessage(`${row.name} успешно добавлен(а) в список для оценивания`)
     }).catch((error) => {
       row.formState = 'failed'
-      ElMessage({ message: error.response.data[0], type: 'warning' })
+      showMessage(error.response.data[0], 'warning')
     })
   } else {
     row.formState = 'sent'
     stagesTeachersRelationsService.removeRelation(stageId.value, row.id).then(() => {
       row.selected = false
       row.formState = 'initial'
-      ElMessage({ message: `${row.name} успешно удален(а) из списка для оценивания` })
+      showMessage(`${row.name} успешно удален(а) из списка для оценивания`)
     }).catch((error) => {
       row.formState = 'failed'
-      ElMessage({ message: error.response.data[0], type: 'warning' })
+      showMessage(error.response.data[0], 'warning')
     })
   }
 }

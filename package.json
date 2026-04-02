@@ -12,7 +12,6 @@
     "@vitejs/plugin-vue": "^5.0.0",
     "@vueform/multiselect": "^2.6.0",
     "axios": "^1.7.0",
-    "element-plus": "^2.9.0",
     "vue": "^3.5.0",
     "vue-router": "^4.5.0",
     "vuetify": "^4.0.5"

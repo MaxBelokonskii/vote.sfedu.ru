@@ -2,25 +2,28 @@
   <div class="page">
     <h1 class="page__title">{{ poll.title || "Загрузка..." }}</h1>
     <p class="page__subtitle">Выберите кандидатуру из списка ниже, чтобы проголосовать.</p>
-    <el-divider></el-divider>
-    <div style="margin-top: 16px">
+    <v-divider class="my-4"></v-divider>
+    <div class="mt-4">
       <template v-if="poll.participated">
-        <div style="display: flex; align-items: center; margin-bottom: 16px;">
+        <div class="d-flex align-center mb-4">
           <CheckMark />
-          <span style="margin-left: 8px;">Ваш голос принят. Спасибо за участие!</span>
+          <span class="ml-2">Ваш голос принят. Спасибо за участие!</span>
         </div>
-        <el-button @click="router.push({ path: `/` })" type="success">Вернуться к списку опросов</el-button>
+        <v-btn @click="router.push({ path: `/` })" color="success">Вернуться к списку опросов</v-btn>
       </template>
       <template v-else>
-        <el-radio-group v-loading="loading" v-model="pollOptionId" size="small" style="width: 100%; min-height: 100px;">
+        <div v-if="loading" class="d-flex justify-center" style="min-height: 100px;">
+          <v-progress-circular indeterminate color="primary" />
+        </div>
+        <v-radio-group v-else v-model="pollOptionId" class="w-100">
           <PollOption v-for="option in poll.options" :key="option.id" :option="option" />
-        </el-radio-group>
-        <el-button
-          type="primary"
-          style="width: 100%;"
+        </v-radio-group>
+        <v-btn
+          color="primary"
+          block
           @click="leaveVoice"
           :disabled="pollOptionId == null"
-        >Проголосовать</el-button>
+        >Проголосовать</v-btn>
       </template>
     </div>
   </div>
@@ -29,13 +32,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { useSnackbar } from '../../composables/useSnackbar'
 import pollsService from "../../api/pollsService"
 import PollOption from "./PollOption.vue"
 import CheckMark from "../../components/CheckMark.vue"
 
 const route = useRoute()
 const router = useRouter()
+const { showMessage } = useSnackbar()
 
 const poll = ref({ options: [] })
 const loading = ref(false)
@@ -47,10 +51,7 @@ function leaveVoice() {
       poll.value.participated = true
     })
     .catch((error) => {
-      ElMessage({
-        message: error.response.data[0],
-        type: 'warning'
-      })
+      showMessage(error.response.data[0], 'warning')
     })
 }
 

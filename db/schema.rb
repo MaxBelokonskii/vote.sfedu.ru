@@ -2,16 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_12_125917) do
-
+ActiveRecord::Schema[7.2].define(version: 2023_04_12_125917) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -21,8 +20,8 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.bigint "stage_id"
     t.bigint "teacher_id"
     t.integer "ratings", array: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["ratings"], name: "index_answers_on_ratings", using: :gin
     t.index ["stage_id"], name: "index_answers_on_stage_id"
@@ -33,7 +32,7 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.string "event_type", null: false
     t.binary "metadata"
     t.binary "data", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["created_at"], name: "index_event_store_events_on_created_at"
     t.index ["event_type"], name: "index_event_store_events_on_event_type"
   end
@@ -42,7 +41,7 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.string "stream", null: false
     t.integer "position"
     t.uuid "event_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["created_at"], name: "index_event_store_events_in_streams_on_created_at"
     t.index ["stream", "event_id"], name: "index_event_store_events_in_streams_on_stream_and_event_id", unique: true
     t.index ["stream", "position"], name: "index_event_store_events_in_streams_on_stream_and_position", unique: true
@@ -50,15 +49,15 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
 
   create_table "faculties", force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.text "aliases", default: [], array: true
   end
 
   create_table "flipper_features", force: :cascade do |t|
     t.string "key", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["key"], name: "index_flipper_features_on_key", unique: true
   end
 
@@ -66,8 +65,8 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.string "feature_key", null: false
     t.string "key", null: false
     t.string "value"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
   end
 
@@ -80,8 +79,8 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.string "group_num", null: false
     t.integer "time_type", default: 0, null: false
     t.integer "grade_level", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["faculty_id"], name: "index_grade_books_on_faculty_id"
     t.index ["student_id"], name: "index_grade_books_on_student_id"
   end
@@ -90,8 +89,8 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.bigint "stage_id"
     t.bigint "student_id"
     t.bigint "teacher_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["stage_id"], name: "index_participations_on_stage_id"
     t.index ["student_id"], name: "index_participations_on_student_id"
     t.index ["teacher_id"], name: "index_participations_on_teacher_id"
@@ -100,7 +99,6 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
   create_table "poll_answers", force: :cascade do |t|
     t.bigint "poll_id"
     t.bigint "poll_option_id"
-    t.index ["id"], name: "index_poll_answers_on_id"
     t.index ["poll_id"], name: "index_poll_answers_on_poll_id"
     t.index ["poll_option_id"], name: "index_poll_answers_on_poll_option_id"
   end
@@ -117,35 +115,34 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.string "title", null: false
     t.string "description"
     t.text "image_data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["poll_id"], name: "index_poll_options_on_poll_id"
   end
 
   create_table "poll_participations", force: :cascade do |t|
     t.bigint "poll_id"
     t.bigint "student_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["id"], name: "index_poll_participations_on_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["poll_id"], name: "index_poll_participations_on_poll_id"
     t.index ["student_id"], name: "index_poll_participations_on_student_id"
   end
 
   create_table "polls", force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "starts_at", null: false
-    t.datetime "ends_at", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "archived_at"
+    t.datetime "starts_at", precision: nil, null: false
+    t.datetime "ends_at", precision: nil, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "archived_at", precision: nil
   end
 
   create_table "questions", force: :cascade do |t|
     t.string "text", null: false
     t.integer "max_rating", default: 10, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "questions_stages", id: false, force: :cascade do |t|
@@ -159,8 +156,8 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.integer "year_begin"
     t.integer "year_end"
     t.integer "kind"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "semesters_stages", id: false, force: :cascade do |t|
@@ -175,23 +172,23 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.bigint "stage_id"
     t.integer "choosing_status", default: 0, null: false
     t.integer "fetching_status", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["stage_id"], name: "index_stage_attendees_on_stage_id"
     t.index ["student_id"], name: "index_stage_attendees_on_student_id"
   end
 
   create_table "stages", force: :cascade do |t|
-    t.datetime "starts_at", null: false
-    t.datetime "ends_at", null: false
+    t.datetime "starts_at", precision: nil, null: false
+    t.datetime "ends_at", precision: nil, null: false
     t.integer "lower_participants_limit", default: 10, null: false
     t.integer "scale_min", default: 6, null: false
     t.integer "scale_max", default: 10, null: false
     t.integer "lower_truncation_percent", default: 5, null: false
     t.integer "upper_truncation_percent", default: 5, null: false
     t.string "scale_ladder", array: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "with_scale", default: true, null: false
     t.boolean "with_truncation", default: true, null: false
   end
@@ -200,8 +197,8 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.string "external_id", null: false
     t.string "name"
     t.boolean "enabled", default: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["external_id"], name: "index_students_on_external_id"
   end
 
@@ -210,8 +207,8 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.bigint "teacher_id"
     t.bigint "semester_id"
     t.string "disciplines", array: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "choosen", default: false, null: false
     t.string "origin"
     t.bigint "stage_id"
@@ -226,8 +223,8 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.bigint "survey_question_id", null: false
     t.bigint "survey_option_id", null: false
     t.bigint "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["survey_id"], name: "index_survey_answers_on_survey_id"
     t.index ["survey_option_id"], name: "index_survey_answers_on_survey_option_id"
     t.index ["survey_question_id"], name: "index_survey_answers_on_survey_question_id"
@@ -238,8 +235,8 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.bigint "survey_question_id"
     t.string "text"
     t.boolean "custom", default: false, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["survey_question_id"], name: "index_survey_options_on_survey_question_id"
   end
 
@@ -249,16 +246,16 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.boolean "required", default: true, null: false
     t.boolean "multichoice", default: false, null: false
     t.boolean "free_answer", default: false, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["survey_id"], name: "index_survey_questions_on_survey_id"
   end
 
   create_table "survey_sharings", force: :cascade do |t|
     t.bigint "survey_id", null: false
     t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["survey_id"], name: "index_survey_sharings_on_survey_id"
     t.index ["user_id"], name: "index_survey_sharings_on_user_id"
   end
@@ -270,8 +267,8 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.string "title", null: false
     t.string "passcode", null: false
     t.date "active_until", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["user_id"], name: "index_surveys_on_user_id"
   end
 
@@ -280,8 +277,8 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.string "name"
     t.string "snils"
     t.boolean "enabled", default: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "kind", default: 0
     t.string "encrypted_snils"
     t.string "stale_external_id"
@@ -292,8 +289,8 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.bigint "stage_id"
     t.bigint "teacher_id"
     t.string "kind"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["kind"], name: "index_teachers_rosters_on_kind"
     t.index ["stage_id"], name: "index_teachers_rosters_on_stage_id"
     t.index ["teacher_id"], name: "index_teachers_rosters_on_teacher_id"
@@ -304,17 +301,17 @@ ActiveRecord::Schema.define(version: 2023_04_12_125917) do
     t.string "encrypted_password", default: "", null: false
     t.string "identity_url", null: false
     t.string "nickname", null: false
-    t.datetime "remember_created_at"
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
     t.integer "role", default: 0, null: false
     t.string "kind_type"
     t.bigint "kind_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "name"
     t.bigint "teacher_id"
     t.bigint "student_id"

@@ -2,15 +2,15 @@
   <div class="page">
     <h1 class="page__title">Оценка качества преподавания</h1>
     <p class="page__subtitle">Анкеты преподавателей, которые вели дисциплины за указанный период.</p>
-    <el-divider></el-divider>
+    <v-divider class="my-4"></v-divider>
     <div class="stage-teachers-list">
       <div class="stage-teachers-list__actions">
-        <el-button size="small" v-if="stageAttendee.fetchingStatus !== 'in_progress'" @click="refreshTeachers">
+        <v-btn size="small" variant="outlined" v-if="stageAttendee.fetchingStatus !== 'in_progress'" @click="refreshTeachers">
           Обновить список преподавателей
-        </el-button>
-        <el-button size="small" @click="router.push({ path: `/stages/${stageId}/teachers` })">
+        </v-btn>
+        <v-btn size="small" variant="outlined" @click="router.push({ path: `/stages/${stageId}/teachers` })">
           Выбрать преподавателей из списка
-        </el-button>
+        </v-btn>
       </div>
 
       <template v-if="stageAttendee.fetchingStatus === 'done'">
@@ -26,8 +26,9 @@
       </template>
       <template v-else-if="stageAttendee.fetchingStatus === 'in_progress'">
         <div class="stage-teachers-list__message">
-          <div v-loading="true">
-            <h1>Загрузка...</h1>
+          <div class="d-flex justify-center align-center" style="min-height: 100px;">
+            <v-progress-circular indeterminate color="primary" />
+            <span class="ml-4">Загрузка...</span>
           </div>
           <p>Загружаем список преподавателей. Это может занять некоторое время (от одной до десяти минут).</p>
         </div>
@@ -51,12 +52,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { useSnackbar } from '../../composables/useSnackbar'
 import StageTeacher from "./StageTeacher.vue"
 import stagesTeachersService from "../../api/stagesTeachersService"
 
 const route = useRoute()
 const router = useRouter()
+const { showMessage } = useSnackbar()
 
 const items = ref([])
 const stageAttendee = ref({
@@ -86,10 +88,7 @@ function refreshTeachers() {
   stagesTeachersService.refreshTeachers(stageId.value).then(() => {
     stageAttendee.value.fetchingStatus = 'in_progress'
   }).catch((error) => {
-    ElMessage({
-      message: error.response.data[0],
-      type: 'warning'
-    })
+    showMessage(error.response.data[0], 'warning')
   })
 }
 
