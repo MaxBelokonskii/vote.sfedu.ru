@@ -344,7 +344,7 @@ GEM
       racc (~> 1.4)
     nori (2.7.1)
       bigdecimal
-    normalize-rails (3.0.3)
+    normalize-rails (8.0.1)
     oauth2 (2.0.18)
       faraday (>= 0.17.3, < 4.0)
       jwt (>= 1.0, < 4.0)
@@ -697,7 +697,7 @@ DEPENDENCIES
   listen
   meta-tags
   nested_form_fields
-  normalize-rails (~> 3.0.0)
+  normalize-rails
   omniauth-entra-id
   omniauth-rails_csrf_protection
   ostruct

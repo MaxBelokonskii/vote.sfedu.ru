@@ -20,7 +20,7 @@ gem 'flipper-active_record'
 gem "high_voltage"
 gem "jquery-rails"
 gem "nested_form_fields"
-gem "normalize-rails", "~> 3.0.0"
+gem "normalize-rails"
 
 gem "omniauth-rails_csrf_protection"
 gem "omniauth-entra-id"
