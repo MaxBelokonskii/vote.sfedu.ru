@@ -35,8 +35,8 @@ class Devise::Strategies::OpenidAuthenticatable < Devise::Strategies::Authentica
         if resource && validate(resource)
           begin
             update_resource!(resource)
-          rescue
-            fail! $!
+          rescue => e
+            fail! e.message
           else
             success!(resource)
           end
