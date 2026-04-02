@@ -363,7 +363,8 @@ GEM
       logger
       rack (>= 2.2.3)
       rack-protection
-    omniauth-azure-activedirectory-v2 (2.4.0)
+    omniauth-entra-id (3.1.1)
+      jwt (>= 2.9.2)
       omniauth-oauth2 (~> 1.8)
     omniauth-oauth2 (1.9.0)
       oauth2 (>= 2.0.2, < 3)
@@ -372,6 +373,7 @@ GEM
       actionpack (>= 4.2)
       omniauth (~> 2.0)
     orm_adapter (0.5.0)
+    ostruct (0.6.3)
     parallel (1.28.0)
     parser (3.3.11.1)
       ast (~> 2.4.1)
@@ -460,9 +462,9 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.3.1)
-    ransack (2.5.0)
-      activerecord (>= 5.2.4)
-      activesupport (>= 5.2.4)
+    ransack (4.4.1)
+      activerecord (>= 7.2)
+      activesupport (>= 7.2)
       i18n
     rb-fsevent (0.11.2)
     rb-inotify (0.11.1)
@@ -706,14 +708,15 @@ DEPENDENCIES
   meta-tags
   nested_form_fields
   normalize-rails (~> 3.0.0)
-  omniauth-azure-activedirectory-v2
+  omniauth-entra-id
   omniauth-rails_csrf_protection
+  ostruct
   pg
   puma
   rack-canonical-host
   rails (~> 7.2.0)
   rails_event_store
-  ransack
+  ransack (~> 4.0)
   rspec-rails (~> 7.0)
   rspec_api_documentation
   ruby-openid
