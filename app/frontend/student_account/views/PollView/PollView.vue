@@ -4,16 +4,16 @@
     <p class="page__subtitle">Выберите кандидатуру из списка ниже, чтобы проголосовать.</p>
     <el-divider></el-divider>
     <div style="margin-top: 16px">
-      <template v-if="poll.participated" >
+      <template v-if="poll.participated">
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
-          <check-mark v-if="poll.participated"></check-mark>
+          <CheckMark />
           <span style="margin-left: 8px;">Ваш голос принят. Спасибо за участие!</span>
         </div>
-        <el-button @click="$router.push({ path: `/` })" type="success">Вернуться к списку опросов</el-button>
+        <el-button @click="router.push({ path: `/` })" type="success">Вернуться к списку опросов</el-button>
       </template>
       <template v-else>
         <el-radio-group v-loading="loading" v-model="pollOptionId" size="small" style="width: 100%; min-height: 100px;">
-          <poll-option v-for="option in poll.options" :option="option" />
+          <PollOption v-for="option in poll.options" :key="option.id" :option="option" />
         </el-radio-group>
         <el-button
           type="primary"
@@ -26,46 +26,39 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import pollsService from "../../api/pollsService"
+import PollOption from "./PollOption.vue"
+import CheckMark from "../../components/CheckMark.vue"
 
-import pollsService from "../../api/pollsService";
-import PollOption from "./PollOption";
-import CheckMark from "../../components/CheckMark";
+const route = useRoute()
+const router = useRouter()
 
-export default {
-  mounted() {
-    this.loading = true;
-    pollsService.show(this.$route.params.id).then((response) => {
-      this.loading = false;
-      this.poll = response.data
-    });
-  },
-  data() {
-    return {
-      poll: {
-        options: []
-      },
-      loading: false,
-      pollOptionId: null
-    }
-  },
-  methods: {
-    leaveVoice() {
-      pollsService.leaveVoice(this.$route.params.id, this.pollOptionId)
-        .then((response) => {
-          this.poll.participated = true;
-        })
-        .catch((error) => {
-          this.$message({
-            message: error.response.data[0],
-            type: 'warning'
-          });
-        });
-    }
-  },
-  components: {
-    PollOption,
-    CheckMark
-  }
+const poll = ref({ options: [] })
+const loading = ref(false)
+const pollOptionId = ref(null)
+
+function leaveVoice() {
+  pollsService.leaveVoice(route.params.id, pollOptionId.value)
+    .then(() => {
+      poll.value.participated = true
+    })
+    .catch((error) => {
+      ElMessage({
+        message: error.response.data[0],
+        type: 'warning'
+      })
+    })
 }
+
+onMounted(() => {
+  loading.value = true
+  pollsService.show(route.params.id).then((response) => {
+    loading.value = false
+    poll.value = response.data
+  })
+})
 </script>

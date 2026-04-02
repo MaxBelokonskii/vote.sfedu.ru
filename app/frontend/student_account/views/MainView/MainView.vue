@@ -4,16 +4,14 @@
     <p class="page__subtitle">Выберите активный опрос из списка ниже и помогите университету стать лучше.</p>
     <el-divider></el-divider>
     <template v-if="items.length > 0">
-      <app-voting
+      <MainViewVoteCard
         v-for="item in items" :key="item.meta.source"
-
         :title="item.title"
         :description="item.description"
         :participated="item.participated"
         :starts-at="item.startsAtLocalized"
         :ends-at="item.endsAtLocalized"
         :meta="item.meta"
-
         style="margin-bottom: 16px;"
       />
     </template>
@@ -33,42 +31,36 @@
   </div>
 </template>
 
-<script>
-import MainViewVoteCard from "./MainViewVoteCard";
-import stagesService from "../../api/stagesService";
-import pollsService from "../../api/pollsService";
+<script setup>
+import { ref, onMounted } from 'vue'
+import MainViewVoteCard from "./MainViewVoteCard.vue"
+import stagesService from "../../api/stagesService"
+import pollsService from "../../api/pollsService"
 
-export default {
-  mounted() {
-    this.loading = true;
-    this.fetchPolls();
-    this.fetchStages();
-  },
-  data() {
-    return {
-      items: [],
-      loading: false,
-      attempts: 10
-    }
-  },
-  methods: {
-    fetchPolls() {
-      pollsService.index().then((response) => {
-        this.items = this.items.concat(response.data);
-        this.loading = response.data.length === 0;
-        if(response.data.length === 0) setTimeout(() => { this.fetchPolls(); this.attempts -= 1; }, 5000);
-      });
-    },
+const items = ref([])
+const loading = ref(false)
+const attempts = ref(10)
 
-    fetchStages() {
-      stagesService.index().then((response) => {
-        this.items = this.items.concat(response.data);
-        this.loading = response.data.length === 0;
-      });
+function fetchPolls() {
+  pollsService.index().then((response) => {
+    items.value = items.value.concat(response.data)
+    loading.value = response.data.length === 0
+    if (response.data.length === 0) {
+      setTimeout(() => { fetchPolls(); attempts.value -= 1 }, 5000)
     }
-  },
-  components: {
-    AppVoting: MainViewVoteCard
-  }
+  })
 }
+
+function fetchStages() {
+  stagesService.index().then((response) => {
+    items.value = items.value.concat(response.data)
+    loading.value = response.data.length === 0
+  })
+}
+
+onMounted(() => {
+  loading.value = true
+  fetchPolls()
+  fetchStages()
+})
 </script>
