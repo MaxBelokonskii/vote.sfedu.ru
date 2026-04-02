@@ -16,9 +16,12 @@ class EventStore
 
   def event_store
     @event_store ||= RailsEventStore::Client.new(
-      dispatcher: RubyEventStore::ComposedDispatcher.new(
-        RailsEventStore::AfterCommitAsyncDispatcher.new(scheduler: CustomEventScheduler.new),
-        RubyEventStore::Dispatcher.new
+      message_broker: RubyEventStore::Broker.new(
+        subscriptions: RubyEventStore::Subscriptions.new,
+        dispatcher: RubyEventStore::ComposedDispatcher.new(
+          RailsEventStore::AfterCommitAsyncDispatcher.new(scheduler: CustomEventScheduler.new),
+          RubyEventStore::Dispatcher.new
+        )
       )
     )
   end
