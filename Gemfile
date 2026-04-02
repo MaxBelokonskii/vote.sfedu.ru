@@ -48,6 +48,7 @@ gem "with_advisory_lock"
 gem "write_xlsx"
 gem "jbuilder"
 gem "ostruct"
+gem "csv"
 
 group :development do
   gem "listen"

@@ -132,6 +132,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
+    csv (3.3.5)
     data_migrate (11.3.1)
       activerecord (>= 6.1)
       railties (>= 6.1)
@@ -679,6 +680,7 @@ DEPENDENCIES
   bundler-audit (>= 0.5.0)
   cancancan
   clowne
+  csv
   data_migrate
   database_cleaner
   debug
