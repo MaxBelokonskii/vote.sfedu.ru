@@ -30,7 +30,7 @@ module Admin
       end
 
       def execute_params
-        params.require(:tool).permit!
+        params.require(:tool).permit(:faculty_id, :duplicated_faculty_id)
       end
     end
   end
