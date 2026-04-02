@@ -1,7 +1,6 @@
-# if Rails.env.production?
-Raven.configure do |config|
+Sentry.init do |config|
   config.dsn = ENV.fetch("SENTRY_URL", nil)
-  config.environments = ["production"]
-  config.sanitize_fields = Rails.application.config.filter_parameters.map(&:to_s)
+  config.enabled_environments = ["production"]
+  config.breadcrumbs_logger = [:active_support_logger, :http_logger]
+  config.send_default_pii = false
 end
-# end

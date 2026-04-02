@@ -1,16 +1,15 @@
 require Rails.root.join("config/smtp")
 Rails.application.configure do
   config.middleware.use Rack::CanonicalHost, ENV.fetch("APPLICATION_HOST", "vote.sfedu.ru")
-  config.cache_classes = true
+  config.enable_reloading = false
   config.eager_load = true
   config.consider_all_requests_local = false
   config.action_controller.perform_caching = true
-  config.read_encrypted_secrets = true
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
-  config.assets.js_compressor = :uglifier
+  config.assets.js_compressor = :terser
   config.assets.compile = true
   config.action_controller.asset_host = ENV.fetch("ASSET_HOST", ENV.fetch("APPLICATION_HOST", "vote.sfedu.ru"))
-  config.log_level = :debug
+  config.log_level = :info
   config.log_tags = [:request_id]
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :smtp

@@ -9,7 +9,7 @@ module Handlers
     def perform(payload)
       @event = Rails.configuration.event_store.deserialize(payload.transform_keys(&:to_sym))
 
-      set_raven_context
+      set_sentry_context
       handle_event
     rescue NotImplementedError
       Rails.logger.fatal "#{self.class} is not implemented yet"
@@ -28,11 +28,11 @@ module Handlers
       Rails.configuration.event_store
     end
 
-    def set_raven_context
+    def set_sentry_context
       serialized_event = RubyEventStore::Mappers::Default.new.event_to_serialized_record(event)
 
-      Raven.tags_context(dispatcher: self.class.to_s, event_type: event.event_type)
-      Raven.extra_context(event: serialized_event.to_h)
+      Sentry.set_tags(dispatcher: self.class.to_s, event_type: event.event_type)
+      Sentry.set_extras(event: serialized_event.to_h)
     end
   end
 end
