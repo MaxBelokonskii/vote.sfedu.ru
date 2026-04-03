@@ -1,5 +1,0 @@
-[      53ms] ReferenceError: $ is not defined
-    at http://localhost:3000/assets/application.debug-58134f3e7b4a308a1517b306c8eee82eae54412a94bd3af97e9d427f3ddc22ec.js:743:3
-    at http://localhost:3000/assets/application.debug-58134f3e7b4a308a1517b306c8eee82eae54412a94bd3af97e9d427f3ddc22ec.js:767:4
-[      54ms] ReferenceError: $ is not defined
-    at http://localhost:3000/pages/about:39:126

@@ -1,5 +1,6 @@
 !.keep
 *.DS_Store
+.playwright-mcp/
 *.swo
 *.swp
 # Created by https://www.gitignore.io/api/ruby,rails
