@@ -1,18 +1,22 @@
-footer.footer
-  .footer__logotypes
-    = link_to "https://sfedu.ru", target: "_blank" do
-      = image_tag("logo.png")
-    = link_to "https://vk.com/oso.sfedu", target: "_blank" do
-      = image_tag("studsovet-white.png")
-  .footer__about-service
-    div style='max-width: 600px;'
+footer.bg-dark.text-white.py-8.px-5
+  .max-w-screen-xl.mx-auto.flex.flex-col.md_flex-row.gap-8
+    .flex.items-center.gap-4
+      = link_to "https://sfedu.ru", target: "_blank" do
+        = image_tag("logo.png", class: "max-h-[40px]")
+      = link_to "https://vk.com/oso.sfedu", target: "_blank" do
+        = image_tag("studsovet-white.png", class: "max-h-[40px]")
+
+    .flex-1.text-sm.text-gray-300.leading-relaxed style="max-width: 600px;"
       | Система оценки профессорско-преподавательского состава Южного федерального университета реализуется с целью
       |  совершенствования образовательного процесса университета и вовлечения обучающихся в процесс повышения качества
       |  образования через независимую оценку преподавательской деятельности.
 
-  .footer__admin-info
-    = link_to "Исходный код на GitHub", "https://github.com/a1tavista/vote.sfedu.ru", target: "_blank"
-    div Администратор: Моисеенко Екатерина Эдуардовна
-    div Телефон:&nbsp;#{link_to '+7 (918) 123 42-16', 'tel:+79181234216'}
-    div E-Mail:&nbsp;#{link_to 'ekmoiseenko@sfedu.ru', 'mailto:ekmoiseenko@sfedu.ru'}
-
+    .text-sm.text-gray-300.space-y-1
+      = link_to "Исходный код на GitHub", "https://github.com/a1tavista/vote.sfedu.ru", target: "_blank", class: "text-gray-200 hover:text-white transition-colors"
+      div Администратор: Моисеенко Екатерина Эдуардовна
+      div
+        | Телефон:&nbsp;
+        = link_to '+7 (918) 123 42-16', 'tel:+79181234216', class: 'text-gray-200 hover:text-white transition-colors'
+      div
+        | E-Mail:&nbsp;
+        = link_to 'ekmoiseenko@sfedu.ru', 'mailto:ekmoiseenko@sfedu.ru', class: 'text-gray-200 hover:text-white transition-colors'

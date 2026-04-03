@@ -1,8 +1,10 @@
-aside.sidebar
-  ul.sidebar__menu
-    = link_to "Главная", root_path, wrap_tag: :li
-    = link_to "О сервисе", page_path('about'), wrap_tag: :li
-    /= link_to "Вопросы и ответы", page_path('faq'), wrap_tag: :li
+aside.sidebar.fixed.top-0.right-0.h-full.w-72.bg-white.z-50.shadow-xl.translate-x-full.transition-transform.duration-300
+  ul.py-4.list-none.m-0.p-0
+    li
+      = link_to "Главная", root_path, class: "block px-6 py-3 text-gray-700 no-underline hover:bg-blue-50 transition-colors"
+    li
+      = link_to "О сервисе", page_path('about'), class: "block px-6 py-3 text-gray-700 no-underline hover:bg-blue-50 transition-colors"
     - if current_user.present?
-      = link_to "Выход", destroy_user_session_path, wrap_tag: :li
-.sidebar__overlay
+      li
+        = link_to "Выход", destroy_user_session_path, class: "block px-6 py-3 text-gray-700 no-underline hover:bg-blue-50 transition-colors"
+.sidebar__overlay.fixed.inset-0.bg-black.bg-opacity-50.z-40.hidden

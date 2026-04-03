@@ -1,37 +1,37 @@
-section.page-section.page-section--raised.page-section--survey-header
-  h1.page-section__label--main Голосование / #{@poll.name}
-  p с #{l(@poll.starts_at, format: :only_date)} по #{l(@poll.ends_at, format: :only_date)}
+section.bg-accent.py-12.px-5
+  .max-w-screen-lg.mx-auto.text-center
+    h1.text-3xl.font-bold.text-gray-900.mb-2 Голосование / #{@poll.name}
+    p.text-gray-700 с #{l(@poll.starts_at, format: :only_date)} по #{l(@poll.ends_at, format: :only_date)}
 
-section.page-section
-  h1 Результаты
+section.py-12.px-5
+  .max-w-screen-lg.mx-auto
+    h1.text-2xl.font-bold.text-gray-900.mb-6 Результаты
 
-  - if @poll.finished?
-    p Результы прошедшего голосования:
+    - if @poll.finished?
+      p.text-gray-700.mb-4 Результы прошедшего голосования:
 
-    .page-section__content.page-section__content--limited.page-section__content--justify
-      table
-        thead
-          td
-          td <b>Процент голосов</b>
-        tbody
-        - @poll.options.each do |option|
+      table.w-full.text-sm.border.border-gray-200.rounded-lg.overflow-hidden
+        thead.bg-gray-100
           tr
-            td = option.title
-            td = number_to_percentage(option.proportion)
-  - else
-    p Результаты голосования будут автоматически опубликованы на этой странице после #{l(@poll.ends_at)}.
+            td.px-4.py-2
+            td.px-4.py-2.font-semibold Процент голосов
+        tbody
+          - @poll.options.each do |option|
+            tr.border-t.border-gray-200
+              td.px-4.py-2 = option.title
+              td.px-4.py-2 = number_to_percentage(option.proportion)
+    - else
+      p.text-gray-600 Результаты голосования будут автоматически опубликованы на этой странице после #{l(@poll.ends_at)}.
 
-section.page-section
-  h1 Порядок проведения
-  .page-section__content.page-section__content--limited.page-section__content--justify
-    p Голосование проводится среди студентов следующих структурных подразделений:
-    table
-      - @poll.faculties.each do |faculty|
-        tr
-          td = faculty.name
-  .page-section__content.page-section__content--limited
-    p Голосование проводится в анонимном режиме. Система раздельно хранит голос и факт участия.
-      После внесения ответа в систему его <b>невозможно отследить, изменить или отменить</b>,
-      так как отсутствует связь между респондентом и его голосом.
-
-
+section.bg-gray-50.py-12.px-5
+  .max-w-screen-lg.mx-auto
+    h1.text-2xl.font-bold.text-gray-900.mb-6 Порядок проведения
+    .text-gray-700.leading-relaxed.space-y-4
+      p Голосование проводится среди студентов следующих структурных подразделений:
+      .space-y-1
+        - @poll.faculties.each do |faculty|
+          .p-2.bg-white.rounded.border.border-gray-200.text-sm = faculty.name
+    .text-gray-700.leading-relaxed.space-y-4.mt-6
+      p Голосование проводится в анонимном режиме. Система раздельно хранит голос и факт участия.
+        |  После внесения ответа в систему его <b>невозможно отследить, изменить или отменить</b>,
+        |  так как отсутствует связь между респондентом и его голосом.

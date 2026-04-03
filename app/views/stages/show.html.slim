@@ -1,47 +1,51 @@
-section.page-section.page-section--raised.page-section--survey-header
-  h1.page-section__label--main Анкетирование студентов Южного федерального университета
-  p с #{l(@stage.starts_at, format: :only_date)} по #{l(@stage.ends_at, format: :only_date)}
+section.bg-accent.py-12.px-5
+  .max-w-screen-lg.mx-auto.text-center
+    h1.text-3xl.font-bold.text-gray-900.mb-2 Анкетирование студентов Южного федерального университета
+    p.text-gray-700 с #{l(@stage.starts_at, format: :only_date)} по #{l(@stage.ends_at, format: :only_date)}
 
-section.page-section.page-section--raised
-  h1 Порядок проведения
-  .page-section__content.page-section__content--limited.page-section__content--justify
-    p В анкетировании участвуют студенты всех структурных подразделений Южного федерального университета,
-      прослушавшие курсы за #{stage_semesters_list(@stage)}.
-    p Во время заполнения анкеты студентам предлагается оценить преподавателя по следующим критериям
-      путём проставления оценки по шкале от 1 до 10:
-  .page-section__content.page-section__content--limited
-    .traced-list
+section.py-12.px-5
+  .max-w-screen-lg.mx-auto
+    h1.text-2xl.font-bold.text-gray-900.mb-6 Порядок проведения
+    .text-gray-700.leading-relaxed.space-y-4.mb-8
+      p В анкетировании участвуют студенты всех структурных подразделений Южного федерального университета,
+        |  прослушавшие курсы за #{stage_semesters_list(@stage)}.
+      p Во время заполнения анкеты студентам предлагается оценить преподавателя по следующим критериям
+        |  путём проставления оценки по шкале от 1 до 10:
+
+    .space-y-2.mb-8
       - @stage.questions.each do |question|
-        .traced-list__item = question.text
-  .page-section__content.page-section__content--limited
-    p Анкетирование проводится в анонимном режиме. Система раздельно хранит факт заполнения анкеты
-      и её содержимое. После внесения ответа в систему его <b>невозможно отследить, изменить или отменить</b>,
-      так как отсутствует связь между респондентом и его оценкой преподавателя.
+        .flex.items-start.gap-3.p-3.bg-gray-50.rounded-lg
+          span.text-primary.font-bold &bull;
+          span.text-gray-700 = question.text
 
-section.page-section.page-section--raised
-  h1 Правила подсчета результатов
-  .page-section__content.page-section__content--limited.page-section__content--justify
-    p Для того, чтобы участвовать в рейтинге, преподавателю необходимо набрать
-      <b>не менее #{@stage.lower_participants_limit} голосов</b>. Если данная планка не была преодолена,
-      преподавателю автоматически присваивается <b>0 баллов</b> за текущее анкетирование.
-    - if @stage.with_truncation
-      p По каждому критерию отбрасываются <b>#{@stage.lower_truncation_percent}%</b> минимальных и
-        <b>#{@stage.upper_truncation_percent}%</b> максимальных оценок, но не менее одной с каждой стороны. Это
-        необходимо, чтобы исключить явно завышенные или заниженные оценки от участников анкетирования.
-    / p (тут интерактивный пример, как это работает)
-    p По каждому критерию подсчитывается среднее арифметическое, затем подсчитывается среднее арифметическое
-      по всем средним оценкам за критерии.
-    - if @stage.with_scale
-      p После получения среднего арифметического происходит постобработка полученных баллов &ndash; шкалирование.
-        Шкала перевода необработанных баллов в итоговые выглядит следующим образом:
+    .text-gray-700.leading-relaxed.space-y-4
+      p Анкетирование проводится в анонимном режиме. Система раздельно хранит факт заполнения анкеты
+        |  и её содержимое. После внесения ответа в систему его <b>невозможно отследить, изменить или отменить</b>,
+        |  так как отсутствует связь между респондентом и его оценкой преподавателя.
 
-      table
-        thead
-          td <b>Диапазон</b>
-          td <b>Итоговая оценка</b>
-        tbody
-          = stage_ladder_table(@stage)
+section.bg-gray-50.py-12.px-5
+  .max-w-screen-lg.mx-auto
+    h1.text-2xl.font-bold.text-gray-900.mb-6 Правила подсчета результатов
+    .text-gray-700.leading-relaxed.space-y-4
+      p Для того, чтобы участвовать в рейтинге, преподавателю необходимо набрать
+        |  <b>не менее #{@stage.lower_participants_limit} голосов</b>. Если данная планка не была преодолена,
+        |  преподавателю автоматически присваивается <b>0 баллов</b> за текущее анкетирование.
+      - if @stage.with_truncation
+        p По каждому критерию отбрасываются <b>#{@stage.lower_truncation_percent}%</b> минимальных и
+          |  <b>#{@stage.upper_truncation_percent}%</b> максимальных оценок, но не менее одной с каждой стороны. Это
+          |  необходимо, чтобы исключить явно завышенные или заниженные оценки от участников анкетирования.
+      p По каждому критерию подсчитывается среднее арифметическое, затем подсчитывается среднее арифметическое
+        |  по всем средним оценкам за критерии.
+      - if @stage.with_scale
+        p После получения среднего арифметического происходит постобработка полученных баллов &ndash; шкалирование.
+          |  Шкала перевода необработанных баллов в итоговые выглядит следующим образом:
 
-    p Результат анкетирования после обработки значений записывается в рейтинг преподавателя.
+        table.w-full.text-sm.mt-4.border.border-gray-200.rounded-lg.overflow-hidden
+          thead.bg-gray-100
+            tr
+              td.px-4.py-2.font-semibold Диапазон
+              td.px-4.py-2.font-semibold Итоговая оценка
+          tbody
+            = stage_ladder_table(@stage)
 
-
+      p Результат анкетирования после обработки значений записывается в рейтинг преподавателя.

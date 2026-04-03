@@ -77,7 +77,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <div class="survey-form" v-if="!finished">
+    <div v-if="!finished" class="space-y-6">
       <Question
         v-for="q in questions"
         :key="q.id"
@@ -88,9 +88,13 @@ onMounted(() => {
         :multichoice="q.multichoice"
         v-model="answers[q.id]"
       />
-      <button class="btn" @click="sendFormAnswer" :disabled="!isFormValid">Отправить ответ</button>
+      <button
+        class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-blue-800 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+        @click="sendFormAnswer"
+        :disabled="!isFormValid"
+      >Отправить ответ</button>
     </div>
-    <div class="note" v-else>
+    <div v-else class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-800">
       <p>Спасибо за участие в опросе!</p>
     </div>
   </div>
