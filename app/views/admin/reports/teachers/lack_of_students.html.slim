@@ -1,19 +1,19 @@
 = paginate @report.source
-table.table.mb-3
-  thead
-    tr
-      th ID
-      th Имя
-      th Количество респондентов
-      th Осталось до лимита
-      th
-  tbody
-    - @report.rows.each do |row|
+.bg-white.rounded-lg.border.border-gray-200.overflow-hidden.mt-4
+  table.w-full.text-sm.text-left
+    thead.bg-gray-50
       tr
-        td = row[:teacher].id
-        td = row[:teacher].name
-        td = row[:count]
-        td = row[:lack]
-        td
-          / = link_to 'Подробнее', admin_teacher_path(row)
+        th.px-4.py-3.font-medium.text-gray-600 ID
+        th.px-4.py-3.font-medium.text-gray-600 Имя
+        th.px-4.py-3.font-medium.text-gray-600 Количество респондентов
+        th.px-4.py-3.font-medium.text-gray-600 Осталось до лимита
+        th.px-4.py-3
+    tbody
+      - @report.rows.each do |row|
+        tr.border-t.border-gray-200.hover_bg-gray-50
+          td.px-4.py-3 = row[:teacher].id
+          td.px-4.py-3 = row[:teacher].name
+          td.px-4.py-3 = row[:count]
+          td.px-4.py-3 = row[:lack]
+          td.px-4.py-3
 = paginate @report.source

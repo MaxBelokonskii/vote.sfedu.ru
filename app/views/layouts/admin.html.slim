@@ -8,15 +8,16 @@ html lang="en"
     title Система анкетирования ЮФУ
     = stylesheet_link_tag :admin, media: 'all'
     = csrf_meta_tags
-  body
+    = vite_client_tag
+    = vite_javascript_tag 'tailwind'
+  body.bg-gray-50.min-h-screen
     = render 'shared/header'
     = render 'shared/flashes'
-    main.container-fluid
-      .row.flex-xl-nowrap
-        .col-12.col-md-3.col-xl-2.bd-sidebar
+    main.max-w-screen-xl.mx-auto.px-4.py-6
+      .flex.flex-col.xl_flex-row.gap-6
+        aside.w-full.xl_w-56.shrink-0
           = render 'shared/sidebar'
-        .col-12.col-md-9.col-xl-8.bd-content.py-md-3.pl-md-5
+        .flex-1.min-w-0
           = yield
     = javascript_include_tag :admin
     = yield :javascript
-

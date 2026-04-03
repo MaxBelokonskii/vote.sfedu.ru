@@ -1,24 +1,21 @@
-.page-header
-  h1.page-header-title Стадии анкетирования
-  .page-header-lead
-    p Здесь можно управлять стадиями анкетирования и смотреть статистику участия и результаты по каждой стадии.
-  ul.nav.nav-pills.page-header-actions.d-flex.justify-content-end
-    li.nav-item
-      = active_link_to 'Список', admin_stages_path, class: 'nav-link', role: 'button'
-    li.nav-item
-      = active_link_to 'Статистика', new_admin_stage_path, class: 'nav-link', role: 'button'
-    li.nav-item
-      = active_link_to 'Новая стадия', new_admin_stage_path, class: 'nav-link', role: 'button'
+.mb-6
+  .flex.items-start.justify-between.mb-2
+    div
+      h1.text-2xl.font-bold.text-gray-900 Стадии анкетирования
+      p.text-gray-600.text-sm.mt-1 Здесь можно управлять стадиями анкетирования и смотреть статистику участия и результаты по каждой стадии.
+    .flex.gap-2
+      = active_link_to 'Список', admin_stages_path, class: 'px-3 py-1.5 rounded-lg text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors no-underline', class_active: 'bg-primary text-white hover:bg-primary-700'
+      = active_link_to 'Статистика', new_admin_stage_path, class: 'px-3 py-1.5 rounded-lg text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors no-underline', class_active: 'bg-primary text-white hover:bg-primary-700'
+      = active_link_to 'Новая стадия', new_admin_stage_path, class: 'px-3 py-1.5 rounded-lg text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors no-underline', class_active: 'bg-primary text-white hover:bg-primary-700'
 
-.list-group
+.space-y-2
   - @stages.each do |stage|
-    = link_to admin_stage_path(stage), class: 'list-group-item list-group-item-action flex-column align-items-start' do
-      .d-flex.w-100.justify-content-between
-        h5.mb-1 Рейтинг НПР с #{l(stage.starts_at, format: :only_date)} по #{l(stage.ends_at, format: :only_date)}
-        h5
-          - if stage.current?
-            .badge.badge-primary Активная
-          - else
-            .badge.badge-secondary Завершена
-      p.mb-1 = stage_semesters_list(stage).capitalize
-      p.mb-1
+    = link_to admin_stage_path(stage), class: 'block p-4 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow no-underline' do
+      .flex.items-start.justify-between
+        div
+          h5.text-base.font-semibold.text-gray-900.mb-1 Рейтинг НПР с #{l(stage.starts_at, format: :only_date)} по #{l(stage.ends_at, format: :only_date)}
+          p.text-sm.text-gray-600 = stage_semesters_list(stage).capitalize
+        - if stage.current?
+          span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-primary.text-white Активная
+        - else
+          span.inline-flex.items-center.px-2.5.py-0.5.rounded-full.text-xs.font-medium.bg-gray-100.text-gray-600 Завершена

@@ -1,60 +1,65 @@
-.page-header
-  h1.page-header-title = @student.name
+.mb-6
+  h1.text-2xl.font-bold.text-gray-900 = @student.name
 
-h3.mb-3 Данные об аккаунте
+h3.text-lg.font-semibold.text-gray-900.mb-3 Данные об аккаунте
 
-dl.row.mb-3
-  dt.col-sm-3 Последний раз был
-  dd.col-sm-9 = l @student.user.last_sign_in_at
+.bg-white.rounded-lg.border.border-gray-200.p-4.mb-6
+  dl.grid.grid-cols-1.sm_grid-cols-[200px_1fr].gap-2.text-sm
+    dt.font-medium.text-gray-600 Последний раз был
+    dd.text-gray-900 = l @student.user.last_sign_in_at
+    dt.font-medium.text-gray-600 Заходов на сайт
+    dd.text-gray-900 = @student.user.sign_in_count
+    dt.font-medium.text-gray-600 E-Mail на sfedu.ru
+    dd.text-gray-900 = @student.user.email || '<i class="text-gray-400">не передан</i>'.html_safe
 
-  dt.col-sm-3 Заходов на сайт
-  dd.col-sm-9 = @student.user.sign_in_count
+h3.text-lg.font-semibold.text-gray-900.mb-3 Данные о студенте
 
-  dt.col-sm-3 E-Mail на sfedu.ru
-  dd.col-sm-9 = @student.user.email || '<i>не передан</i>'.html_safe
+.bg-white.rounded-lg.border.border-gray-200.p-4.mb-6
+  dl.grid.grid-cols-1.sm_grid-cols-[200px_1fr].gap-2.text-sm
+    dt.font-medium.text-gray-600 Идентификатор в 1С
+    dd.text-gray-900 = @student.external_id || '<i class="text-gray-400">не передан</i>'.html_safe
 
-h3.mb-3 Данные о студенте
+h3.text-lg.font-semibold.text-gray-900.mb-3 Зачетные книжки
 
-dl.row.mb-3
-  dt.col-sm-3 Идентификатор в 1С
-  dd.col-sm-9 = @student.external_id || '<i>не передан</i>'.html_safe
-
-h3.row.mb-3
-
-h3.mb-3 Зачетные книжки
-
-table.table.mb-3
-  thead
-    th Номер
-    th Подразделение
-    th Направление
-    th Ступень
-    th Курс
-    th Группа
-    th Форма
-  tbody
-    - @student.grade_books.each do |gb|
+.bg-white.rounded-lg.border.border-gray-200.overflow-hidden.mb-6
+  table.w-full.text-sm.text-left
+    thead.bg-gray-50
       tr
-        td style='min-width: 140px;' = gb.external_id
-        td = gb.faculty.name
-        td = gb.major
-        td = gb.grade_level
-        td = gb.grade_num
-        td = gb.group_num
-        td = gb.time_type
+        th.px-4.py-3.font-medium.text-gray-600 Номер
+        th.px-4.py-3.font-medium.text-gray-600 Подразделение
+        th.px-4.py-3.font-medium.text-gray-600 Направление
+        th.px-4.py-3.font-medium.text-gray-600 Ступень
+        th.px-4.py-3.font-medium.text-gray-600 Курс
+        th.px-4.py-3.font-medium.text-gray-600 Группа
+        th.px-4.py-3.font-medium.text-gray-600 Форма
+    tbody
+      - @student.grade_books.each do |gb|
+        tr.border-t.border-gray-200
+          td.px-4.py-3 style="min-width: 140px;" = gb.external_id
+          td.px-4.py-3 = gb.faculty.name
+          td.px-4.py-3 = gb.major
+          td.px-4.py-3 = gb.grade_level
+          td.px-4.py-3 = gb.grade_num
+          td.px-4.py-3 = gb.group_num
+          td.px-4.py-3 = gb.time_type
 
-h3 Cвязанные преподаватели
+h3.text-lg.font-semibold.text-gray-900.mb-3 Связанные преподаватели
 
-p = link_to 'Преподаватели в 1С (полный отчет)', admin_student_raw_teachers_path(@student)
+p.mb-2
+  = link_to 'Преподаватели в 1С (полный отчет)', admin_student_raw_teachers_path(@student), class: 'text-primary hover:underline'
 
-p <i>Курсивом</i> отмечены семестры, включенные в текущем этапе анкетирования.
+p.text-sm.text-gray-600.mb-3
+  i Курсивом
+  |  отмечены семестры, включенные в текущем этапе анкетирования.
 
-table.table.mb-3
-  thead
-    th Семестр
-    th Число преподавателей
-  tbody
-    - @student.relations_by_semesters.each do |r|
-      tr class=('font-italic' if r[:is_current])
-        td = r[:is_current] ? "<i>#{r[:semester]}</i>".html_safe : r[:semester]
-        td = r[:count]
+.bg-white.rounded-lg.border.border-gray-200.overflow-hidden
+  table.w-full.text-sm.text-left
+    thead.bg-gray-50
+      tr
+        th.px-4.py-3.font-medium.text-gray-600 Семестр
+        th.px-4.py-3.font-medium.text-gray-600 Число преподавателей
+    tbody
+      - @student.relations_by_semesters.each do |r|
+        tr.border-t.border-gray-200 class=(r[:is_current] ? 'italic' : '')
+          td.px-4.py-3 = r[:is_current] ? "<i>#{r[:semester]}</i>".html_safe : r[:semester]
+          td.px-4.py-3 = r[:count]

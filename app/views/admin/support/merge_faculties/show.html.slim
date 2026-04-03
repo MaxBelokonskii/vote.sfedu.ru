@@ -1,18 +1,18 @@
-.page-header
-  h1.page-header-title Объединение структурных подразделений
-  .page-header-lead
-    p Если из чьей-то зачетки в 1С:Университет поступили устаревшие данные о названии факультета, то этот инструмент
-      помогает решить эту проблему.
+.mb-6
+  h1.text-2xl.font-bold.text-gray-900 Объединение структурных подразделений
+  p.text-gray-600.text-sm.mt-1 Если из чьей-то зачетки в 1С:Университет поступили устаревшие данные о названии факультета, то этот инструмент
+    |  помогает решить эту проблему.
 
-.alert.alert-warning role='alert'
+.bg-amber-50.border.border-amber-200.rounded-lg.p-4.text-amber-800.mb-6 role='alert'
   | Внимание! Изменения, которые вносятся этим инструментом, необратимы. Выбирайте мудро.
 
 = form_tag execute_admin_support_merge_faculties_path, method: :post do |f|
-  .form-group
-    div Выберите актуальное название факультета
-    = collection_select :tool, :faculty_id, @faculties, :id, :name, {prompt: 'Выберите факультет, в который нужно влить данные'}, class: 'form-control'
+  .mb-4
+    label.block.text-sm.font-medium.text-gray-700.mb-1 Выберите актуальное название факультета
+    = collection_select :tool, :faculty_id, @faculties, :id, :name, {prompt: 'Выберите факультет, в который нужно влить данные'}, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary'
 
-  .form-group
-    div Выберите старое название факультета
-    = collection_select :tool, :duplicated_faculty_id, @faculties, :id, :name, {prompt: 'Выберите факультет, который будет влит в выбранный выше'}, class: 'form-control'
-  = submit_tag 'Объединить факультеты', class: 'btn btn-primary'
+  .mb-4
+    label.block.text-sm.font-medium.text-gray-700.mb-1 Выберите старое название факультета
+    = collection_select :tool, :duplicated_faculty_id, @faculties, :id, :name, {prompt: 'Выберите факультет, который будет влит в выбранный выше'}, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary'
+
+  = submit_tag 'Объединить факультеты', class: 'px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium cursor-pointer border-0'

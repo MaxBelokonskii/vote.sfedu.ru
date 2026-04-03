@@ -1,10 +1,9 @@
-.page-header
-  h1.page-header-title Критерии оценивания
-  .page-header-lead
-    p Здесь можно просматривать список критериев, создавать новые и смотреть статистику по каждому критерию.
-.list-group
+.mb-6
+  h1.text-2xl.font-bold.text-gray-900 Критерии оценивания
+  p.text-gray-600.text-sm.mt-1 Здесь можно просматривать список критериев, создавать новые и смотреть статистику по каждому критерию.
+
+.space-y-2
   - @questions.each do |question|
-    = link_to admin_question_path(question), class: 'list-group-item list-group-item-action flex-column align-items-start' do
-      .d-flex.w-100.justify-content-between
-        h5.mb-1 = question.text
-      small #{question.stages.count} #{t(:stages, count: question.stages.count)}
+    = link_to admin_question_path(question), class: 'block p-4 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow no-underline' do
+      h5.text-base.font-semibold.text-gray-900.mb-1 = question.text
+      small.text-sm.text-gray-500 #{question.stages.count} #{t(:stages, count: question.stages.count)}
