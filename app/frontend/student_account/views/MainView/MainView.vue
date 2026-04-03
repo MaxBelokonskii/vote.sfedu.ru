@@ -1,7 +1,7 @@
 <template>
-  <div class="page">
-    <h1 class="page__title">Активные опросы</h1>
-    <p class="page__subtitle">Выберите активный опрос из списка ниже и помогите университету стать лучше.</p>
+  <div class="max-w-4xl mx-auto px-4">
+    <h1 class="text-3xl font-normal text-gray-800 my-4">Активные опросы</h1>
+    <p class="text-gray-600 my-4">Выберите активный опрос из списка ниже и помогите университету стать лучше.</p>
     <v-divider class="my-4"></v-divider>
     <template v-if="items.length > 0">
       <MainViewVoteCard

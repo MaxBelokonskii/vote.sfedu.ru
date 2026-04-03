@@ -1,10 +1,10 @@
 <template>
-  <div class="page">
-    <h1 class="page__title">Оценка качества преподавания</h1>
-    <p class="page__subtitle">Анкеты преподавателей, которые вели дисциплины за указанный период.</p>
+  <div class="max-w-4xl mx-auto px-4">
+    <h1 class="text-3xl font-normal text-gray-800 my-4">Оценка качества преподавания</h1>
+    <p class="text-gray-600 my-4">Анкеты преподавателей, которые вели дисциплины за указанный период.</p>
     <v-divider class="my-4"></v-divider>
-    <div class="stage-teachers-list">
-      <div class="stage-teachers-list__actions">
+    <div>
+      <div class="flex justify-end gap-2 mb-4">
         <v-btn size="small" variant="outlined" v-if="stageAttendee.fetchingStatus !== 'in_progress'" @click="refreshTeachers">
           Обновить список преподавателей
         </v-btn>
@@ -15,7 +15,7 @@
 
       <template v-if="stageAttendee.fetchingStatus === 'done'">
         <StageTeacher
-          class="stage-teachers-list__item"
+          class="mb-4 shadow-sm"
           v-for="item in items"
           :key="item.id"
           :id="item.id"
@@ -25,7 +25,7 @@
         />
       </template>
       <template v-else-if="stageAttendee.fetchingStatus === 'in_progress'">
-        <div class="stage-teachers-list__message">
+        <div class="text-gray-600 my-4">
           <div class="d-flex justify-center align-center" style="min-height: 100px;">
             <v-progress-circular indeterminate color="primary" />
             <span class="ml-4">Загрузка...</span>
@@ -34,14 +34,14 @@
         </div>
       </template>
       <template v-else-if="stageAttendee.fetchingStatus === 'failed'">
-        <div class="stage-teachers-list__message">
+        <div class="text-gray-600 my-4">
           Не удалось получить актуальный список преподавателей.
           Возможно, проблема вызвана техническими работами на стороне 1С:Университет.
           Попробуйте вернуться сюда через несколько часов и попробовать снова обновить список преподавателей.
         </div>
       </template>
       <template v-else-if="stageAttendee.fetchingStatus === 'fresh'">
-        <div class="stage-teachers-list__message">
+        <div class="text-gray-600 my-4">
           Добро пожаловать! Нажмите "Обновить список преподавателей", чтобы приступить к оцениванию.
         </div>
       </template>

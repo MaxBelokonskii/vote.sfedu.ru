@@ -1,8 +1,8 @@
 <template>
   <v-card>
     <v-card-text class="d-flex align-center justify-space-between">
-      <div class="stage-teacher__name">{{ name }}</div>
-      <div class="stage-teacher__action">
+      <div class="font-medium">{{ name }}</div>
+      <div>
         <CheckMark v-if="participated" />
         <v-btn @click="router.push({ path: `/stages/${stageId}/teachers/${id}` })" v-else color="primary" size="small">
           Заполнить анкету

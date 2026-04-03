@@ -1,8 +1,8 @@
 <template>
-  <div class="page">
-    <h1 class="page__title">{{ teacher.name }}</h1>
-    <p class="page__subtitle">Дисциплины, которые связывают вас с преподавателем:</p>
-    <ul class="page__subtitle">
+  <div class="max-w-4xl mx-auto px-4">
+    <h1 class="text-3xl font-normal text-gray-800 my-4">{{ teacher.name }}</h1>
+    <p class="text-gray-600 my-4">Дисциплины, которые связывают вас с преподавателем:</p>
+    <ul class="text-gray-600 my-4 list-disc pl-5">
       <li v-for="discipline in teacher.disciplines" :key="discipline">{{ discipline }}</li>
     </ul>
     <v-divider class="my-4"></v-divider>
@@ -14,9 +14,9 @@
         <v-btn @click="router.push({ path: `/stages/${stage.id}` })" color="success">Вернуться к списку преподавателей</v-btn>
       </template>
       <template v-else>
-        <div v-for="question in questions" :key="question.id" class="feedback-control">
-          <div class="feedback-control__question">{{ question.text }}</div>
-          <div class="feedback-control__buttons">
+        <div v-for="question in questions" :key="question.id" class="flex flex-col my-6">
+          <div class="text-sm mb-3">{{ question.text }}</div>
+          <div>
             <v-rating
               v-model="question.rate"
               :length="10"

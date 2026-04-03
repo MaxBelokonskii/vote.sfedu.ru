@@ -1,26 +1,24 @@
 <template>
-  <v-card class="voting">
-    <v-card-title class="voting__header">
-      <span class="voting__title">{{ title }}</span>
+  <v-card
+    <v-card-title class="flex items-center justify-between">
+      <span class="text-base">{{ title }}</span>
     </v-card-title>
-    <v-card-text>
-      <div class="voting-description">
-        <p class="voting-description__item voting-description__item_lg-offset" v-if="!!description">
-          {{ description }}
-        </p>
-        <div class="voting-description__item voting-description__item_lg-offset">
-          <dl class="voting-property voting-description__item">
-            <dt class="voting-property__name">Начало</dt>
-            <dd class="voting-property__value">{{ startsAt }}</dd>
-          </dl>
-          <dl class="voting-property voting-description__item">
-            <dt class="voting-property__name">Завершение</dt>
-            <dd class="voting-property__value">{{ endsAt }}</dd>
-          </dl>
-        </div>
+    <v-card-text class="text-sm">
+      <p class="mb-4" v-if="!!description">
+        {{ description }}
+      </p>
+      <div class="mb-4">
+        <dl class="flex mb-2">
+          <dt class="w-24 text-gray-500">Начало</dt>
+          <dd>{{ startsAt }}</dd>
+        </dl>
+        <dl class="flex mb-2">
+          <dt class="w-24 text-gray-500">Завершение</dt>
+          <dd>{{ endsAt }}</dd>
+        </dl>
       </div>
     </v-card-text>
-    <v-card-actions class="voting__action">
+    <v-card-actions class="flex items-center">
       <template v-if="participated">
         <CheckMark />
         <span class="ml-2">Спасибо за участие!</span>

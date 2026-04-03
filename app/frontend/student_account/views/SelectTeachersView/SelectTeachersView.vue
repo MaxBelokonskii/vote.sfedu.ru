@@ -1,7 +1,7 @@
 <template>
-  <div class="page">
-    <h1 class="page__title">Добавление преподавателей в список</h1>
-    <p class="page__subtitle">Ниже представлены анкеты преподавателей, которые можно свободно добавить в список.</p>
+  <div class="max-w-4xl mx-auto px-4">
+    <h1 class="text-3xl font-normal text-gray-800 my-4">Добавление преподавателей в список</h1>
+    <p class="text-gray-600 my-4">Ниже представлены анкеты преподавателей, которые можно свободно добавить в список.</p>
     <v-divider class="my-4"></v-divider>
     <v-text-field
       v-model="search"

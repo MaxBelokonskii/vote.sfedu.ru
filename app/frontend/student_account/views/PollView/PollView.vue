@@ -1,7 +1,7 @@
 <template>
-  <div class="page">
-    <h1 class="page__title">{{ poll.title || "Загрузка..." }}</h1>
-    <p class="page__subtitle">Выберите кандидатуру из списка ниже, чтобы проголосовать.</p>
+  <div class="max-w-4xl mx-auto px-4">
+    <h1 class="text-3xl font-normal text-gray-800 my-4">{{ poll.title || "Загрузка..." }}</h1>
+    <p class="text-gray-600 my-4">Выберите кандидатуру из списка ниже, чтобы проголосовать.</p>
     <v-divider class="my-4"></v-divider>
     <div class="mt-4">
       <template v-if="poll.participated">
