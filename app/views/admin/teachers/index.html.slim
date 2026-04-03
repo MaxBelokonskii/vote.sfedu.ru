@@ -4,8 +4,8 @@
 
 = search_form_for @q, url: admin_teachers_path do |f|
   .grid.grid-cols-1.md_grid-cols-3.gap-3.mb-4
-    = f.search_field :name_cont, class: 'rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary', placeholder: 'Поиск по имени'
-    = f.search_field :external_id_cont, class: 'rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary', placeholder: 'Поиск по ID в 1С'
+    = f.search_field :name_cont, class: 'rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', placeholder: 'Поиск по имени'
+    = f.search_field :external_id_cont, class: 'rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', placeholder: 'Поиск по ID в 1С'
     button.px-4.py-2.bg-primary.text-white.rounded-lg.hover_bg-primary-700.transition-colors.text-sm.font-medium.cursor-pointer.border-0 Искать
 
 = paginate @teachers
@@ -28,5 +28,5 @@
           td.px-4.py-3
             small.text-xs = teacher.encrypted_snils
           td.px-4.py-3
-            = link_to 'Подробнее', admin_teacher_path(teacher), class: 'text-primary hover:underline'
+            = link_to 'Подробнее', admin_teacher_path(teacher), class: 'text-primary hover_underline'
 = paginate @teachers

@@ -4,6 +4,6 @@
 
 .space-y-2
   - @questions.each do |question|
-    = link_to admin_question_path(question), class: 'block p-4 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow no-underline' do
+    = link_to admin_question_path(question), class: 'block p-4 bg-white rounded-lg border border-gray-200 hover_shadow-sm transition-shadow no-underline' do
       h5.text-base.font-semibold.text-gray-900.mb-1 = question.text
       small.text-sm.text-gray-500 #{question.stages.count} #{t(:stages, count: question.stages.count)}

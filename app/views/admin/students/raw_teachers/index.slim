@@ -23,4 +23,4 @@ h3.text-lg.font-semibold.text-gray-900.mb-3 Преподаватели студ�
           td.px-4.py-3 = teacher[:record].valid? ? 'OK' : teacher[:record].errors.full_messages
           td.px-4.py-3
             - if teacher[:record].persisted?
-              = link_to 'Подробнее', admin_teacher_path(teacher[:record]), class: 'text-primary hover:underline'
+              = link_to 'Подробнее', admin_teacher_path(teacher[:record]), class: 'text-primary hover_underline'

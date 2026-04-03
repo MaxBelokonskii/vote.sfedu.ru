@@ -50,9 +50,9 @@ watch(freeAnswer, emitValue)
     <div class="space-y-3">
       <div class="flex items-start gap-3" v-for="item in options" :key="item.id">
         <input type="checkbox" :id="optionID(item.id)" :value="item.id" v-model="chosenOptions" v-if="multichoice"
-          class="mt-1 rounded border-gray-300 text-primary focus:ring-primary">
+          class="mt-1 rounded border-gray-300 text-primary focus_ring-primary">
         <input type="radio" :id="optionID(item.id)" :value="item.id" v-model="chosenOptions" v-else
-          class="mt-1 border-gray-300 text-primary focus:ring-primary">
+          class="mt-1 border-gray-300 text-primary focus_ring-primary">
         <label class="text-sm text-gray-700 cursor-pointer" :for="optionID(item.id)">
           {{ item.text }}
         </label>
@@ -60,16 +60,16 @@ watch(freeAnswer, emitValue)
 
       <div class="flex items-start gap-3" v-if="free && options.length > 0">
         <input type="checkbox" value="free" v-model="chosenOptions" v-if="multichoice"
-          class="mt-1 rounded border-gray-300 text-primary focus:ring-primary">
+          class="mt-1 rounded border-gray-300 text-primary focus_ring-primary">
         <input type="radio" value="free" v-model="chosenOptions" v-else
-          class="mt-1 border-gray-300 text-primary focus:ring-primary">
+          class="mt-1 border-gray-300 text-primary focus_ring-primary">
         <input type="text" v-model="freeAnswer" placeholder="Укажите Ваш ответ" :disabled="!freeAnswerChoosed"
-          class="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary disabled:opacity-50 disabled:bg-gray-50">
+          class="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary disabled_opacity-50 disabled_bg-gray-50">
       </div>
 
       <div v-else-if="free && options.length === 0">
         <textarea v-model="freeAnswer" placeholder="Укажите Ваш ответ"
-          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary min-h-[100px]"></textarea>
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary min-h-[100px]"></textarea>
       </div>
     </div>
   </div>

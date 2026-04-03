@@ -9,10 +9,10 @@
 = form_tag execute_admin_support_merge_faculties_path, method: :post do |f|
   .mb-4
     label.block.text-sm.font-medium.text-gray-700.mb-1 Выберите актуальное название факультета
-    = collection_select :tool, :faculty_id, @faculties, :id, :name, {prompt: 'Выберите факультет, в который нужно влить данные'}, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary'
+    = collection_select :tool, :faculty_id, @faculties, :id, :name, {prompt: 'Выберите факультет, в который нужно влить данные'}, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary'
 
   .mb-4
     label.block.text-sm.font-medium.text-gray-700.mb-1 Выберите старое название факультета
-    = collection_select :tool, :duplicated_faculty_id, @faculties, :id, :name, {prompt: 'Выберите факультет, который будет влит в выбранный выше'}, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary'
+    = collection_select :tool, :duplicated_faculty_id, @faculties, :id, :name, {prompt: 'Выберите факультет, который будет влит в выбранный выше'}, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary'
 
-  = submit_tag 'Объединить факультеты', class: 'px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium cursor-pointer border-0'
+  = submit_tag 'Объединить факультеты', class: 'px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium cursor-pointer border-0'

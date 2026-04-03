@@ -4,15 +4,15 @@
 = form_for(@poll_option, url: admin_poll_poll_options_path(@poll)) do |f|
   .mb-4
     label.block.text-sm.font-medium.text-gray-700.mb-1 Имя кандидата / название варианта ответа
-    = f.text_field :title, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary'
+    = f.text_field :title, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary'
 
   .mb-4
     label.block.text-sm.font-medium.text-gray-700.mb-1 Краткое описание
-    = f.text_area :description, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary min-h-[100px]'
+    = f.text_area :description, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary min-h-[100px]'
 
   .mb-4
     label.block.text-sm.font-medium.text-gray-700.mb-1 Фотография (необязательно)
     = f.hidden_field :image, value: @poll_option.cached_image_data
     = f.file_field :image, class: 'text-sm text-gray-600'
 
-  = f.submit 'Создать опцию', class: 'px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium cursor-pointer border-0'
+  = f.submit 'Создать опцию', class: 'px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium cursor-pointer border-0'

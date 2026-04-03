@@ -1,7 +1,7 @@
 .max-w-screen-lg.mx-auto.py-12.px-5
   h1.text-2xl.font-bold.text-gray-900.mb-4
     | Участники опроса (#{@respondents.count})
-  = link_to 'Перейти к результатам опроса', results_survey_path(@survey.passcode), class: 'text-primary hover:underline'
+  = link_to 'Перейти к результатам опроса', results_survey_path(@survey.passcode), class: 'text-primary hover_underline'
   table.w-full.text-sm.border.border-gray-200.rounded-lg.overflow-hidden.mt-6
     tbody
       - @respondents.each do |respondent|

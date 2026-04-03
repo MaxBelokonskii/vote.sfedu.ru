@@ -6,10 +6,10 @@ header.bg-dark.shadow-lg.flex.justify-between.items-stretch.px-5
       h1.text-white.text-lg.font-normal.m-0 Система анкетирования ЮФУ
 
   nav.items-stretch.hidden.lg_flex
-    = link_to "Главная", root_path, class: 'flex items-center px-4 text-white no-underline hover:bg-dark-light transition-colors text-sm'
-    = link_to "О сервисе", page_path('about'), class: 'flex items-center px-4 text-white no-underline hover:bg-dark-light transition-colors text-sm'
+    = link_to "Главная", root_path, class: 'flex items-center px-4 text-white no-underline hover_bg-dark-light transition-colors text-sm'
+    = link_to "О сервисе", page_path('about'), class: 'flex items-center px-4 text-white no-underline hover_bg-dark-light transition-colors text-sm'
     - if current_user.present?
-      = link_to "Выход", destroy_user_session_path, class: 'flex items-center px-4 text-white no-underline hover:bg-dark-light transition-colors text-sm'
+      = link_to "Выход", destroy_user_session_path, class: 'flex items-center px-4 text-white no-underline hover_bg-dark-light transition-colors text-sm'
 
   .flex.items-center.lg_hidden.cursor-pointer
     img.open-sidebar.w-6.h-6.invert src=(image_path('menu.svg'))

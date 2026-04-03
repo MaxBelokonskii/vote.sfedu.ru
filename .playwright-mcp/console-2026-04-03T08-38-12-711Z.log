@@ -1,0 +1,19 @@
+[  350003ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:3000/vite-dev/@vite/client:963
+[  350008ms] [ERROR] WebSocket connection to 'ws://localhost:3036/vite-dev/' failed: Error during WebSocket handshake: net::ERR_CONNECTION_RESET @ http://localhost:3000/vite-dev/@vite/client:1034
+[  351012ms] [ERROR] WebSocket connection to 'ws://localhost:3036/vite-dev/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/vite-dev/@vite/client:1034
+[  352014ms] [ERROR] WebSocket connection to 'ws://localhost:3036/vite-dev/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/vite-dev/@vite/client:1034
+[  353017ms] [ERROR] WebSocket connection to 'ws://localhost:3036/vite-dev/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/vite-dev/@vite/client:1034
+[  354020ms] [ERROR] WebSocket connection to 'ws://localhost:3036/vite-dev/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/vite-dev/@vite/client:1034
+[  355023ms] [ERROR] WebSocket connection to 'ws://localhost:3036/vite-dev/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/vite-dev/@vite/client:1034
+[  356027ms] [ERROR] WebSocket connection to 'ws://localhost:3036/vite-dev/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/vite-dev/@vite/client:1034
+[  357031ms] [ERROR] WebSocket connection to 'ws://localhost:3036/vite-dev/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/vite-dev/@vite/client:1034
+[  358035ms] [ERROR] WebSocket connection to 'ws://localhost:3036/vite-dev/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/vite-dev/@vite/client:1034
+[  359039ms] [ERROR] WebSocket connection to 'ws://localhost:3036/vite-dev/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/vite-dev/@vite/client:1034
+[  360042ms] [ERROR] WebSocket connection to 'ws://localhost:3036/vite-dev/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/vite-dev/@vite/client:1034
+[  361047ms] [ERROR] WebSocket connection to 'ws://localhost:3036/vite-dev/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/vite-dev/@vite/client:1034
+[  362051ms] [ERROR] WebSocket connection to 'ws://localhost:3036/vite-dev/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/vite-dev/@vite/client:1034
+[  369857ms] ReferenceError: $ is not defined
+    at http://localhost:3000/assets/application.debug-58134f3e7b4a308a1517b306c8eee82eae54412a94bd3af97e9d427f3ddc22ec.js:743:3
+    at http://localhost:3000/assets/application.debug-58134f3e7b4a308a1517b306c8eee82eae54412a94bd3af97e9d427f3ddc22ec.js:767:4
+[  369858ms] ReferenceError: $ is not defined
+    at http://localhost:3000/:42:126

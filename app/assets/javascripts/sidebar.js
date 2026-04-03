@@ -1,53 +1,28 @@
-(function (window, $) {
+document.addEventListener('DOMContentLoaded', function () {
+  var trigger = document.querySelector('.open-sidebar');
+  var sidebar = document.querySelector('.sidebar');
+  var overlay = document.querySelector('.sidebar__overlay');
 
-  var Sidebar = function (target, options) {
-    this.$sidebar = $(target);
-    this.$body = $(document.body);
-    this.options = options;
+  if (!trigger || !sidebar) return;
 
-    this.init();
-  };
+  trigger.addEventListener('click', function (e) {
+    e.stopPropagation();
+    sidebar.classList.remove('translate-x-full');
+    sidebar.classList.add('translate-x-0');
+    if (overlay) overlay.classList.remove('hidden');
+  });
 
-  Sidebar.prototype = {
-    defaults: {
-      trigger: null,
-      content: 'main'
-    },
-    init: function () {
-      this.config = $.extend({}, this.defaults, this.options);
-      this.$content = $(this.config.content);
-      this.$trigger = $(this.config.trigger) || this.$body.find(this.config.trigger);
+  function closeSidebar() {
+    sidebar.classList.add('translate-x-full');
+    sidebar.classList.remove('translate-x-0');
+    if (overlay) overlay.classList.add('hidden');
+  }
 
-      this.attach();
-    },
-    attach: function () {
-      this.$trigger.on('click', this.onShow.bind(this));
-      this.$content.on('click', this.onHide.bind(this));
-    },
-    onShow: function (e) {
-      e.stopPropagation();
-      this.slideIn();
-    },
-    onHide: function (e) {
-      if (this.$sidebar.hasClass('sidebar-opened')) {
-        e.stopPropagation();
-        this.slideOut();
-      }
-    },
-    slideIn: function () {
-      this.$sidebar.addClass('sidebar-opened');
-      this.$sidebar.css({'animation': 'slidein .2s ease-in-out'});
-    },
-    slideOut: function () {
-      this.$sidebar.css({'animation': 'slideout .2s ease-in-out'});
-      this.$sidebar.removeClass('sidebar-opened');
+  if (overlay) overlay.addEventListener('click', closeSidebar);
+
+  document.addEventListener('click', function (e) {
+    if (!sidebar.contains(e.target) && !trigger.contains(e.target)) {
+      closeSidebar();
     }
-  };
-
-  $.fn.sidebar = function (options) {
-    return this.each(function () {
-      $(this).data('sidebar', new Sidebar(this, options));
-    });
-  };
-
-})(window, window.jQuery);
+  });
+});

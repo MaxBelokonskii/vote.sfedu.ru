@@ -89,7 +89,7 @@ onMounted(() => {
         v-model="answers[q.id]"
       />
       <button
-        class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-blue-800 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+        class="px-6 py-3 bg-primary text-white rounded-lg hover_bg-blue-800 transition-colors font-medium disabled_opacity-50 disabled_cursor-not-allowed"
         @click="sendFormAnswer"
         :disabled="!isFormValid"
       >Отправить ответ</button>

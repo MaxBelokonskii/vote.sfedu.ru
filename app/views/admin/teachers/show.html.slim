@@ -32,7 +32,7 @@ h3.text-lg.font-semibold.text-gray-900.mb-3 Результаты по стади
 
 .space-y-2
   - @results.each do |result|
-    = link_to admin_stage_path(result[:stage]), class: 'block p-4 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow no-underline' do
+    = link_to admin_stage_path(result[:stage]), class: 'block p-4 bg-white rounded-lg border border-gray-200 hover_shadow-sm transition-shadow no-underline' do
       .flex.items-start.justify-between
         div
           h5.text-base.font-semibold.text-gray-900.mb-1 Анкетирование с #{l(result[:stage].starts_at, format: :only_date)} по #{l(result[:stage].ends_at, format: :only_date)}

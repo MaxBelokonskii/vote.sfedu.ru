@@ -1,0 +1,53 @@
+- generic [active] [ref=e1]:
+  - complementary [ref=e2]:
+    - list [ref=e3]:
+      - listitem [ref=e4]:
+        - link "Главная" [ref=e5] [cursor=pointer]:
+          - /url: /
+      - listitem [ref=e6]:
+        - link "О сервисе" [ref=e7] [cursor=pointer]:
+          - /url: /pages/about
+  - banner [ref=e8]:
+    - generic [ref=e9]:
+      - link [ref=e10] [cursor=pointer]:
+        - /url: https://sfedu.ru
+        - img [ref=e11]
+      - link "Система анкетирования ЮФУ" [ref=e12] [cursor=pointer]:
+        - /url: /
+        - heading "Система анкетирования ЮФУ" [level=1] [ref=e13]
+    - navigation [ref=e14]:
+      - link "Главная" [ref=e15] [cursor=pointer]:
+        - /url: /
+      - link "О сервисе" [ref=e16] [cursor=pointer]:
+        - /url: /pages/about
+  - main [ref=e17]:
+    - generic [ref=e19]:
+      - heading "Система анкетирования Объединённого совета обучающихся ЮФУ" [level=1] [ref=e20]
+      - paragraph [ref=e21]: От твоего выбора сегодня зависит завтрашняя жизнь
+      - generic [ref=e22]:
+        - heading "Вход в личный кабинет" [level=3] [ref=e23]
+        - textbox "Логин на sfedu.ru" [ref=e24]
+        - button "Войти" [ref=e25] [cursor=pointer]
+    - heading "История опросов" [level=1] [ref=e28]
+  - contentinfo [ref=e29]:
+    - generic [ref=e30]:
+      - generic [ref=e31]:
+        - link [ref=e32] [cursor=pointer]:
+          - /url: https://sfedu.ru
+          - img [ref=e33]
+        - link [ref=e34] [cursor=pointer]:
+          - /url: https://vk.com/oso.sfedu
+          - img [ref=e35]
+      - generic [ref=e36]: Система оценки профессорско-преподавательского состава Южного федерального университета реализуется с целью совершенствования образовательного процесса университета и вовлечения обучающихся в процесс повышения качества образования через независимую оценку преподавательской деятельности.
+      - generic [ref=e37]:
+        - link "Исходный код на GitHub" [ref=e38] [cursor=pointer]:
+          - /url: https://github.com/a1tavista/vote.sfedu.ru
+        - generic [ref=e39]: "Администратор: Моисеенко Екатерина Эдуардовна"
+        - generic [ref=e40]:
+          - text: "Телефон:"
+          - link "+7 (918) 123 42-16" [ref=e41] [cursor=pointer]:
+            - /url: tel:+79181234216
+        - generic [ref=e42]:
+          - text: "E-Mail:"
+          - link "ekmoiseenko@sfedu.ru" [ref=e43] [cursor=pointer]:
+            - /url: mailto:ekmoiseenko@sfedu.ru

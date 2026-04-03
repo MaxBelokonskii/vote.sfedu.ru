@@ -7,15 +7,15 @@
     .flex.gap-2
       - unless @poll.archived?
         = form_for @poll, url: archive_admin_poll_path(@poll), method: :put do |f|
-          = f.submit 'Архивировать', class: 'px-3 py-1.5 rounded-lg text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer border-0', data: { confirm: 'Вы уверены?' }
+          = f.submit 'Архивировать', class: 'px-3 py-1.5 rounded-lg text-sm bg-gray-100 text-gray-700 hover_bg-gray-200 transition-colors cursor-pointer border-0', data: { confirm: 'Вы уверены?' }
       = form_for @poll, url: admin_poll_path(@poll), method: :delete do |f|
-        = f.submit 'Удалить', class: 'px-3 py-1.5 rounded-lg text-sm bg-red-500 text-white hover:bg-red-600 transition-colors cursor-pointer border-0', data: { confirm: 'Вы уверены?' }
+        = f.submit 'Удалить', class: 'px-3 py-1.5 rounded-lg text-sm bg-red-500 text-white hover_bg-red-600 transition-colors cursor-pointer border-0', data: { confirm: 'Вы уверены?' }
 
 .mb-6
   .flex.items-center.justify-between.mb-3
     h4.text-lg.font-semibold.text-gray-900 Варианты ответа / кандидаты
     - unless @poll.started?
-      = active_link_to 'Добавить вариант ответа', new_admin_poll_poll_option_path(@poll), class: 'px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium no-underline'
+      = active_link_to 'Добавить вариант ответа', new_admin_poll_poll_option_path(@poll), class: 'px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium no-underline'
 
   .space-y-2
     - @options.each do |option|
@@ -29,7 +29,7 @@
             p.text-sm.text-gray-500 #{number_to_percentage(option.proportion)} (#{option.answers.count})
             - unless @poll.started?
               = form_for @poll, url: admin_poll_poll_option_path(@poll, option), method: :delete, html: { class: 'mt-2' } do |f|
-                = f.submit 'Удалить', class: 'px-2 py-1 rounded text-xs bg-red-500 text-white hover:bg-red-600 transition-colors cursor-pointer border-0'
+                = f.submit 'Удалить', class: 'px-2 py-1 rounded text-xs bg-red-500 text-white hover_bg-red-600 transition-colors cursor-pointer border-0'
 
 .mb-6
   h4.text-lg.font-semibold.text-gray-900.mb-3 Подразделения-участники

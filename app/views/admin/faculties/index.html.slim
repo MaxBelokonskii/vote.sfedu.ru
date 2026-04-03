@@ -6,7 +6,7 @@
 
 .space-y-2.mt-4
   - @faculties.each do |faculty|
-    = link_to admin_faculty_path(faculty), class: 'block p-4 bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-shadow no-underline' do
+    = link_to admin_faculty_path(faculty), class: 'block p-4 bg-white rounded-lg border border-gray-200 hover_shadow-sm transition-shadow no-underline' do
       .flex.items-start.justify-between
         h5.text-base.font-semibold.text-gray-900 = faculty.name
       small.text-sm.text-gray-500 #{faculty.students.count} #{t(:students, count: faculty.students.count)}

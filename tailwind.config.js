@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  separator: '_',
   content: [
     './app/views/**/*.slim',
     './app/views/**/*.erb',
