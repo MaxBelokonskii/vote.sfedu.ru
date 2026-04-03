@@ -104,10 +104,6 @@ GEM
     bcrypt (3.1.22)
     benchmark (0.5.0)
     bigdecimal (4.1.0)
-    bootstrap (4.0.0)
-      autoprefixer-rails (>= 6.0.3)
-      popper_js (>= 1.12.9, < 2)
-      sass (>= 3.5.2)
     builder (3.3.0)
     bullet (8.1.0)
       activesupport (>= 3.0.0)
@@ -346,7 +342,6 @@ GEM
       racc (~> 1.4)
     nori (2.7.1)
       bigdecimal
-    normalize-rails (8.0.1)
     oauth2 (2.0.18)
       faraday (>= 0.17.3, < 4.0)
       jwt (>= 1.0, < 4.0)
@@ -382,7 +377,6 @@ GEM
     pg (1.6.3-x86_64-darwin)
     pg (1.6.3-x86_64-linux)
     pg (1.6.3-x86_64-linux-musl)
-    popper_js (1.16.1)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -532,11 +526,6 @@ GEM
       rack
       ruby_event_store (= 2.18.0)
     rubyzip (3.2.2)
-    sass (3.7.4)
-      sass-listen (~> 4.0.0)
-    sass-listen (4.0.0)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -675,7 +664,6 @@ DEPENDENCIES
   active_interaction
   active_link_to
   autoprefixer-rails
-  bootstrap (~> 4.0.0)
   bullet
   bundler-audit (>= 0.5.0)
   cancancan
@@ -698,12 +686,10 @@ DEPENDENCIES
   flipper-active_record
   high_voltage
   jbuilder
-  jquery-rails
   kaminari
   listen
   meta-tags
   nested_form_fields
-  normalize-rails
   omniauth-entra-id
   omniauth-rails_csrf_protection
   ostruct
