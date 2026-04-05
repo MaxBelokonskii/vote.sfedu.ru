@@ -1,9 +1,11 @@
 <template>
   <div class="max-w-4xl mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold text-gray-900 mb-2">Оценка качества преподавания</h1>
-    <p class="text-gray-500 text-sm mb-6">Анкеты преподавателей, которые вели дисциплины за указанный период.</p>
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">Оценка качества преподавания</h1>
+      <p class="text-gray-500 text-sm">Анкеты преподавателей, которые вели дисциплины за указанный период.</p>
+    </div>
 
-    <div class="flex flex-wrap gap-2 mb-6">
+    <div class="flex flex-wrap justify-center gap-2 mb-6">
       <button
         v-if="stageAttendee.fetchingStatus !== 'in_progress'"
         @click="refreshTeachers"
