@@ -3,14 +3,17 @@
     <h1 class="text-3xl font-normal text-gray-800 my-4">Добавление преподавателей в список</h1>
     <p class="text-gray-600 my-4">Ниже представлены анкеты преподавателей, которые можно свободно добавить в список.</p>
     <v-divider class="my-4"></v-divider>
-    <v-text-field
-      v-model="search"
-      prepend-inner-icon="mdi-magnify"
-      label="Начните вводить для поиска..."
-      density="compact"
-      hide-details
-      class="mb-4"
-    />
+    <div class="relative mb-4">
+      <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+      </svg>
+      <input
+        v-model="search"
+        type="text"
+        placeholder="Начните вводить для поиска..."
+        class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm focus_ring-2 focus_ring-primary focus_border-primary outline-none transition-shadow duration-200"
+      />
+    </div>
     <v-table>
       <thead>
         <tr>
