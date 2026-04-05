@@ -110,7 +110,7 @@ import stagesTeachersService from "../../api/stagesTeachersService"
 
 const route = useRoute()
 const router = useRouter()
-const { showMessage } = useSnackbar()
+const { showMessage, showError } = useSnackbar()
 
 const items = ref([])
 const stageAttendee = ref({
@@ -140,7 +140,7 @@ function refreshTeachers() {
   stagesTeachersService.refreshTeachers(stageId.value).then(() => {
     stageAttendee.value.fetchingStatus = 'in_progress'
   }).catch((error) => {
-    showMessage(error.response.data[0], 'warning')
+    showError(error)
   })
 }
 

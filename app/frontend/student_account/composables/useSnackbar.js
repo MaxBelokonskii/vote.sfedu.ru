@@ -17,5 +17,20 @@ export function useSnackbar() {
     }
   }
 
-  return { snackbar, showMessage }
+  function showError(error) {
+    const data = error?.response?.data
+    let message = 'Произошла ошибка. Попробуйте позже.'
+
+    if (Array.isArray(data) && data.length > 0 && typeof data[0] === 'string') {
+      message = data[0]
+    } else if (typeof data === 'string' && !data.startsWith('<')) {
+      message = data
+    } else if (data?.error) {
+      message = data.error
+    }
+
+    showMessage(message, 'warning')
+  }
+
+  return { snackbar, showMessage, showError }
 }

@@ -47,7 +47,7 @@ import stagesTeachersService from "../../api/stagesTeachersService"
 
 const route = useRoute()
 const router = useRouter()
-const { showMessage } = useSnackbar()
+const { showMessage, showError } = useSnackbar()
 
 const stage = ref({})
 const teacher = ref({})
@@ -75,7 +75,7 @@ function sendFeedback() {
     .then(() => (formState.done = true))
     .catch((error) => {
       formState.sent = false
-      showMessage(error.response.data[0], 'warning')
+      showError(error)
     })
 }
 

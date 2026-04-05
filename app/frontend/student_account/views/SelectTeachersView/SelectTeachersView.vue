@@ -50,7 +50,7 @@ import stagesTeachersService from "../../api/stagesTeachersService"
 import stagesTeachersRelationsService from "../../api/stagesTeachersRelationsService"
 
 const route = useRoute()
-const { showMessage } = useSnackbar()
+const { showMessage, showError } = useSnackbar()
 
 const tableData = ref([])
 const search = ref('')
@@ -75,7 +75,7 @@ function handleClick(index, row) {
       showMessage(`${row.name} успешно добавлен(а) в список для оценивания`)
     }).catch((error) => {
       row.formState = 'failed'
-      showMessage(error.response.data[0], 'warning')
+      showError(error)
     })
   } else {
     row.formState = 'sent'
@@ -85,7 +85,7 @@ function handleClick(index, row) {
       showMessage(`${row.name} успешно удален(а) из списка для оценивания`)
     }).catch((error) => {
       row.formState = 'failed'
-      showMessage(error.response.data[0], 'warning')
+      showError(error)
     })
   }
 }

@@ -65,7 +65,7 @@ import CheckMark from "../../components/CheckMark.vue"
 
 const route = useRoute()
 const router = useRouter()
-const { showMessage } = useSnackbar()
+const { showMessage, showError } = useSnackbar()
 
 const poll = ref({ options: [] })
 const loading = ref(false)
@@ -77,7 +77,7 @@ function leaveVoice() {
       poll.value.participated = true
     })
     .catch((error) => {
-      showMessage(error.response.data[0], 'warning')
+      showError(error)
     })
 }
 
