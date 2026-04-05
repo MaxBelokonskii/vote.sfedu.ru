@@ -28,6 +28,9 @@ ActiveRecord::Schema[7.2].define(version: 2023_04_12_125917) do
     t.index ["teacher_id"], name: "index_answers_on_teacher_id"
   end
 
+  create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  end
+
   create_table "event_store_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "event_type", null: false
     t.binary "metadata"
