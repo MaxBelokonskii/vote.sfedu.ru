@@ -1,5 +1,5 @@
 <template>
-  <v-card
+  <v-card>
     <v-card-title class="flex items-center justify-between">
       <span class="text-base">{{ title }}</span>
     </v-card-title>
