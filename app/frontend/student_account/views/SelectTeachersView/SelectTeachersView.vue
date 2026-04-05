@@ -14,21 +14,21 @@
         class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm focus_ring-2 focus_ring-primary focus_border-primary outline-none transition-shadow duration-200"
       />
     </div>
-    <v-table>
+    <table class="w-full text-sm">
       <thead>
-        <tr>
-          <th>Фамилия, имя, отчество</th>
-          <th class="text-right">Действие</th>
+        <tr class="border-b border-gray-200">
+          <th class="text-left py-3 px-4 font-semibold text-gray-900">Фамилия, имя, отчество</th>
+          <th class="text-right py-3 px-4 font-semibold text-gray-900 w-24">Действие</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row, index) in filteredData" :key="row.id">
-          <td>{{ row.name }}</td>
-          <td class="text-right">
+        <tr v-for="(row, index) in filteredData" :key="row.id" class="border-b border-gray-100 hover_bg-gray-50 transition-colors">
+          <td class="py-3 px-4 text-gray-700">{{ row.name }}</td>
+          <td class="py-3 px-4 text-right">
             <button
               @click="handleClick(index, row)"
               :disabled="row.formState === 'sent'"
-              class="w-9 h-9 rounded-lg flex items-center justify-center transition-colors duration-200 cursor-pointer border-0 disabled_opacity-50 disabled_cursor-not-allowed"
+              class="inline-flex items-center justify-center w-9 h-9 rounded-lg transition-colors duration-200 cursor-pointer border-0 disabled_opacity-50 disabled_cursor-not-allowed"
               :class="row.selected ? 'bg-red-500 text-white hover_bg-red-600' : 'bg-primary text-white hover_bg-blue-800'"
             >
               <svg v-if="row.selected" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -41,7 +41,7 @@
           </td>
         </tr>
       </tbody>
-    </v-table>
+    </table>
   </div>
 </template>
 
