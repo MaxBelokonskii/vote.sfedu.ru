@@ -6,15 +6,15 @@
         |  с работоспособностью сервиса. Разработчики уже знают о них и делают всё возможное, чтобы
         |  устранить возникшие неполадки в кратчайшие сроки. Спасибо за понимание!
 
-/ Hero — жёлтый акцентный градиент с тёмным текстом
-section.relative.overflow-hidden style="background: linear-gradient(135deg, #fee882 0%, #fdd835 50%, #f9a825 100%);"
-  .absolute.inset-0.opacity-10 style="background-image: url(#{asset_path('newbg.jpg')}); background-size: cover; background-position: center;"
+/ Hero — мягкий градиент от тёплого золота к прохладному синему
+section.relative.overflow-hidden style="background: linear-gradient(135deg, #fde68a 0%, #bfdbfe 60%, #93c5fd 100%);"
+  .absolute.inset-0.opacity-5 style="background-image: url(#{asset_path('newbg.jpg')}); background-size: cover; background-position: center;"
   .relative.max-w-screen-lg.mx-auto.px-5.py-20.flex.flex-col.items-center.text-center
-    h1.text-3xl.md_text-4xl.font-bold.text-gray-900.mb-3.leading-tight
+    h1.text-3xl.md_text-4xl.font-bold.text-slate-800.mb-3.leading-tight
       | Система анкетирования
       br /
       | Объединённого совета обучающихся ЮФУ
-    p.text-lg.text-gray-700.mb-10.max-w-xl От твоего выбора сегодня зависит завтрашняя жизнь
+    p.text-lg.text-slate-600.mb-10.max-w-xl От твоего выбора сегодня зависит завтрашняя жизнь
 
     - if current_user.nil?
       = render 'shared/login'
