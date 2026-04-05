@@ -38,7 +38,7 @@ module Api
           end
 
           def create_params
-            params.require(:feedback).permit(answers: [:questionId, :rate]).to_hash
+            params.require(:feedback).permit(answers: [:questionId, :question_id, :rate]).to_hash
           end
         end
       end
