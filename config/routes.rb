@@ -68,6 +68,11 @@ Rails.application.routes.draw do
 
   # API
   namespace :api, defaults: {format: :json} do
+    resources :surveys, only: [] do
+      get :questions, on: :member
+      post :answers, on: :member
+    end
+
     namespace :students_api do
       resources :polls, only: [:index, :show] do
         resource :vote, only: [:create], module: 'polls'
