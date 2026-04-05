@@ -1,5 +1,11 @@
 <template>
   <div class="max-w-4xl mx-auto px-4 py-6">
+    <button @click="router.push({ path: '/' })" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover_text-gray-900 transition-colors duration-200 cursor-pointer border-0 bg-transparent mb-4 px-0">
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+      Назад к списку опросов
+    </button>
     <div class="text-center mb-6">
       <h1 class="text-2xl font-bold text-gray-900 mb-2">Оценка качества преподавания</h1>
       <p class="text-gray-500 text-sm">Анкеты преподавателей, которые вели дисциплины за указанный период.</p>
