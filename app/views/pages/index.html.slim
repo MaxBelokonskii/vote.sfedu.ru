@@ -20,8 +20,9 @@ section.relative.overflow-hidden style="background: linear-gradient(135deg, #fde
       = render 'shared/login'
     - else
       .bg-white.rounded-2xl.shadow-xl.p-8.max-w-md.w-full.border.border-amber-200
-        h3.text-xl.font-semibold.text-gray-900.mb-4 Добро пожаловать,
-          br
+        h3.text-xl.font-semibold.text-gray-900.mb-4
+          | Добро пожаловать,
+          br /
           | #{current_user.name}!
         - if current_user.student?
           = link_to "Перейти к опросам", user_root_path, class: 'inline-flex items-center justify-center w-full px-6 py-3 bg-primary text-white rounded-xl hover_bg-primary-700 transition-colors duration-200 font-medium text-base'
