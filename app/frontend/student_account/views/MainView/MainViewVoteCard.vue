@@ -23,9 +23,9 @@
         <CheckMark />
         <span class="ml-2">Спасибо за участие!</span>
       </template>
-      <v-btn @click="router.push({ path: `/${meta.resource}/${meta.id}` })" v-else color="primary">
+      <button v-else @click="router.push({ path: `/${meta.resource}/${meta.id}` })" class="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover_bg-blue-800 transition-colors duration-200 cursor-pointer border-0">
         Перейти к опросу
-      </v-btn>
+      </button>
     </v-card-actions>
   </v-card>
 </template>

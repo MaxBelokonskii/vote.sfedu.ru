@@ -25,16 +25,19 @@
         <tr v-for="(row, index) in filteredData" :key="row.id">
           <td>{{ row.name }}</td>
           <td class="text-right">
-            <v-btn
-              size="small"
-              :color="row.selected ? 'error' : 'default'"
-              :variant="row.selected ? 'flat' : 'outlined'"
+            <button
               @click="handleClick(index, row)"
               :disabled="row.formState === 'sent'"
-              icon
+              class="w-9 h-9 rounded-lg flex items-center justify-center transition-colors duration-200 cursor-pointer border-0 disabled_opacity-50 disabled_cursor-not-allowed"
+              :class="row.selected ? 'bg-red-500 text-white hover_bg-red-600' : 'bg-primary text-white hover_bg-blue-800'"
             >
-              <v-icon>{{ row.selected ? 'mdi-minus-circle' : 'mdi-plus-circle' }}</v-icon>
-            </v-btn>
+              <svg v-if="row.selected" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9" />
+              </svg>
+              <svg v-else class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+            </button>
           </td>
         </tr>
       </tbody>

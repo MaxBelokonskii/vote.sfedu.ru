@@ -9,7 +9,7 @@
           <CheckMark />
           <span class="ml-2">Ваш голос принят. Спасибо за участие!</span>
         </div>
-        <v-btn @click="router.push({ path: `/` })" color="success">Вернуться к списку опросов</v-btn>
+        <button @click="router.push({ path: `/` })" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover_bg-emerald-700 transition-colors duration-200 cursor-pointer border-0">Вернуться к списку опросов</button>
       </template>
       <template v-else>
         <div v-if="loading" class="d-flex justify-center" style="min-height: 100px;">

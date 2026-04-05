@@ -11,7 +11,7 @@
         <div class="d-flex align-center mb-4">
           <span class="ml-2">Ваше мнение принято. Спасибо за участие!</span>
         </div>
-        <v-btn @click="router.push({ path: `/stages/${stage.id}` })" color="success">Вернуться к списку преподавателей</v-btn>
+        <button @click="router.push({ path: `/stages/${stage.id}` })" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover_bg-emerald-700 transition-colors duration-200 cursor-pointer border-0">Вернуться к списку преподавателей</button>
       </template>
       <template v-else>
         <div v-for="question in questions" :key="question.id" class="flex flex-col my-6">
@@ -28,12 +28,12 @@
           </div>
         </div>
 
-        <v-btn
-          color="primary"
-          block
+        <button
+          class="w-full px-6 py-3 bg-primary text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer border-0 disabled_opacity-50 disabled_cursor-not-allowed"
+          :class="isSubmitEnabled && !formState.sent ? 'hover_bg-blue-800' : ''"
           @click="sendFeedback"
           :disabled="!isSubmitEnabled || formState.sent || formState.done"
-        >Проголосовать</v-btn>
+        >Проголосовать</button>
       </template>
     </div>
   </div>
