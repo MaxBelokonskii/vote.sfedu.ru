@@ -1,5 +1,11 @@
 <template>
   <div class="max-w-4xl mx-auto px-4">
+    <button @click="router.push({ path: `/stages/${stageId}` })" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover_text-gray-900 transition-colors duration-200 cursor-pointer border-0 bg-transparent mt-4 mb-2 px-0">
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+      Назад к списку преподавателей
+    </button>
     <h1 class="text-3xl font-normal text-gray-800 my-4">Добавление преподавателей в список</h1>
     <p class="text-gray-600 my-4">Ниже представлены анкеты преподавателей, которые можно свободно добавить в список.</p>
     <v-divider class="my-4"></v-divider>
@@ -47,12 +53,13 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useSnackbar } from '../../composables/useSnackbar'
 import stagesTeachersService from "../../api/stagesTeachersService"
 import stagesTeachersRelationsService from "../../api/stagesTeachersRelationsService"
 
 const route = useRoute()
+const router = useRouter()
 const { showMessage, showError } = useSnackbar()
 
 const tableData = ref([])
