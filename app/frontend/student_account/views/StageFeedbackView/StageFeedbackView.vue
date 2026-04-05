@@ -71,7 +71,7 @@ function sendFeedback() {
   formState.sent = true
 
   stagesTeachersService
-    .leaveFeedback(feedback)
+    .leaveFeedback(feedback.stageId, feedback.teacherId, feedback.answers)
     .then(() => (formState.done = true))
     .catch((error) => {
       formState.sent = false
