@@ -1,21 +1,19 @@
 <template>
-  <v-card class="mb-4 w-100">
-    <v-radio :value="option.id" class="pa-4">
-      <template #label>
-        <div class="flex items-center">
-          <div
-            v-if="option.imageUrl"
-            class="h-24 w-24 bg-center bg-cover rounded"
-            :style="`background-image: url(${option.imageUrl});`"
-          />
-          <div class="ml-4">
-            <h3>{{ option.title }}</h3>
-            <p>{{ option.description }}</p>
-          </div>
+  <v-radio :value="option.id" class="mb-3 pa-4 rounded-lg border border-gray-200 bg-white">
+    <template #label>
+      <div class="flex items-center cursor-pointer">
+        <div
+          v-if="option.imageUrl"
+          class="h-24 w-24 bg-center bg-cover rounded shrink-0"
+          :style="`background-image: url(${option.imageUrl});`"
+        />
+        <div class="ml-4">
+          <h3 class="text-base font-medium text-gray-900">{{ option.title }}</h3>
+          <p class="text-sm text-gray-600 mt-1">{{ option.description }}</p>
         </div>
-      </template>
-    </v-radio>
-  </v-card>
+      </div>
+    </template>
+  </v-radio>
 </template>
 
 <script setup>
