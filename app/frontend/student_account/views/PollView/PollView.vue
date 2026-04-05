@@ -45,13 +45,12 @@
             </div>
           </div>
         </div>
-        <v-btn
-          color="primary"
-          block
-          class="mt-4"
+        <button
+          class="w-full mt-4 px-6 py-3 bg-primary text-white rounded-lg font-medium transition-colors duration-200 cursor-pointer border-0 disabled_opacity-50 disabled_cursor-not-allowed"
+          :class="pollOptionId != null ? 'hover_bg-blue-800' : ''"
           @click="leaveVoice"
           :disabled="pollOptionId == null"
-        >Проголосовать</v-btn>
+        >Проголосовать</button>
       </template>
     </div>
   </div>
