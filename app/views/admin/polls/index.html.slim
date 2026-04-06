@@ -1,14 +1,23 @@
-.mb-6
-  .flex.items-start.justify-between.mb-2
+.mb-8
+  .flex.flex-col.md_flex-row.items-start.md_items-center.justify-between.gap-4.mb-6
     div
       h1.text-2xl.font-bold.text-gray-900 Голосования
-      p.text-gray-600.text-sm.mt-1 Здесь можно управлять голосованиями, проводимыми на структурных подразделениях.
-    .flex.gap-2
-      = active_link_to 'Новое голосование', new_admin_poll_path, class: 'px-3 py-1.5 rounded-lg text-sm text-gray-700 bg-gray-100 hover_bg-gray-200 transition-colors no-underline', class_active: 'bg-primary text-white hover_bg-primary-700'
+      p.text-gray-500.text-sm.mt-1 Управление голосованиями на структурных подразделениях.
+    = active_link_to 'Новое голосование', new_admin_poll_path, class: 'inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-600 bg-gray-100 hover_bg-gray-200 transition-colors duration-200 no-underline', class_active: 'bg-primary text-white hover_bg-primary-700'
 
-.space-y-2
+.space-y-3
   - @polls.each do |poll|
-    = link_to admin_poll_path(poll), class: 'block p-4 bg-white rounded-lg border border-gray-200 hover_shadow-sm transition-shadow no-underline' do
-      h5.text-base.font-semibold.text-gray-900.mb-1
-        | #{poll.name} #{"[Архив]" if poll.archived?}
-      p.text-sm.text-gray-500 Голосование с #{l(poll.starts_at, format: :only_date)} по #{l(poll.ends_at, format: :only_date)}
+    = link_to admin_poll_path(poll), class: 'block p-5 bg-white rounded-xl border border-gray-200 hover_shadow-md hover_border-gray-300 transition-all duration-200 no-underline group' do
+      .flex.items-center.justify-between
+        div
+          h5.text-base.font-semibold.text-gray-900.group-hover_text-primary.transition-colors.duration-200
+            | #{poll.name}
+            - if poll.archived?
+              span.ml-2.text-xs.text-gray-400 [Архив]
+          p.text-sm.text-gray-500.mt-1 с #{l(poll.starts_at, format: :only_date)} по #{l(poll.ends_at, format: :only_date)}
+        - if poll.current?
+          span.shrink-0.ml-4.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-semibold.bg-emerald-100.text-emerald-700 Активное
+        - elsif poll.upcoming?
+          span.shrink-0.ml-4.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-semibold.bg-amber-100.text-amber-700 Предстоящее
+        - else
+          span.shrink-0.ml-4.inline-flex.items-center.px-3.py-1.rounded-full.text-xs.font-semibold.bg-gray-100.text-gray-500 Завершено

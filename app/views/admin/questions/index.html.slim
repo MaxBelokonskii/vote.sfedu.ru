@@ -1,9 +1,9 @@
-.mb-6
+.mb-8
   h1.text-2xl.font-bold.text-gray-900 Критерии оценивания
-  p.text-gray-600.text-sm.mt-1 Здесь можно просматривать список критериев, создавать новые и смотреть статистику по каждому критерию.
+  p.text-gray-500.text-sm.mt-1 Список критериев, статистика по каждому критерию.
 
-.space-y-2
+.space-y-3
   - @questions.each do |question|
-    = link_to admin_question_path(question), class: 'block p-4 bg-white rounded-lg border border-gray-200 hover_shadow-sm transition-shadow no-underline' do
-      h5.text-base.font-semibold.text-gray-900.mb-1 = question.text
-      small.text-sm.text-gray-500 #{question.stages.count} #{t(:stages, count: question.stages.count)}
+    = link_to admin_question_path(question), class: 'block p-5 bg-white rounded-xl border border-gray-200 hover_shadow-md hover_border-gray-300 transition-all duration-200 no-underline group' do
+      h5.text-base.font-semibold.text-gray-900.group-hover_text-primary.transition-colors.duration-200 = question.text
+      p.text-sm.text-gray-500.mt-1 #{question.stages.count} #{t(:stages, count: question.stages.count)}

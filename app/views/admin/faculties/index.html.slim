@@ -1,12 +1,12 @@
-.mb-6
+.mb-8
   h1.text-2xl.font-bold.text-gray-900 Структурные подразделения
-  p.text-gray-600.text-sm.mt-1 Здесь можно просматривать и экспортировать статистику по структурным подразделениям университета.
+  p.text-gray-500.text-sm.mt-1 Просмотр и экспорт статистики по подразделениям университета.
 
 = paginate @faculties
 
-.space-y-2.mt-4
+.space-y-3.mt-4
   - @faculties.each do |faculty|
-    = link_to admin_faculty_path(faculty), class: 'block p-4 bg-white rounded-lg border border-gray-200 hover_shadow-sm transition-shadow no-underline' do
-      .flex.items-start.justify-between
-        h5.text-base.font-semibold.text-gray-900 = faculty.name
-      small.text-sm.text-gray-500 #{faculty.students.count} #{t(:students, count: faculty.students.count)}
+    = link_to admin_faculty_path(faculty), class: 'block p-5 bg-white rounded-xl border border-gray-200 hover_shadow-md hover_border-gray-300 transition-all duration-200 no-underline group' do
+      .flex.items-center.justify-between
+        h5.text-base.font-semibold.text-gray-900.group-hover_text-primary.transition-colors.duration-200 = faculty.name
+        span.text-sm.text-gray-500 #{faculty.students.count} #{t(:students, count: faculty.students.count)}
