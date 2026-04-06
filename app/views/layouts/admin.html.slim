@@ -8,11 +8,8 @@ html lang="en"
     title Система анкетирования ЮФУ
     = stylesheet_link_tag :admin, media: 'all'
     = csrf_meta_tags
-    style
-      | body { opacity: 0; transition: opacity 0.15s ease; }
-      | body.ready { opacity: 1; }
     = vite_client_tag
-    = vite_javascript_tag 'tailwind'
+    = vite_stylesheet_tag 'tailwind', media: 'all'
   body.bg-gray-50.min-h-screen
     = render 'shared/header'
     = render 'shared/flashes'
@@ -24,5 +21,3 @@ html lang="en"
           = yield
     = javascript_include_tag :admin
     = yield :javascript
-    javascript:
-      document.body.classList.add('ready');

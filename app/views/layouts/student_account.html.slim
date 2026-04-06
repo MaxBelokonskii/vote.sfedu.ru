@@ -9,14 +9,9 @@ html lang="en"
     = stylesheet_link_tag :account, media: "all"
     link rel="icon" type="image/png" href="/favicon.png"
     = csrf_meta_tags
-    style
-      | body { opacity: 0; transition: opacity 0.15s ease; }
-      | body.ready { opacity: 1; }
     = vite_client_tag
-    = vite_javascript_tag 'tailwind'
+    = vite_stylesheet_tag 'tailwind', media: 'all'
   body
     = yield
     = render 'javascript'
     = vite_javascript_tag 'student_account'
-    javascript:
-      document.body.classList.add('ready');
