@@ -5,4 +5,4 @@ test:
   adapter: async
 
 production:
-  adapter: async
+  adapter: async # ActionCable не используется; заменить на solid_cable при необходимости

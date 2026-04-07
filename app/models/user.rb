@@ -18,9 +18,7 @@ class User < ApplicationRecord
   end
 
   def self.find_by_identity_url(identity_url)
-    user = find_by(identity_url: identity_url&.downcase)
-    FillPersonalInfoJob.perform_later(user.id) if user.present?
-    user
+    find_by(identity_url: identity_url&.downcase)
   end
 
   def self.openid_optional_fields
