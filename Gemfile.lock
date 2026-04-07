@@ -109,6 +109,8 @@ GEM
       thor (~> 1.0)
     cancancan (3.6.1)
     cgi (0.5.1)
+    childprocess (5.1.0)
+      logger (~> 1.5)
     clowne (1.5.0)
     coffee-rails (5.0.0)
       coffee-script (>= 2.2.0)
@@ -288,6 +290,12 @@ GEM
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.5)
+    launchy (3.1.1)
+      addressable (~> 2.8)
+      childprocess (~> 5.0)
+      logger (~> 1.6)
+    letter_opener (1.10.0)
+      launchy (>= 2.2, < 4)
     lint_roller (1.1.0)
     listen (3.10.0)
       logger
@@ -688,6 +696,7 @@ DEPENDENCIES
   high_voltage
   jbuilder
   kaminari
+  letter_opener
   listen
   meta-tags
   mission_control-jobs

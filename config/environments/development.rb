@@ -17,14 +17,14 @@ Rails.application.configure do
     Bullet.bullet_logger = true
     Bullet.rails_logger = true
   end
-  config.action_mailer.delivery_method = :file
+  config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.perform_caching = false
   config.active_support.deprecation = :log
   config.active_record.migration_error = :page_load
   config.assets.debug = true
   config.assets.quiet = true
   config.i18n.raise_on_missing_translations = true
-  config.action_mailer.default_url_options = {host: "localhost:3000"}
+  config.action_mailer.default_url_options = {host: ENV.fetch("APPLICATION_HOST", "localhost:3000")}
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = { database: { writing: :primary } }
 end

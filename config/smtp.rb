@@ -4,7 +4,7 @@ SMTP_SETTINGS = {
   domain: ENV["SMTP_DOMAIN"],
   enable_starttls_auto: true,
   password: ENV["SMTP_PASSWORD"],
-  port: "587",
+  port: ENV.fetch("SMTP_PORT", "587"),
   user_name: ENV["SMTP_USERNAME"]
 }.freeze
 

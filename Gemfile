@@ -48,6 +48,7 @@ gem "ostruct"
 gem "csv"
 
 group :development do
+  gem "letter_opener"
   gem "listen"
 end
 
