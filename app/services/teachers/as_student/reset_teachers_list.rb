@@ -26,7 +26,7 @@ module Teachers
       end
 
       def publish_event(input)
-        input[:student].publish_event(Events::StudentRequestedTeachers)
+        LoadTeachersJob.perform_later(input[:student].id)
       end
     end
   end

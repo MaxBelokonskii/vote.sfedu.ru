@@ -42,8 +42,7 @@ module Teachers
       end
 
       def log_incorrect_teacher(teacher)
-        event = Events::ReceivedInvalidTeacher.new(data: teacher.attributes)
-        event_store.append(event)
+        Rails.logger.warn("Received invalid teacher: #{teacher.attributes}")
       end
 
       def add_relations_with_teacher!(teacher, relations)

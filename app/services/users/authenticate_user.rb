@@ -44,9 +44,9 @@ module Users
 
       ActiveRecord::Base.transaction do
         user.save
-        user.publish_event(Events::UserAuthenticated)
       end
 
+      FillPersonalInfoJob.perform_later(user.id)
       Success(input)
     end
 
