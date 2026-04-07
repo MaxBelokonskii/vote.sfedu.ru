@@ -1,0 +1,80 @@
+services:
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vote}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vote}
+      POSTGRES_DB: ${POSTGRES_DB:-vote_production}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vote}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY:-minioadmin}
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  minio-init:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    restart: on-failure
+    entrypoint: >
+      /bin/sh -c "
+        mc alias set local http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD} &&
+        mc mb --ignore-existing local/$${S3_BUCKET}
+      "
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY:-minioadmin}
+      S3_BUCKET: ${S3_BUCKET:-vote-uploads}
+
+  web:
+    build: .
+    command: bash -c "bundle exec rails db:prepare && bundle exec puma -p 3000 -C ./config/puma.rb"
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-vote}:${POSTGRES_PASSWORD:-vote}@db:5432/${POSTGRES_DB:-vote_production}
+      S3_ENDPOINT: http://minio:9000
+      RAILS_ENV: production
+
+  worker:
+    build: .
+    command: bundle exec rake solid_queue:start
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-vote}:${POSTGRES_PASSWORD:-vote}@db:5432/${POSTGRES_DB:-vote_production}
+      S3_ENDPOINT: http://minio:9000
+      RAILS_ENV: production
+
+volumes:
+  postgres_data:
+  minio_data:
