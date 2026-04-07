@@ -1,37 +1,40 @@
-.page-header
-  h1.page-header-title = @teacher.name
+.mb-6
+  h1.text-2xl.font-bold.text-gray-900 = @teacher.name
 
-dl.row
-  dt.col-sm-3 Hash для СНИЛСа
-  dd.col-sm-9 = @teacher.encrypted_snils
+.bg-white.rounded-lg.border.border-gray-200.p-4.mb-6
+  dl.grid.grid-cols-1.sm_grid-cols-[200px_1fr].gap-2.text-sm
+    dt.font-medium.text-gray-600 Hash для СНИЛСа
+    dd.text-gray-900 = @teacher.encrypted_snils
+    dt.font-medium.text-gray-600 Тип
+    dd.text-gray-900 = @teacher.kind
+    dt.font-medium.text-gray-600 Идентификатор в 1С
+    dd.text-gray-900 = @teacher.external_id || '<i class="text-gray-400">не передан</i>'.html_safe
 
-  dt.col-sm-3 Тип
-  dd.col-sm-9 = @teacher.kind
+h3.text-lg.font-semibold.text-gray-900.mb-3 Видимость у студентов
 
-  dt.col-sm-3 Идентификатор в 1С
-  dd.col-sm-9 = @teacher.external_id || '<i>не передан</i>'.html_safe
+p.text-sm.text-gray-600.mb-3
+  i Курсивом
+  |  отмечены семестры, включенные в текущем этапе анкетирования.
 
+.bg-white.rounded-lg.border.border-gray-200.overflow-hidden.mb-6
+  table.w-full.text-sm.text-left
+    thead.bg-gray-50
+      tr
+        th.px-4.py-3.font-medium.text-gray-600 Семестр
+        th.px-4.py-3.font-medium.text-gray-600 Число студентов
+    tbody
+      - @teacher.relations_by_semesters.each do |r|
+        tr.border-t.border-gray-200 class=(r[:is_current] ? 'italic' : '')
+          td.px-4.py-3 = r[:is_current] ? "<i>#{r[:semester]}</i>".html_safe : r[:semester]
+          td.px-4.py-3 = r[:count]
 
-h3 Видимость у студентов
+h3.text-lg.font-semibold.text-gray-900.mb-3 Результаты по стадиям анкетирования
 
-p <i>Курсивом</i> отмечены семестры, включенные в текущем этапе анкетирования.
-
-table.table.mb-3
-  thead
-    th Семестр
-    th Число студентов
-  tbody
-    - @teacher.relations_by_semesters.each do |r|
-      tr class=('font-italic' if r[:is_current])
-        td = r[:is_current] ? "<i>#{r[:semester]}</i>".html_safe : r[:semester]
-        td = r[:count]
-
-h3 Результаты по стадиям анкетирования
-
-- @results.each do |result|
-  = link_to admin_stage_path(result[:stage]), class: 'list-group-item list-group-item-action flex-column align-items-start' do
-    .d-flex.w-100.justify-content-between
-      h5.mb-1 Анкетирование с #{l(result[:stage].starts_at, format: :only_date)} по #{l(result[:stage].ends_at, format: :only_date)}
-      h5.font-weight-bold #{result[:results][:mean_rating_of_stage]} (#{result[:results][:final_rating_of_stage]})
-    p.mb-1 По оценке #{result[:results][:participations_count]} cтудентов
-    p.mb-1
+.space-y-2
+  - @results.each do |result|
+    = link_to admin_stage_path(result[:stage]), class: 'block p-4 bg-white rounded-lg border border-gray-200 hover_shadow-sm transition-shadow no-underline' do
+      .flex.items-start.justify-between
+        div
+          h5.text-base.font-semibold.text-gray-900.mb-1 Анкетирование с #{l(result[:stage].starts_at, format: :only_date)} по #{l(result[:stage].ends_at, format: :only_date)}
+          p.text-sm.text-gray-600 По оценке #{result[:results][:participations_count]} студентов
+        span.text-lg.font-bold.text-gray-900 #{result[:results][:mean_rating_of_stage]} (#{result[:results][:final_rating_of_stage]})

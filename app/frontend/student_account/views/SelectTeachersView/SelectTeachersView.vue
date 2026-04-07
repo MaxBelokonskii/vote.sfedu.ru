@@ -1,47 +1,66 @@
 <template>
-  <div class="page">
-    <h1 class="page__title">Добавление преподавателей в список</h1>
-    <p class="page__subtitle">Ниже представлены анкеты преподавателей, которые можно свободно добавить в список.</p>
-    <el-divider></el-divider>
-    <el-table
-      :data="filteredData"
-      style="width: 100%">
-      <el-table-column
-        label="Фамилия, имя, отчество"
-        prop="name">
-      </el-table-column>
-      <el-table-column align="right">
-        <template #header>
-          <el-input
-            v-model="search"
-            size="small"
-            placeholder="Начните вводить для поиска..."/>
-        </template>
-        <template #default="scope">
-          <el-button
-            size="default"
-            :type="scope.row.selected ? 'danger' : 'default'"
-            @click="handleClick(scope.$index, scope.row)"
-            :disabled="scope.row.formState === 'sent'"
-          >
-            <el-icon v-if="scope.row.selected"><RemoveFilled /></el-icon>
-            <el-icon v-else><CirclePlusFilled /></el-icon>
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+  <div class="max-w-4xl mx-auto px-4">
+    <button @click="router.push({ path: `/stages/${stageId}` })" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover_text-gray-900 transition-colors duration-200 cursor-pointer border-0 bg-transparent mt-4 mb-2 px-0">
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+      Назад к списку преподавателей
+    </button>
+    <h1 class="text-3xl font-normal text-gray-800 my-4">Добавление преподавателей в список</h1>
+    <p class="text-gray-600 my-4">Ниже представлены анкеты преподавателей, которые можно свободно добавить в список.</p>
+    <v-divider class="my-4"></v-divider>
+    <div class="relative mb-4">
+      <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+      </svg>
+      <input
+        v-model="search"
+        type="text"
+        placeholder="Начните вводить для поиска..."
+        class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm focus_ring-2 focus_ring-primary focus_border-primary outline-none transition-shadow duration-200"
+      />
+    </div>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-gray-200">
+          <th class="text-left py-3 px-4 font-semibold text-gray-900">Фамилия, имя, отчество</th>
+          <th class="text-right py-3 px-4 font-semibold text-gray-900 w-24">Действие</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(row, index) in filteredData" :key="row.id" class="border-b border-gray-100 hover_bg-gray-50 transition-colors">
+          <td class="py-3 px-4 text-gray-700">{{ row.name }}</td>
+          <td class="py-3 px-4 text-right">
+            <button
+              @click="handleClick(index, row)"
+              :disabled="row.formState === 'sent'"
+              class="inline-flex items-center justify-center w-9 h-9 rounded-lg transition-colors duration-200 cursor-pointer border-0 disabled_opacity-50 disabled_cursor-not-allowed"
+              :class="row.selected ? 'bg-red-500 text-white hover_bg-red-600' : 'bg-primary text-white hover_bg-blue-800'"
+            >
+              <svg v-if="row.selected" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9" />
+              </svg>
+              <svg v-else class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import { RemoveFilled, CirclePlusFilled } from '@element-plus/icons-vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useSnackbar } from '../../composables/useSnackbar'
 import stagesTeachersService from "../../api/stagesTeachersService"
 import stagesTeachersRelationsService from "../../api/stagesTeachersRelationsService"
 
 const route = useRoute()
+const router = useRouter()
+const { showMessage, showError } = useSnackbar()
 
 const tableData = ref([])
 const search = ref('')
@@ -63,20 +82,20 @@ function handleClick(index, row) {
     stagesTeachersRelationsService.addRelation(stageId.value, row.id).then(() => {
       row.selected = true
       row.formState = 'initial'
-      ElMessage({ message: `${row.name} успешно добавлен(а) в список для оценивания` })
+      showMessage(`${row.name} успешно добавлен(а) в список для оценивания`)
     }).catch((error) => {
       row.formState = 'failed'
-      ElMessage({ message: error.response.data[0], type: 'warning' })
+      showError(error)
     })
   } else {
     row.formState = 'sent'
     stagesTeachersRelationsService.removeRelation(stageId.value, row.id).then(() => {
       row.selected = false
       row.formState = 'initial'
-      ElMessage({ message: `${row.name} успешно удален(а) из списка для оценивания` })
+      showMessage(`${row.name} успешно удален(а) из списка для оценивания`)
     }).catch((error) => {
       row.formState = 'failed'
-      ElMessage({ message: error.response.data[0], type: 'warning' })
+      showError(error)
     })
   }
 }

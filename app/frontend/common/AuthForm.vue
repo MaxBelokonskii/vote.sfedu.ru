@@ -18,11 +18,16 @@ const identityUrl = computed(() => {
 </script>
 
 <template>
-  <form :action="path" method="post" class="authorization-form">
-    <h3 class="authorization-form__title">Вход в личный кабинет</h3>
-    <input class="authorization-form__input" type="text" placeholder="Логин на sfedu.ru" v-model="identityName">
+  <form :action="path" method="post" class="bg-white text-gray-900 rounded-2xl shadow-xl p-8 max-w-md w-full border border-amber-200">
+    <h3 class="text-xl font-semibold text-gray-900 mb-6">Вход в личный кабинет</h3>
+    <input
+      class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm mb-4 focus_ring-2 focus_ring-primary focus_border-primary outline-none transition-shadow duration-200"
+      type="text"
+      placeholder="Логин на sfedu.ru"
+      v-model="identityName"
+    >
     <input type="hidden" :name="name" :value="identityUrl">
     <slot></slot>
-    <button class="btn authorization-form__submit-button">Войти</button>
+    <button class="w-full px-6 py-3 bg-primary text-white rounded-xl hover_bg-primary-700 transition-colors duration-200 font-medium mt-2 cursor-pointer border-0">Войти</button>
   </form>
 </template>

@@ -1,36 +1,45 @@
 <template>
-  <div class="page">
-    <h1 class="page__title">{{ teacher.name }}</h1>
-    <p class="page__subtitle">Дисциплины, которые связывают вас с преподавателем:</p>
-    <ul class="page__subtitle">
+  <div class="max-w-4xl mx-auto px-4">
+    <button @click="router.push({ path: `/stages/${route.params.stageId}` })" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover_text-gray-900 transition-colors duration-200 cursor-pointer border-0 bg-transparent mt-4 mb-2 px-0">
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+      Назад к списку преподавателей
+    </button>
+    <h1 class="text-3xl font-normal text-gray-800 my-4">{{ teacher.name }}</h1>
+    <p class="text-gray-600 my-4">Дисциплины, которые связывают вас с преподавателем:</p>
+    <ul class="text-gray-600 my-4 list-disc pl-5">
       <li v-for="discipline in teacher.disciplines" :key="discipline">{{ discipline }}</li>
     </ul>
-    <el-divider></el-divider>
+    <v-divider class="my-4"></v-divider>
     <div>
       <template v-if="formState.done">
-        <div style="display: flex; align-items: center; margin-bottom: 16px;">
-          <span style="margin-left: 8px;">Ваше мнение принято. Спасибо за участие!</span>
+        <div class="d-flex align-center mb-4">
+          <span class="ml-2">Ваше мнение принято. Спасибо за участие!</span>
         </div>
-        <el-button @click="router.push({ path: `/stages/${stage.id}` })" type="success">Вернуться к списку преподавателей</el-button>
+        <button @click="router.push({ path: `/stages/${stage.id}` })" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover_bg-emerald-700 transition-colors duration-200 cursor-pointer border-0">Вернуться к списку преподавателей</button>
       </template>
       <template v-else>
-        <div v-for="question in questions" :key="question.id" class="feedback-control">
-          <div class="feedback-control__question">{{ question.text }}</div>
-          <div class="feedback-control__buttons">
-            <el-rate
+        <div v-for="question in questions" :key="question.id" class="flex flex-col my-6">
+          <div class="text-sm mb-3">{{ question.text }}</div>
+          <div>
+            <v-rating
               v-model="question.rate"
-              :show-score="true"
-              :max="10"
+              :length="10"
+              color="primary"
+              active-color="primary"
+              hover
+              density="comfortable"
             />
           </div>
         </div>
 
-        <el-button
-          type="primary"
-          style="width: 100%;"
+        <button
+          class="w-full px-6 py-3 bg-primary text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer border-0 disabled_opacity-50 disabled_cursor-not-allowed"
+          :class="isSubmitEnabled && !formState.sent ? 'hover_bg-blue-800' : ''"
           @click="sendFeedback"
           :disabled="!isSubmitEnabled || formState.sent || formState.done"
-        >Проголосовать</el-button>
+        >Проголосовать</button>
       </template>
     </div>
   </div>
@@ -39,11 +48,12 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { useSnackbar } from '../../composables/useSnackbar'
 import stagesTeachersService from "../../api/stagesTeachersService"
 
 const route = useRoute()
 const router = useRouter()
+const { showMessage, showError } = useSnackbar()
 
 const stage = ref({})
 const teacher = ref({})
@@ -67,14 +77,11 @@ function sendFeedback() {
   formState.sent = true
 
   stagesTeachersService
-    .leaveFeedback(feedback)
+    .leaveFeedback(feedback.stageId, feedback.teacherId, feedback.answers)
     .then(() => (formState.done = true))
     .catch((error) => {
       formState.sent = false
-      ElMessage({
-        message: error.response.data[0],
-        type: 'warning'
-      })
+      showError(error)
     })
 }
 

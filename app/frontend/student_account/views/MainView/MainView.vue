@@ -1,8 +1,8 @@
 <template>
-  <div class="page">
-    <h1 class="page__title">Активные опросы</h1>
-    <p class="page__subtitle">Выберите активный опрос из списка ниже и помогите университету стать лучше.</p>
-    <el-divider></el-divider>
+  <div class="max-w-4xl mx-auto px-4">
+    <h1 class="text-3xl font-normal text-gray-800 my-4">Активные опросы</h1>
+    <p class="text-gray-600 my-4">Выберите активный опрос из списка ниже и помогите университету стать лучше.</p>
+    <v-divider class="my-4"></v-divider>
     <template v-if="items.length > 0">
       <MainViewVoteCard
         v-for="item in items" :key="item.meta.source"
@@ -12,21 +12,24 @@
         :starts-at="item.startsAtLocalized"
         :ends-at="item.endsAtLocalized"
         :meta="item.meta"
-        style="margin-bottom: 16px;"
+        class="mb-4"
       />
     </template>
     <div v-else>
-      <div v-loading="loading" v-if="attempts > 0">
-        <h1>Загрузка...</h1>
+      <div v-if="attempts > 0" class="d-flex justify-center align-center" style="min-height: 100px;">
+        <v-progress-circular v-if="loading" indeterminate color="primary" />
+        <span v-if="loading" class="ml-4">Загрузка...</span>
       </div>
-      <p v-else>
-        Нет активных опросов. Приходите позднее и следите за СИЦ вашего структурного подразделения,
-        где студенческий совет публикует информацию о предстоящих опросах.
-      </p>
-      <p>
-        Если вы не видите опрос по вашему актуальному структурному подразделению, то попробуйте зайти сюда через пару минут.
-        Возможно, мы не можем получить ваши зачётные книжки из 1С:Университет.
-      </p>
+      <template v-else>
+        <p>
+          Нет активных опросов. Приходите позднее и следите за СИЦ вашего структурного подразделения,
+          где студенческий совет публикует информацию о предстоящих опросах.
+        </p>
+        <p>
+          Если вы не видите опрос по вашему актуальному структурному подразделению, то попробуйте зайти сюда через пару минут.
+          Возможно, мы не можем получить ваши зачётные книжки из 1С:Университет.
+        </p>
+      </template>
     </div>
   </div>
 </template>

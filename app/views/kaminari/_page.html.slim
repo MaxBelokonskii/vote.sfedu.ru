@@ -1,11 +1,4 @@
-/ Link showing page number
-  - available local variables
-    page         : a page object for "this" page
-    url          : url to this page
-    current_page : a page object for the currently displayed page
-    total_pages  : total number of pages
-    per_page     : number of items to fetch per page
-    remote       : data-remote
-
-li.page-item class=(page.current? ? 'active' : '')
-  == link_to page, url, { class: ['page-link'], remote: remote, rel: page.rel }
+- if page.current?
+  span.px-3.py-1.rounded-lg.bg-primary.text-white.text-sm.font-medium = page
+- else
+  == link_to page, url, { class: 'px-3 py-1 rounded-lg text-sm text-gray-700 hover_bg-gray-100 transition-colors no-underline', remote: remote, rel: page.rel }

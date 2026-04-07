@@ -1,22 +1,24 @@
-.page-content
-  h1 Результаты опроса
-  = link_to 'Перейти к участникам опроса', respondents_survey_path(@survey.passcode)
-  br
-  br
-  - @breakdown[:results].each do |question_section|
-    h3 = question_section[:question].text
-    table
-      tr
-        th style='width: 70%;' Ответ
-        th Кол-во
-        th % от общего числа
-      - question_section[:survey_options].each do |option_section|
-        tr
-          td = option_section[:option].text
-          td = option_section[:count]
-          td = number_to_percentage(option_section[:rate], precision: 2)
-      - question_section[:custom_options]&.each do |option_section|
-        tr
-          td = option_section[:option].text
-          td = option_section[:count]
-          td = number_to_percentage(option_section[:rate], precision: 2)
+.max-w-screen-lg.mx-auto.py-12.px-5
+  h1.text-2xl.font-bold.text-gray-900.mb-4 Результаты опроса
+  = link_to 'Перейти к участникам опроса', respondents_survey_path(@survey.passcode), class: 'text-primary hover_underline'
+  .mt-6.space-y-8
+    - @breakdown[:results].each do |question_section|
+      div
+        h3.text-lg.font-semibold.text-gray-900.mb-3 = question_section[:question].text
+        table.w-full.text-sm.border.border-gray-200.rounded-lg.overflow-hidden
+          thead.bg-gray-100
+            tr
+              th.px-4.py-2.text-left style="width: 70%;" Ответ
+              th.px-4.py-2.text-left Кол-во
+              th.px-4.py-2.text-left % от общего числа
+          tbody
+            - question_section[:survey_options].each do |option_section|
+              tr.border-t.border-gray-200
+                td.px-4.py-2 = option_section[:option].text
+                td.px-4.py-2 = option_section[:count]
+                td.px-4.py-2 = number_to_percentage(option_section[:rate], precision: 2)
+            - question_section[:custom_options]&.each do |option_section|
+              tr.border-t.border-gray-200
+                td.px-4.py-2 = option_section[:option].text
+                td.px-4.py-2 = option_section[:count]
+                td.px-4.py-2 = number_to_percentage(option_section[:rate], precision: 2)

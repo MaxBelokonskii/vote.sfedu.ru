@@ -1,25 +1,26 @@
-.page-header
-  h1.page-header-title = @student.name
+.mb-6
+  h1.text-2xl.font-bold.text-gray-900 = @student.name
 
-h3.mb-3 Преподаватели студента из 1С
+h3.text-lg.font-semibold.text-gray-900.mb-3 Преподаватели студента из 1С
 
-table.table.mb-3
-  thead
-    tr
-      th Имя
-      th ID в 1С
-      th СНИЛС
-      th Статус
-      th Действия
-  tbody
-    - @teachers_data.each do |teacher|
+.bg-white.rounded-lg.border.border-gray-200.overflow-hidden
+  table.w-full.text-sm.text-left
+    thead.bg-gray-50
       tr
-        td = teacher[:name]
-        td
-          small = teacher[:external_id] || '<i>Не передан</i>'.html_safe
-        td
-          small = teacher[:snils] || '<i>Не передан</i>'.html_safe
-        td = teacher[:record].valid? ? 'OK' : teacher[:record].errors.full_messages
-        td
-          - if teacher[:record].persisted?
-            = link_to 'Подробнее', admin_teacher_path(teacher[:record])
+        th.px-4.py-3.font-medium.text-gray-600 Имя
+        th.px-4.py-3.font-medium.text-gray-600 ID в 1С
+        th.px-4.py-3.font-medium.text-gray-600 СНИЛС
+        th.px-4.py-3.font-medium.text-gray-600 Статус
+        th.px-4.py-3.font-medium.text-gray-600 Действия
+    tbody
+      - @teachers_data.each do |teacher|
+        tr.border-t.border-gray-200.hover_bg-gray-50
+          td.px-4.py-3 = teacher[:name]
+          td.px-4.py-3
+            small.text-xs = teacher[:external_id] || '<i class="text-gray-400">Не передан</i>'.html_safe
+          td.px-4.py-3
+            small.text-xs = teacher[:snils] || '<i class="text-gray-400">Не передан</i>'.html_safe
+          td.px-4.py-3 = teacher[:record].valid? ? 'OK' : teacher[:record].errors.full_messages
+          td.px-4.py-3
+            - if teacher[:record].persisted?
+              = link_to 'Подробнее', admin_teacher_path(teacher[:record]), class: 'text-primary hover_underline'

@@ -1,19 +1,19 @@
 <template>
-  <el-card style="margin-bottom: 16px; width: 100%;">
-    <el-radio :value="option.id" style="display: flex; align-items: center;">
-      <div class="poll-option">
+  <v-radio :value="option.id" class="mb-3 pa-4 rounded-lg border border-gray-200 bg-white">
+    <template #label>
+      <div class="flex items-center cursor-pointer">
         <div
           v-if="option.imageUrl"
-          class="poll-option__image"
+          class="h-24 w-24 bg-center bg-cover rounded shrink-0"
           :style="`background-image: url(${option.imageUrl});`"
         />
-        <div class="poll-option__info">
-          <h3>{{ option.title }}</h3>
-          <p>{{ option.description }}</p>
+        <div class="ml-4">
+          <h3 class="text-base font-medium text-gray-900">{{ option.title }}</h3>
+          <p class="text-sm text-gray-600 mt-1">{{ option.description }}</p>
         </div>
       </div>
-    </el-radio>
-  </el-card>
+    </template>
+  </v-radio>
 </template>
 
 <script setup>

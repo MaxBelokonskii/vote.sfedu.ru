@@ -5,7 +5,6 @@ ruby "3.4.3"
 gem "active_link_to"
 gem "active_interaction"
 gem "autoprefixer-rails"
-gem "bootstrap", "~> 4.0.0"
 gem "cancancan"
 gem "clowne"
 gem 'data_migrate'
@@ -18,9 +17,7 @@ gem "dry-validation"
 gem "flipper"
 gem 'flipper-active_record'
 gem "high_voltage"
-gem "jquery-rails"
 gem "nested_form_fields"
-gem "normalize-rails"
 
 gem "omniauth-rails_csrf_protection"
 gem "omniauth-entra-id"
