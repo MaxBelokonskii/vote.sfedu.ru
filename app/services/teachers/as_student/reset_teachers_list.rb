@@ -12,7 +12,7 @@ module Teachers
 
       step :validate_input
       step :update_fetching_status
-      tee :publish_event
+      tee :enqueue_teachers_loading
 
       def validate_input(input)
         ::Operations::ValidateInput.new.call(input, contract_klass: Contract)
@@ -25,8 +25,8 @@ module Teachers
         Success(input)
       end
 
-      def publish_event(input)
-        input[:student].publish_event(Events::StudentRequestedTeachers)
+      def enqueue_teachers_loading(input)
+        LoadTeachersJob.perform_later(input[:student].id)
       end
     end
   end

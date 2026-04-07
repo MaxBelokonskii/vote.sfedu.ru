@@ -25,4 +25,6 @@ Rails.application.configure do
   config.assets.quiet = true
   config.i18n.raise_on_missing_translations = true
   config.action_mailer.default_url_options = {host: "localhost:3000"}
+  config.active_job.queue_adapter = :solid_queue
+  config.solid_queue.connects_to = { database: { writing: :primary } }
 end

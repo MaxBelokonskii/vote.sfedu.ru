@@ -8,7 +8,6 @@ class User < ApplicationRecord
   enum role: %i[regular moderator admin]
 
   attr_accessor :identity_name
-  after_create { publish_event(Events::RegisteredNewUser) }
 
   def self.build_identity_url(url)
     "https://openid.sfedu.ru/server.php/idpage?user=#{url&.downcase}"
@@ -19,9 +18,7 @@ class User < ApplicationRecord
   end
 
   def self.find_by_identity_url(identity_url)
-    user = find_by(identity_url: identity_url&.downcase)
-    user.publish_event(Events::UserAuthenticated) if user.present?
-    user
+    find_by(identity_url: identity_url&.downcase)
   end
 
   def self.openid_optional_fields
@@ -39,16 +36,6 @@ class User < ApplicationRecord
       id = normalize_id(fields.fetch("r61globalkey"))
       self.kind = Teacher.find_or_create_by(external_id: id)
     end
-  end
-
-  def publish_event(klass, data = {})
-    data = data.merge(user_id: id)
-    event = klass.new(data: data)
-    event_store.publish(event, stream_name: stream_name)
-  end
-
-  def stream_name
-    ["User", id].join(":")
   end
 
   def student?

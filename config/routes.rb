@@ -1,5 +1,3 @@
-require 'sidekiq/web'
-
 Rails.application.routes.draw do
   root "pages#index"
 
@@ -92,7 +90,7 @@ Rails.application.routes.draw do
   end
 
   authenticate :user, lambda { |u| u.admin? } do
-    mount Sidekiq::Web => '/sidekiq'
+    mount MissionControl::Jobs::Engine, at: "/jobs"
   end
 
   match "/404", to: "errors#not_found", via: :all

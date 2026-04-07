@@ -13,4 +13,5 @@ Rails.application.configure do
   config.active_support.deprecation = :stderr
   config.i18n.raise_on_missing_translations = true
   config.action_mailer.default_url_options = {host: "www.example.com"}
+  config.active_job.queue_adapter = :test
 end
