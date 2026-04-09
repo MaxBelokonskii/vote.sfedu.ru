@@ -45,20 +45,14 @@ module Polls
         participation = Poll::Participation.new(student: input[:student], poll: input[:poll])
         answer = Poll::Answer.new(poll: input[:poll], poll_option: input[:poll_option])
 
-        ActiveRecord::Base.with_advisory_lock(with_lock_name(input[:student], input[:poll])) do
-          ActiveRecord::Base.transaction do
-            participation.save
-            answer.save
-          end
+        ActiveRecord::Base.transaction do
+          participation.save!
+          answer.save!
         end
 
-        answer.persisted? ? Success(input.merge(answer_uuid: answer.id)) : Failure(input)
-      end
-
-      private
-
-      def with_lock_name(student, poll)
-        "lock_for_participation_in_poll_#{poll.id}_by_student_#{student.id}"
+        Success(input.merge(answer_uuid: answer.id))
+      rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+        Failure(input)
       end
     end
   end

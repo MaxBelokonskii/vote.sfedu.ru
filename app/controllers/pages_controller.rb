@@ -4,6 +4,9 @@ class PagesController < ApplicationController
     @all_activities = (Stage.all + Poll.not_archived).sort_by(&:starts_at).reverse
   end
 
+  def about
+  end
+
   def faq
   end
 end
