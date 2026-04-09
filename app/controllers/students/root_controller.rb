@@ -3,7 +3,7 @@ module Students
     before_action :authenticate_user!
 
     def show
-      render layout: 'student_account'
+      render layout: "student_account"
     end
   end
 end

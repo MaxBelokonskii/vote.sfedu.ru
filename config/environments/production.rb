@@ -23,5 +23,5 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
   config.action_mailer.default_url_options = {host: ENV.fetch("APPLICATION_HOST")}
   config.active_job.queue_adapter = :solid_queue
-  config.solid_queue.connects_to = { database: { writing: :primary } }
+  config.solid_queue.connects_to = {database: {writing: :primary}}
 end

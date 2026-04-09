@@ -3,16 +3,16 @@ require "rails_helper"
 describe OneCApi::FetchStudentTeachersRelations do
   subject { described_class.new.call(external_id: external_id) }
 
-  let(:external_id) { '0000' }
+  let(:external_id) { "0000" }
   let(:teacher_raw_data) do
     {
       prep_kod: Faker::Config.random,
       prep_fio: Faker::Name.name,
       prep_snils: Faker::Russian.snils,
       edu_year: {
-        edu_year_name: '2019 - 2020',
-        semester_name: 'I полугодие',
-        disc_name: 'Математический анализ',
+        edu_year_name: "2019 - 2020",
+        semester_name: "I полугодие",
+        disc_name: "Математический анализ"
       }
     }
   end

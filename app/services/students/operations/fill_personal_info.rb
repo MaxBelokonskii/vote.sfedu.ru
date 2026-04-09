@@ -1,4 +1,4 @@
-require 'dry/transaction/operation'
+require "dry/transaction/operation"
 
 module Students
   module Operations

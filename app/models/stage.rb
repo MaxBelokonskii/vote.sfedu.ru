@@ -29,7 +29,7 @@ class Stage < ApplicationRecord
 
   def current?
     current_time = Time.current
-    starts_at <= current_time && current_time <= ends_at
+    current_time.between?(starts_at, ends_at)
   end
 
   def past?

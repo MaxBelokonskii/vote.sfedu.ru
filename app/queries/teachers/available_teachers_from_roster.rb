@@ -18,7 +18,7 @@ module Teachers
         AND "students_teachers_relations"."student_id" = #{student.id}
         AND (
           "students_teachers_relations"."stage_id" = #{stage.id}
-          OR "students_teachers_relations"."semester_id" IN (#{stage.semester_ids.join(',')})
+          OR "students_teachers_relations"."semester_id" IN (#{stage.semester_ids.join(",")})
         )
       SQL
     end

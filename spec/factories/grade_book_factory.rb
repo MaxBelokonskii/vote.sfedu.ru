@@ -3,7 +3,7 @@ FactoryBot.define do
     student
     faculty
     major { Faker::Educator.subject }
-    external_id { Faker::IDNumber.valid }
+    external_id { Faker::IdNumber.valid }
     grade_num { Faker::Number.between(from: 1, to: 2) }
     group_num { Faker::Educator.degree }
     time_type { :fulltime }

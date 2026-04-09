@@ -2,7 +2,7 @@
                       rule: lambda { |n|
                               if n == 0
                                 :zero
-                              elsif ((n % 10) == 1) && ((n % 100 != 11))
+                              elsif ((n % 10) == 1) && (n % 100 != 11)
                                 # 1, 21, 31, 41, 51, 61...
                                 :one
                               elsif [2, 3, 4].include?(n % 10) && ![12, 13, 14].include?(n % 100)

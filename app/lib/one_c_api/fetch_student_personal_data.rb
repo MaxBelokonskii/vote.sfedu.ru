@@ -43,13 +43,13 @@ module OneCApi
     end
 
     def fetch_grade_book_info(grade_book_id)
-      response = get_study_info(message: {'ZachNum': grade_book_id}).body
+      response = get_study_info(message: {ZachNum: grade_book_id}).body
       # BE AWARE! 1C returns non-ASCII and ASCII characters in one string here (study_infо).
       response.dig(:get_study_info_response, :return, :study_infо)
     end
 
     def fetch_personal_info(external_id)
-      response = get_student_info(message: {'StudentID': external_id}).body
+      response = get_student_info(message: {StudentID: external_id}).body
       response.dig(:get_student_info_response, :return, :student_info)
     end
   end

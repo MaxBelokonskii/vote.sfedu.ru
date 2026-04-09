@@ -12,10 +12,10 @@ class Student < ApplicationRecord
   end
 
   def self.without_grade_books
-    select("students.id, students.name, students.external_id, count(grade_books.student_id) AS gb_count").
-      joins('LEFT JOIN "grade_books" ON "grade_books"."student_id" = "students"."id"').
-      group("students.id").
-      having("count(grade_books.student_id) = 0")
+    select("students.id, students.name, students.external_id, count(grade_books.student_id) AS gb_count")
+      .joins('LEFT JOIN "grade_books" ON "grade_books"."student_id" = "students"."id"')
+      .group("students.id")
+      .having("count(grade_books.student_id) = 0")
       .order("students.name ASC")
   end
 

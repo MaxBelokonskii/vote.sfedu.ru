@@ -2,12 +2,12 @@ module TeachersReports
   class NotEnoughStudentsReport
     def initialize(stage)
       @stage = stage
-      @teachers = Teacher.
-        select("teachers.id, teachers.name, count(students_teachers_relations.student_id) AS students_count").
-        joins("LEFT JOIN \"students_teachers_relations\" ON \"students_teachers_relations\".\"teacher_id\" = \"teachers\".\"id\" AND \"students_teachers_relations\".\"semester_id\" IN (#{stage.semester_ids.join(", ")})").
-        group("teachers.id").
-        having("count(students_teachers_relations.student_id) < 10").
-        order("teachers.name ASC")
+      @teachers = Teacher
+        .select("teachers.id, teachers.name, count(students_teachers_relations.student_id) AS students_count")
+        .joins("LEFT JOIN \"students_teachers_relations\" ON \"students_teachers_relations\".\"teacher_id\" = \"teachers\".\"id\" AND \"students_teachers_relations\".\"semester_id\" IN (#{stage.semester_ids.join(", ")})")
+        .group("teachers.id")
+        .having("count(students_teachers_relations.student_id) < 10")
+        .order("teachers.name ASC")
     end
 
     def paginate(page: 1, per: 20)

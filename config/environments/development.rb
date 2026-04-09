@@ -5,8 +5,7 @@ Rails.application.configure do
   if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.cache_store = :memory_store
-    config.public_file_server.headers = {
-    }
+    config.public_file_server.headers = {}
   else
     config.action_controller.perform_caching = false
     config.cache_store = :null_store
@@ -26,5 +25,5 @@ Rails.application.configure do
   config.i18n.raise_on_missing_translations = true
   config.action_mailer.default_url_options = {host: ENV.fetch("APPLICATION_HOST", "localhost:3000")}
   config.active_job.queue_adapter = :solid_queue
-  config.solid_queue.connects_to = { database: { writing: :primary } }
+  config.solid_queue.connects_to = {database: {writing: :primary}}
 end
