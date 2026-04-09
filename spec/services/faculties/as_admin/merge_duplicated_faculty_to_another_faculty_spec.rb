@@ -12,12 +12,12 @@ describe Faculties::AsAdmin::MergeDuplicatedFacultyToAnotherFaculty do
     it("returns success") { expect(subject).to be_success }
     it("changes faculty for students") do
       expect { subject }.to change { students.map(&:reload).map(&:faculty_ids).flatten }
-                              .from([duplicated_faculty.id] * 3).to([master_faculty.id] * 3)
+        .from([duplicated_faculty.id] * 3).to([master_faculty.id] * 3)
     end
 
     it("changes faculties-participants in poll") do
       expect { subject }.to change { polls.map(&:reload).map(&:faculty_ids).flatten }
-                              .from([duplicated_faculty.id] * 3).to([master_faculty.id] * 3)
+        .from([duplicated_faculty.id] * 3).to([master_faculty.id] * 3)
     end
 
     it("adds alias to master faculty") do

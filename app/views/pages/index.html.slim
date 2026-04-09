@@ -1,4 +1,4 @@
-- if Flipper.enabled?(:ops_maintenance_warning)
+- if ENV["OPS_MAINTENANCE_WARNING"].present?
   .bg-amber-50.border-b.border-amber-200.px-5.py-4
     .max-w-screen-lg.mx-auto
       h3.text-amber-800.font-semibold.mb-1 Уважаемые студенты Южного федерального университета!

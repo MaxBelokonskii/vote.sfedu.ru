@@ -19,7 +19,7 @@ describe Teachers::AsStudent::LeaveFeedback do
   let(:answers) {
     index = 0
     stage.questions.map do |question|
-      answer = { question_id: question.id, rate: rates[index] }
+      answer = {question_id: question.id, rate: rates[index]}
       index += 1
       answer
     end

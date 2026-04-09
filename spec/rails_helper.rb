@@ -12,7 +12,7 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
   config.use_transactional_fixtures = false
 
-  Faker::Config.locale = 'en'
+  Faker::Config.locale = "en"
 end
 
 ActiveRecord::Migration.maintain_test_schema!

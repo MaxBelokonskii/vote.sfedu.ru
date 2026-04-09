@@ -6,7 +6,7 @@ class Admin::StagesController < Admin::BaseController
 
   def show
     respond_to do |format|
-      format.html {  }
+      format.html {}
       format.xlsx do
         io_string = Stages::ProgressReport.run!(stage: @stage)
 

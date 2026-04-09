@@ -53,7 +53,7 @@ module Users
     private
 
     def identity_data_by(email)
-      nickname = email.split('@').first
+      nickname = email.split("@").first
 
       {
         identity_url: "https://openid.sfedu.ru/server.php/idpage?user=#{nickname}",

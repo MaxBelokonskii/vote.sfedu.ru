@@ -15,11 +15,11 @@ module SeoHelper
           {
             _: image_url("og_cover.png"),
             width: 1179,
-            height: 731,
-          },
-        ],
+            height: 731
+          }
+        ]
       },
-      reverse: true,
+      reverse: true
     }
   end
 end

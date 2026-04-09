@@ -14,12 +14,12 @@ class SnilsCheck
 
   # Calculates checksum (last 2 digits) of a number
   def checksum
-    digits = @snils.split("").take(9).map(&:to_i)
+    digits = @snils[0...9].chars.map(&:to_i)
     checksum = digits.each.with_index.reduce(0) { |sum, (digit, index)|
       sum + digit * (9 - index)
     }
     while checksum > 101
-      checksum = checksum % 101
+      checksum %= 101
     end
     checksum = 0 if (100..101).cover?(checksum)
     "%02d" % checksum
@@ -62,7 +62,7 @@ class SnilsCheck
 
   def validate
     @errors << [:wrong_length, {count: 11}] if @snils.blank? || @snils.length != 11
-    @errors << :invalid if @snils.present? && @snils[-2..-1] != checksum
+    @errors << :invalid if @snils.present? && @snils[-2..] != checksum
     @validated = true
   end
 end

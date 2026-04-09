@@ -14,7 +14,7 @@ module Teachers
         pairs.each do |_hash, pair|
           next if pair.length != 2
 
-          pair.sort! { |a, b| a.kind == 0 ? 0 : 1 }
+          pair.sort! { |a, b| (a.kind == 0) ? 0 : 1 }
 
           Teachers::Operations::MergeRecords.new.call(original: pair[0], duplicate: pair[1])
         end

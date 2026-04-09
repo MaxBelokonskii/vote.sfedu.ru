@@ -39,7 +39,7 @@ module OneCApi
     end
 
     def fetch_relations_data(external_id)
-      response = get_stud_preps(message: {'StudentID': external_id}).body
+      response = get_stud_preps(message: {StudentID: external_id}).body
       Array.wrap(response.dig(:get_stud_preps_response, :return, :stud_preps, :prep))
     end
   end

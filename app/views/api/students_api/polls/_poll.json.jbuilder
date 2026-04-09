@@ -8,7 +8,7 @@ json.participated poll.student_participated_in_poll?(@current_kind)
 
 json.meta do
   json.id poll.id
-  json.resource 'polls'
+  json.resource "polls"
 end
 
 if local_assigns[:full_representation]
@@ -19,4 +19,3 @@ if local_assigns[:full_representation]
     json.image_url option.image_url
   end
 end
-

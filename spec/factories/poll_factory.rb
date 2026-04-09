@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :poll do
-    name { 'Выборы председателя студенческого совета' }
+    name { "Выборы председателя студенческого совета" }
     starts_at { Time.current - 1.week }
     ends_at { Time.current + 1.week }
 

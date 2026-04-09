@@ -4,7 +4,7 @@ class Poll
     include ::ImageUploader::Attachment(:image)
 
     belongs_to :poll
-    has_many :answers, class_name: 'Poll::Answer', foreign_key: 'poll_option_id'
+    has_many :answers, class_name: "Poll::Answer", foreign_key: "poll_option_id"
 
     def proportion
       answers_by_poll = poll.answers.count.to_f

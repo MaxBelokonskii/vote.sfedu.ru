@@ -251,13 +251,13 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   config.omniauth :entra_id,
-                  {
-                    name: :azure_oauth2,
-                    client_id: ENV['AZURE_CLIENT_ID'],
-                    client_secret: ENV['AZURE_CLIENT_SECRET'],
-                    tenant_id: ENV['AZURE_TENANT_ID'],
-                    strategy_class: OmniAuth::Strategies::EntraId
-                  }
+    {
+      name: :azure_oauth2,
+      client_id: ENV["AZURE_CLIENT_ID"],
+      client_secret: ENV["AZURE_CLIENT_SECRET"],
+      tenant_id: ENV["AZURE_TENANT_ID"],
+      strategy_class: OmniAuth::Strategies::EntraId
+    }
 
   # scope: %w[
   #   extension_bbae8bc5f9974429ac916158e53c4710_r61FirstName

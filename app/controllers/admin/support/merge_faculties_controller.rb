@@ -10,11 +10,11 @@ module Admin
 
         ::Faculties::AsAdmin::MergeDuplicatedFacultyToAnotherFaculty.new.call(call_params) do |monad|
           monad.success do
-            flash[:success] = 'Структурные подразделения успешно объединены'
+            flash[:success] = "Структурные подразделения успешно объединены"
             redirect_to admin_support_merge_faculties_path
           end
           monad.failure do
-            flash[:error] = 'Не удалось объединить выбранные факультеты'
+            flash[:error] = "Не удалось объединить выбранные факультеты"
             redirect_to admin_support_merge_faculties_path
           end
         end

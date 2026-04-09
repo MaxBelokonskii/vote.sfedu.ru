@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
   root "pages#index"
+  get "about", to: "pages#about", as: :page
 
-  devise_for :users, path: "", controllers: { omniauth_callbacks: 'auth/omniauth_callbacks' }
+  devise_for :users, path: "", controllers: {omniauth_callbacks: "auth/omniauth_callbacks"}
 
-  get 'login_as', to: 'debug#login_as' if ENV["DEBUG_LOGIN_INTO_ACCOUNT"]
+  get "login_as", to: "debug#login_as" if ENV["DEBUG_LOGIN_INTO_ACCOUNT"]
 
   namespace :student, module: "students" do
     root to: "root#show"
@@ -73,18 +74,18 @@ Rails.application.routes.draw do
 
     namespace :students_api do
       resources :polls, only: [:index, :show] do
-        resource :vote, only: [:create], module: 'polls'
+        resource :vote, only: [:create], module: "polls"
       end
 
       resources :stages do
-        resources :teachers, module: 'stages', only: [:index, :show] do
-          resource :feedback, module: 'teachers', only: [:show, :create]
-          resource :relation, module: 'teachers', only: [:create, :destroy]
+        resources :teachers, module: "stages", only: [:index, :show] do
+          resource :feedback, module: "teachers", only: [:show, :create]
+          resource :relation, module: "teachers", only: [:create, :destroy]
 
           post :refresh, on: :collection
         end
 
-        resource :roster, module: 'stages/teachers', only: [:show]
+        resource :roster, module: "stages/teachers", only: [:show]
       end
     end
   end

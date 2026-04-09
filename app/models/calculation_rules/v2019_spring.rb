@@ -32,11 +32,11 @@ module CalculationRules
       ladder = []
 
       while (current + step) < stage.scale_max
-        ladder.push((current...(current + step).round(4)))
+        ladder.push(current...(current + step).round(4))
         current = (current + step).round(4)
       end
 
-      ladder.push((current..(current + step)))
+      ladder.push(current..(current + step))
 
       ladder
     end
@@ -91,7 +91,7 @@ module CalculationRules
     end
 
     def mean_rating_of_stage(calc_by:)
-      questions_ratings ||= (@rating_by_questions || rating_by_questions)
+      questions_ratings ||= @rating_by_questions || rating_by_questions
       return 0.0 if questions_ratings.count.zero?
 
       questions_sum = questions_ratings.map { |question_rating| question_rating[calc_by] }.sum

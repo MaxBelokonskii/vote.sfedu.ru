@@ -16,7 +16,7 @@ module Auth
     end
 
     def authenticate_params
-      auth_hash = request.env['omniauth.auth'].to_hash
+      auth_hash = request.env["omniauth.auth"].to_hash
 
       {
         user_attributes: {
@@ -25,11 +25,10 @@ module Auth
           azure_id: auth_hash["uid"],
           available_roles: auth_hash.dig("extra", "raw_info").values_at("extensionAttribute1", "extensionAttribute2").compact,
           sfedu_student_id: auth_hash.dig("extra", "raw_info", "r61StudentId"),
-          sfedu_global_key: auth_hash.dig("extra", "raw_info", "r61GlobalKey"),
+          sfedu_global_key: auth_hash.dig("extra", "raw_info", "r61GlobalKey")
         },
-        ip_address: auth_hash.dig("extra", "raw_info", "ipaddr"),
+        ip_address: auth_hash.dig("extra", "raw_info", "ipaddr")
       }
     end
   end
 end
-
