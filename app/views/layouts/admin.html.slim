@@ -19,5 +19,4 @@ html lang="en"
           = render 'shared/sidebar'
         .flex-1.min-w-0
           = yield
-    = javascript_include_tag :admin
-    = yield :javascript
+    = vite_javascript_tag 'admin'
