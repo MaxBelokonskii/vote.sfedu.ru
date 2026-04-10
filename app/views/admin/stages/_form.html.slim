@@ -26,34 +26,34 @@
           span.text-sm.text-gray-700 = semester.full_title.capitalize
 
   / Section 2: Assessment criteria
-  .bg-white.rounded-xl.border.border-gray-200.p-6.mb-6
+  .bg-white.rounded-xl.border.border-gray-200.p-6.mb-6 data-controller="new-question"
     h2.text-base.font-semibold.text-gray-900.mb-4 Критерии оценивания
 
-    - if @questions.any?
-      label.block.text-sm.font-medium.text-gray-700.mb-2 Существующие вопросы
-      .grid.grid-cols-1.md_grid-cols-2.gap-2.mb-4
-        - @questions.each do |question|
-          label.flex.items-center.gap-3.p-3.rounded-lg.border.border-gray-200.cursor-pointer.hover_bg-gray-50.transition-colors
-            = f.check_box :question_ids, { multiple: true, checked: f.object.question_ids.include?(question.id), class: 'rounded border-gray-300 text-primary focus_ring-primary' }, question.id, nil
-            span.text-sm.text-gray-700 = question.text
+    .grid.grid-cols-1.md_grid-cols-2.gap-2.mb-4 data-new-question-target="questionsList"
+      - @questions.each do |question|
+        label.flex.items-center.gap-3.p-3.rounded-lg.border.border-gray-200.cursor-pointer.hover_bg-gray-50.transition-colors
+          = f.check_box :question_ids, { multiple: true, checked: f.object.question_ids.include?(question.id), class: 'rounded border-gray-300 text-primary focus_ring-primary' }, question.id, nil
+          span.text-sm.text-gray-700 = question.text
+          span.text-xs.text-gray-400.ml-auto макс. #{question.max_rating}
 
-    label.block.text-sm.font-medium.text-gray-700.mb-2 Новые вопросы
-    div data-controller="new-question"
-      div data-new-question-target="list" class="space-y-3 mb-3"
+    / Inline form for creating new question
+    .p-4.bg-gray-50.rounded-lg.border.border-dashed.border-gray-300.hidden data-new-question-target="form"
+      p.text-sm.font-medium.text-gray-700.mb-3 Новый вопрос
+      .space-y-3
+        div
+          input.w-full.rounded-lg.border.border-gray-300.px-3.py-2.text-sm.focus_ring-2.focus_ring-primary.focus_border-primary type="text" placeholder="Текст вопроса" data-new-question-target="text"
+        .flex.items-end.gap-3
+          div.w-40
+            label.block.text-xs.text-gray-500.mb-1 Макс. балл
+            input.w-full.rounded-lg.border.border-gray-300.px-3.py-2.text-sm.focus_ring-2.focus_ring-primary.focus_border-primary type="number" value="10" min="1" data-new-question-target="maxRating"
+          button.px-4.py-2.bg-primary.text-white.rounded-lg.hover_bg-primary-700.transition-colors.text-sm.font-medium.cursor-pointer.border-0 type="button" data-action="new-question#submit" Создать вопрос
+          button.px-4.py-2.text-sm.text-gray-500.hover_text-gray-700.transition-colors.cursor-pointer.border-0.bg-transparent type="button" data-action="new-question#toggle" Отмена
+      p.text-sm.text-red-600.mt-2.hidden data-new-question-target="error"
 
-      template data-new-question-target="template"
-        .flex.items-start.gap-3.p-3.bg-gray-50.rounded-lg.border.border-gray-200 data-new-question-target="entry"
-          .flex-1
-            input.w-full.rounded-lg.border.border-gray-300.px-3.py-2.text-sm.focus_ring-2.focus_ring-primary.focus_border-primary.mb-2 name="stage[new_questions_attributes][NEW_INDEX][text]" placeholder="Текст вопроса" type="text"
-            input.w-full.rounded-lg.border.border-gray-300.px-3.py-2.text-sm.focus_ring-2.focus_ring-primary.focus_border-primary name="stage[new_questions_attributes][NEW_INDEX][max_rating]" placeholder="Максимальный балл" type="number" min="1"
-          button.shrink-0.mt-1.p-1.text-gray-400.hover_text-red-500.transition-colors type="button" data-action="new-question#remove"
-            svg.h-5.w-5 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-              path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"
-
-      button.inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.border.border-gray-300.text-sm.font-medium.text-gray-700.hover_bg-gray-50.transition-colors type="button" data-action="new-question#add"
-        svg.h-4.w-4 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-          path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"
-        | Создать новый вопрос
+    button.inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.border.border-gray-300.text-sm.font-medium.text-gray-700.hover_bg-gray-50.transition-colors.cursor-pointer.bg-transparent.mt-2 type="button" data-action="new-question#toggle"
+      svg.h-4.w-4 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"
+      | Создать новый вопрос
 
   / Section 3: Parameters
   .bg-white.rounded-xl.border.border-gray-200.p-6.mb-6

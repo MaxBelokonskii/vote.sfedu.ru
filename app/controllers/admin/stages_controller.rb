@@ -34,8 +34,7 @@ class Admin::StagesController < Admin::BaseController
   end
 
   def create
-    @stage = Stage.new(stage_params.except(:new_questions_attributes))
-    create_and_attach_new_questions
+    @stage = Stage.new(stage_params)
     if @stage.save
       redirect_to admin_stage_path(@stage), notice: "Стадия успешно создана"
     else
@@ -49,8 +48,7 @@ class Admin::StagesController < Admin::BaseController
   end
 
   def update
-    @stage.assign_attributes(stage_params.except(:new_questions_attributes))
-    create_and_attach_new_questions
+    @stage.assign_attributes(stage_params)
     if @stage.save
       redirect_to admin_stage_path(@stage), notice: "Стадия успешно обновлена"
     else
@@ -73,24 +71,12 @@ class Admin::StagesController < Admin::BaseController
       :with_scale, :scale_min, :scale_max,
       :with_truncation, :lower_truncation_percent, :upper_truncation_percent,
       semester_ids: [],
-      question_ids: [],
-      new_questions_attributes: [:text, :max_rating]
+      question_ids: []
     )
   end
 
   def load_form_collections
     @semesters = Semester.order(year_begin: :desc, kind: :asc)
     @questions = Question.order(:text)
-  end
-
-  def create_and_attach_new_questions
-    new_attrs = stage_params[:new_questions_attributes]
-    return if new_attrs.blank?
-
-    new_attrs.each_value do |attrs|
-      next if attrs[:text].blank?
-      question = Question.create!(text: attrs[:text], max_rating: attrs[:max_rating] || 10)
-      @stage.questions << question
-    end
   end
 end
