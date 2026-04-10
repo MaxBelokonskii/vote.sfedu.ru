@@ -23,7 +23,7 @@
       - @semesters.each do |semester|
         label.flex.items-center.gap-3.p-3.rounded-lg.border.border-gray-200.cursor-pointer.hover_bg-gray-50.transition-colors
           = f.check_box :semester_ids, { multiple: true, checked: f.object.semester_ids.include?(semester.id), class: 'rounded border-gray-300 text-primary focus_ring-primary' }, semester.id, nil
-          span.text-sm.text-gray-700 = semester.name
+          span.text-sm.text-gray-700 = semester.full_title.capitalize
 
   / Section 2: Assessment criteria
   .bg-white.rounded-xl.border.border-gray-200.p-6.mb-6
