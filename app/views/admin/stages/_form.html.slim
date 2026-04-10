@@ -1,0 +1,97 @@
+= form_with model: [:admin, @stage], local: true do |f|
+  - if @stage.errors.any?
+    .mb-6.p-4.bg-red-50.border.border-red-200.rounded-lg
+      h3.text-sm.font-semibold.text-red-800.mb-2 Пожалуйста, исправьте ошибки:
+      ul.list-disc.list-inside.space-y-1
+        - @stage.errors.full_messages.each do |message|
+          li.text-sm.text-red-700 = message
+
+  / Section 1: Dates & Semesters
+  .bg-white.rounded-xl.border.border-gray-200.p-6.mb-6
+    h2.text-base.font-semibold.text-gray-900.mb-4 Даты и семестры
+
+    .grid.grid-cols-1.md_grid-cols-2.gap-4.mb-6
+      div
+        label.block.text-sm.font-medium.text-gray-700.mb-1 Дата начала
+        = f.datetime_local_field :starts_at, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary'
+      div
+        label.block.text-sm.font-medium.text-gray-700.mb-1 Дата окончания
+        = f.datetime_local_field :ends_at, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary'
+
+    label.block.text-sm.font-medium.text-gray-700.mb-2 Семестры
+    .grid.grid-cols-1.md_grid-cols-2.xl_grid-cols-3.gap-2
+      - @semesters.each do |semester|
+        label.flex.items-center.gap-3.p-3.rounded-lg.border.border-gray-200.cursor-pointer.hover_bg-gray-50.transition-colors
+          = f.check_box :semester_ids, { multiple: true, checked: f.object.semester_ids.include?(semester.id), class: 'rounded border-gray-300 text-primary focus_ring-primary' }, semester.id, nil
+          span.text-sm.text-gray-700 = semester.name
+
+  / Section 2: Assessment criteria
+  .bg-white.rounded-xl.border.border-gray-200.p-6.mb-6
+    h2.text-base.font-semibold.text-gray-900.mb-4 Критерии оценивания
+
+    - if @questions.any?
+      label.block.text-sm.font-medium.text-gray-700.mb-2 Существующие вопросы
+      .grid.grid-cols-1.md_grid-cols-2.gap-2.mb-4
+        - @questions.each do |question|
+          label.flex.items-center.gap-3.p-3.rounded-lg.border.border-gray-200.cursor-pointer.hover_bg-gray-50.transition-colors
+            = f.check_box :question_ids, { multiple: true, checked: f.object.question_ids.include?(question.id), class: 'rounded border-gray-300 text-primary focus_ring-primary' }, question.id, nil
+            span.text-sm.text-gray-700 = question.text
+
+    label.block.text-sm.font-medium.text-gray-700.mb-2 Новые вопросы
+    div data-controller="new-question"
+      div data-new-question-target="list" class="space-y-3 mb-3"
+
+      template data-new-question-target="template"
+        .flex.items-start.gap-3.p-3.bg-gray-50.rounded-lg.border.border-gray-200 data-new-question-target="entry"
+          .flex-1
+            input.w-full.rounded-lg.border.border-gray-300.px-3.py-2.text-sm.focus_ring-2.focus_ring-primary.focus_border-primary.mb-2 name="stage[new_questions_attributes][NEW_INDEX][text]" placeholder="Текст вопроса" type="text"
+            input.w-full.rounded-lg.border.border-gray-300.px-3.py-2.text-sm.focus_ring-2.focus_ring-primary.focus_border-primary name="stage[new_questions_attributes][NEW_INDEX][max_rating]" placeholder="Максимальный балл" type="number" min="1"
+          button.shrink-0.mt-1.p-1.text-gray-400.hover_text-red-500.transition-colors type="button" data-action="new-question#remove"
+            svg.h-5.w-5 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+              path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"
+
+      button.inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.border.border-gray-300.text-sm.font-medium.text-gray-700.hover_bg-gray-50.transition-colors type="button" data-action="new-question#add"
+        svg.h-4.w-4 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"
+        | Создать новый вопрос
+
+  / Section 3: Parameters
+  .bg-white.rounded-xl.border.border-gray-200.p-6.mb-6
+    h2.text-base.font-semibold.text-gray-900.mb-4 Параметры
+
+    .mb-4
+      label.block.text-sm.font-medium.text-gray-700.mb-1 Минимальное число участников
+      = f.number_field :lower_participants_limit, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', min: 0
+
+    .mb-4 data-controller="toggle-fields"
+      label.flex.items-center.gap-3.cursor-pointer.mb-3
+        = f.check_box :with_scale, class: 'rounded border-gray-300 text-primary focus_ring-primary', data: { action: 'toggle-fields#toggle' }
+        span.text-sm.font-medium.text-gray-700 Использовать шкалу оценок
+
+      - scale_hidden = f.object.with_scale ? '' : 'hidden'
+      .grid.grid-cols-1.md_grid-cols-2.gap-4 data-toggle-fields-target="container" class="#{scale_hidden}"
+        div
+          label.block.text-sm.font-medium.text-gray-700.mb-1 Минимум шкалы
+          = f.number_field :scale_min, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', disabled: !f.object.with_scale
+        div
+          label.block.text-sm.font-medium.text-gray-700.mb-1 Максимум шкалы
+          = f.number_field :scale_max, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', disabled: !f.object.with_scale
+
+    .mb-4 data-controller="toggle-fields"
+      label.flex.items-center.gap-3.cursor-pointer.mb-3
+        = f.check_box :with_truncation, class: 'rounded border-gray-300 text-primary focus_ring-primary', data: { action: 'toggle-fields#toggle' }
+        span.text-sm.font-medium.text-gray-700 Использовать усечение выборки
+
+      - trunc_hidden = f.object.with_truncation ? '' : 'hidden'
+      .grid.grid-cols-1.md_grid-cols-2.gap-4 data-toggle-fields-target="container" class="#{trunc_hidden}"
+        div
+          label.block.text-sm.font-medium.text-gray-700.mb-1 Нижний процент усечения
+          = f.number_field :lower_truncation_percent, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', min: 0, max: 100, disabled: !f.object.with_truncation
+        div
+          label.block.text-sm.font-medium.text-gray-700.mb-1 Верхний процент усечения
+          = f.number_field :upper_truncation_percent, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', min: 0, max: 100, disabled: !f.object.with_truncation
+
+  / Submit
+  .flex.items-center.gap-3
+    = f.submit(f.object.persisted? ? 'Сохранить' : 'Создать стадию', class: 'px-6 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium cursor-pointer border-0')
+    = link_to 'Отмена', admin_stages_path, class: 'px-4 py-2 text-sm font-medium text-gray-600 hover_text-gray-900 transition-colors no-underline'
