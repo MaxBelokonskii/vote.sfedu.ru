@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_09_175643) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_10_091140) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -280,6 +280,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_09_175643) do
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "with_scale", default: true, null: false
     t.boolean "with_truncation", default: true, null: false
+    t.datetime "deleted_at"
   end
 
   create_table "students", force: :cascade do |t|
