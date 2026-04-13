@@ -6,7 +6,7 @@ class Survey
     has_many :options, class_name: "Survey::Option", foreign_key: :survey_question_id, dependent: :destroy
     belongs_to :survey
 
-    accepts_nested_attributes_for :options, reject_if: :all_blank
+    accepts_nested_attributes_for :options, reject_if: :all_blank, allow_destroy: true
 
     validates :text, presence: true
   end

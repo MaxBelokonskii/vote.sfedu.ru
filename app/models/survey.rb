@@ -8,7 +8,7 @@ class Survey < ApplicationRecord
   validates :title, presence: true
   validates :passcode, presence: true
 
-  accepts_nested_attributes_for :questions, reject_if: :all_blank
+  accepts_nested_attributes_for :questions, reject_if: :all_blank, allow_destroy: true
 
   belongs_to :user
 
