@@ -1,0 +1,7 @@
+= render 'shared/back_link', path: admin_question_path(@question), label: 'К критерию'
+
+.mb-6
+  h1.text-2xl.font-bold.text-gray-900 Редактирование критерия
+  p.text-gray-500.text-sm.mt-1 = @question.text
+
+= render 'form'
