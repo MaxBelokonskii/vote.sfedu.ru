@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   end
 
   namespace :teacher, module: "teachers" do
-    root to: "students#index"
+    root to: "dashboard#show"
 
     resources :students, only: %i[index]
     resources :surveys
@@ -51,10 +51,7 @@ Rails.application.routes.draw do
     resources :teachers
     resources :questions
     resources :faculties
-    resources :users do
-      get "admins", action: :index, on: :collection
-      get ":kind", action: :index, on: :collection
-    end
+    resources :users, only: [:index, :show, :update]
 
     namespace :reports do
       resources :teachers, only: [:index] do

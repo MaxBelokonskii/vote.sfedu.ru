@@ -15,17 +15,29 @@ FactoryBot.define do
         questions_count { 5 }
       end
 
+      after(:build) do |stage, evaluator|
+        stage.questions = build_list(:question, evaluator.questions_count)
+      end
+
       after(:create) do |stage, evaluator|
-        stage.questions << build_list(:question, evaluator.questions_count)
+        stage.questions = create_list(:question, evaluator.questions_count)
         stage.reload
       end
     end
 
     trait :with_semester do
+      after(:build) do |stage, _|
+        stage.semesters = [build(:semester)]
+      end
+
       after(:create) do |stage, _|
-        stage.semesters << build(:semester)
+        stage.semesters = [create(:semester)]
         stage.reload
       end
+    end
+
+    trait :deleted do
+      deleted_at { Time.current }
     end
   end
 end

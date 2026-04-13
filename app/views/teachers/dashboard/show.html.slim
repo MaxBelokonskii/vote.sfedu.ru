@@ -1,0 +1,21 @@
+.mb-8
+  h1.text-2xl.font-bold.text-gray-900 Добро пожаловать, #{@teacher&.name || current_user.name}!
+  p.text-gray-500.text-sm.mt-1 Управляйте опросами и просматривайте информацию о своих студентах.
+
+.grid.grid-cols-1.md_grid-cols-2.gap-4
+  = link_to teacher_students_path, class: 'p-5 bg-white rounded-xl border border-gray-200 hover_shadow-md hover_border-gray-300 transition-all duration-200 group no-underline' do
+    .flex.items-start.justify-between.gap-4
+      div
+        h3.text-base.font-semibold.text-gray-900.group-hover_text-primary.transition-colors Мои студенты
+        p.text-sm.text-gray-500.mt-1 Список студентов, связанных с вами через учебные дисциплины.
+      svg.w-5.h-5.text-gray-400.group-hover_text-primary.transition-colors xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+        path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"
+
+  = link_to teacher_surveys_path, class: 'p-5 bg-white rounded-xl border border-gray-200 hover_shadow-md hover_border-gray-300 transition-all duration-200 group no-underline' do
+    .flex.items-start.justify-between.gap-4
+      div
+        h3.text-base.font-semibold.text-gray-900.group-hover_text-primary.transition-colors Мои опросы
+        p.text-sm.text-gray-500.mt-1 Создание и управление анкетами для ваших студентов.
+        p.text-xs.text-gray-400.mt-2 Всего опросов: #{@surveys_count}
+      svg.w-5.h-5.text-gray-400.group-hover_text-primary.transition-colors xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+        path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"

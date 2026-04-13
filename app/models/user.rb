@@ -9,6 +9,14 @@ class User < ApplicationRecord
 
   attr_accessor :identity_name
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[id email nickname role identity_url created_at updated_at]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    []
+  end
+
   def self.build_identity_url(url)
     "https://openid.sfedu.ru/server.php/idpage?user=#{url&.downcase}"
   end

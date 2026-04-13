@@ -7,6 +7,14 @@ class Student < ApplicationRecord
   has_many :participations, dependent: :destroy
   has_many :stage_attendees, dependent: :destroy
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[id name external_id created_at updated_at]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[user]
+  end
+
   def teachers_chosen?(stage)
     stage_attendees.find_or_create_by(stage: stage).choosing_selected?
   end
@@ -23,9 +31,12 @@ class Student < ApplicationRecord
     students_by_semesters = students_teachers_relations.group(:semester_id).order(:semester_id).count
     semesters = Semester.all.index_by(&:id)
     current_stage = Stage.current
-    students_by_semesters.map do |k, v|
+    students_by_semesters.filter_map do |k, v|
+      semester = semesters[k]
+      next if semester.nil?
+
       {
-        semester: semesters[k].full_title.capitalize,
+        semester: semester.full_title.capitalize,
         is_current: current_stage&.semester_ids&.include?(k) || false,
         count: v
       }

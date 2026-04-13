@@ -1,9 +1,20 @@
 .mb-8
-  h1.text-2xl.font-bold.text-gray-900 Критерии оценивания
-  p.text-gray-500.text-sm.mt-1 Список критериев, статистика по каждому критерию.
+  .flex.flex-col.md_flex-row.items-start.md_items-center.justify-between.gap-4.mb-6
+    div
+      h1.text-2xl.font-bold.text-gray-900 Критерии оценивания
+      p.text-gray-500.text-sm.mt-1 Список критериев, статистика по каждому критерию.
+    = link_to 'Новый критерий', new_admin_question_path, class: 'inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium no-underline'
 
-.space-y-3
-  - @questions.each do |question|
-    = link_to admin_question_path(question), class: 'block p-5 bg-white rounded-xl border border-gray-200 hover_shadow-md hover_border-gray-300 transition-all duration-200 no-underline group' do
-      h5.text-base.font-semibold.text-gray-900.group-hover_text-primary.transition-colors.duration-200 = question.text
-      p.text-sm.text-gray-500.mt-1 #{question.stages.count} #{t(:stages, count: question.stages.count)}
+- if @questions.any?
+  .space-y-3
+    - @questions.each do |question|
+      .p-5.bg-white.rounded-xl.border.border-gray-200.hover_shadow-md.hover_border-gray-300.transition-all.duration-200.group.cursor-pointer data-controller="clickable-card" data-clickable-card-url-value=admin_question_path(question) data-action="click->clickable-card#navigate"
+        .flex.items-center.justify-between.gap-4
+          div.flex-1.min-w-0
+            h5.text-base.font-semibold.text-gray-900.group-hover_text-primary.transition-colors.duration-200 = question.text
+            p.text-sm.text-gray-500.mt-1 #{question.stages.count} #{t(:stages, count: question.stages.count)} · макс. балл #{question.max_rating}
+          .flex.items-center.gap-2.shrink-0
+            = link_to 'Редактировать', edit_admin_question_path(question), class: 'text-sm text-primary hover_underline no-underline'
+- else
+  .text-center.py-12
+    p.text-gray-500 Критерии пока не созданы

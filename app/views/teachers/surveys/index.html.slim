@@ -1,0 +1,35 @@
+= render 'shared/back_link', path: teacher_root_path, label: 'В кабинет'
+
+.mb-6
+  .flex.flex-col.md_flex-row.items-start.md_items-center.justify-between.gap-4
+    div
+      h1.text-2xl.font-bold.text-gray-900 Мои опросы
+      p.text-gray-500.text-sm.mt-1 Создание и управление анкетами для студентов.
+    = link_to 'Новый опрос', new_teacher_survey_path, class: 'inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium no-underline'
+
+- if @surveys.any?
+  .bg-white.rounded-lg.border.border-gray-200.overflow-hidden
+    table.w-full.text-sm.text-left
+      thead.bg-gray-50
+        tr
+          th.px-4.py-3.font-medium.text-gray-600 Название
+          th.px-4.py-3.font-medium.text-gray-600 Активен до
+          th.px-4.py-3.font-medium.text-gray-600 Создан
+          th.px-4.py-3.font-medium.text-gray-600 Действия
+      tbody
+        - @surveys.each do |survey|
+          tr.border-t.border-gray-200.hover_bg-gray-50
+            td.px-4.py-3
+              = link_to survey.title, survey_path(survey.passcode), class: 'text-primary hover_underline'
+            td.px-4.py-3 = l survey.active_until
+            td.px-4.py-3.text-gray-500 = l survey.created_at
+            td.px-4.py-3
+              .flex.flex-wrap.gap-2
+                = link_to 'Результаты', results_survey_path(survey.passcode), class: 'text-xs text-primary hover_underline'
+                = link_to 'Участники', respondents_survey_path(survey.passcode), class: 'text-xs text-primary hover_underline'
+                = link_to 'Редактировать', edit_teacher_survey_path(survey), class: 'text-xs text-primary hover_underline'
+                = link_to 'Клонировать', new_teacher_survey_path(source_id: survey.id), class: 'text-xs text-primary hover_underline'
+- else
+  .p-8.bg-white.rounded-lg.border.border-gray-200.text-center
+    p.text-gray-500.text-sm.mb-4 У вас пока нет опросов.
+    = link_to 'Создать первый опрос', new_teacher_survey_path, class: 'inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium no-underline'

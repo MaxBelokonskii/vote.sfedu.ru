@@ -105,6 +105,7 @@ build-iPhoneSimulator/
 
 # End of https://www.gitignore.io/api/ruby,rails
 /public/packs
+/public/uploads
 /node_modules
 
 

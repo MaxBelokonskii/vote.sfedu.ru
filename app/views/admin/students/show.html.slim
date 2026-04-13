@@ -1,10 +1,12 @@
+= render 'shared/back_link', path: admin_students_path, label: 'К списку студентов'
+
 .mb-6
   h1.text-2xl.font-bold.text-gray-900 = @student.name
 
 h3.text-lg.font-semibold.text-gray-900.mb-3 Данные об аккаунте
 
 .bg-white.rounded-lg.border.border-gray-200.p-4.mb-6
-  dl.grid.grid-cols-1.sm_grid-cols-[200px_1fr].gap-2.text-sm
+  dl.grid.grid-cols-1.gap-2.text-sm class="sm_grid-cols-[200px_1fr]"
     dt.font-medium.text-gray-600 Последний раз был
     dd.text-gray-900 = l @student.user.last_sign_in_at
     dt.font-medium.text-gray-600 Заходов на сайт
@@ -15,7 +17,7 @@ h3.text-lg.font-semibold.text-gray-900.mb-3 Данные об аккаунте
 h3.text-lg.font-semibold.text-gray-900.mb-3 Данные о студенте
 
 .bg-white.rounded-lg.border.border-gray-200.p-4.mb-6
-  dl.grid.grid-cols-1.sm_grid-cols-[200px_1fr].gap-2.text-sm
+  dl.grid.grid-cols-1.gap-2.text-sm class="sm_grid-cols-[200px_1fr]"
     dt.font-medium.text-gray-600 Идентификатор в 1С
     dd.text-gray-900 = @student.external_id || '<i class="text-gray-400">не передан</i>'.html_safe
 

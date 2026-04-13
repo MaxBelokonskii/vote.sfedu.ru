@@ -1,3 +1,5 @@
+= render 'shared/back_link', path: admin_polls_path, label: 'К списку голосований'
+
 .mb-6
   .flex.items-start.justify-between
     div
@@ -6,10 +8,27 @@
         | #{@poll.name} #{"[Архив]" if @poll.archived?}
     .flex.gap-2
       - unless @poll.archived?
-        = form_for @poll, url: archive_admin_poll_path(@poll), method: :put do |f|
-          = f.submit 'Архивировать', class: 'px-3 py-1.5 rounded-lg text-sm bg-gray-100 text-gray-700 hover_bg-gray-200 transition-colors cursor-pointer border-0', data: { confirm: 'Вы уверены?' }
-      = form_for @poll, url: admin_poll_path(@poll), method: :delete do |f|
-        = f.submit 'Удалить', class: 'px-3 py-1.5 rounded-lg text-sm bg-red-500 text-white hover_bg-red-600 transition-colors cursor-pointer border-0', data: { confirm: 'Вы уверены?' }
+        div data-controller="confirm-modal"
+          button.px-3.py-1.5.rounded-lg.text-sm.bg-gray-100.text-gray-700.hover_bg-gray-200.transition-colors.cursor-pointer.border-0 type="button" data-action="confirm-modal#open"
+            | Архивировать
+          dialog.rounded-xl.border.border-gray-200.shadow-xl.p-0 data-confirm-modal-target="dialog"
+            .p-6
+              h3.text-lg.font-semibold.text-gray-900.mb-2 Подтверждение архивации
+              p.text-sm.text-gray-600.mb-6 Вы уверены, что хотите отправить голосование в архив?
+              .flex.justify-end.gap-3
+                button.px-4.py-2.text-sm.font-medium.text-gray-600.bg-gray-100.rounded-lg.hover_bg-gray-200.transition-colors.cursor-pointer.border-0 type="button" data-action="confirm-modal#close" Отмена
+                = button_to 'Да, архивировать', archive_admin_poll_path(@poll), method: :put, class: 'px-4 py-2 text-sm font-medium text-white bg-gray-700 rounded-lg hover_bg-gray-800 transition-colors cursor-pointer border-0'
+
+      div data-controller="confirm-modal"
+        button.px-3.py-1.5.rounded-lg.text-sm.bg-red-500.text-white.hover_bg-red-600.transition-colors.cursor-pointer.border-0 type="button" data-action="confirm-modal#open"
+          | Удалить
+        dialog.rounded-xl.border.border-gray-200.shadow-xl.p-0 data-confirm-modal-target="dialog"
+          .p-6
+            h3.text-lg.font-semibold.text-gray-900.mb-2 Подтверждение удаления
+            p.text-sm.text-gray-600.mb-6 Вы уверены, что хотите удалить это голосование? Действие необратимо.
+            .flex.justify-end.gap-3
+              button.px-4.py-2.text-sm.font-medium.text-gray-600.bg-gray-100.rounded-lg.hover_bg-gray-200.transition-colors.cursor-pointer.border-0 type="button" data-action="confirm-modal#close" Отмена
+              = button_to 'Да, удалить', admin_poll_path(@poll), method: :delete, class: 'px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover_bg-red-700 transition-colors cursor-pointer border-0'
 
 .mb-6
   .flex.items-center.justify-between.mb-3
@@ -28,8 +47,17 @@
           .text-right.shrink-0
             p.text-sm.text-gray-500 #{number_to_percentage(option.proportion)} (#{option.answers.count})
             - unless @poll.started?
-              = form_for @poll, url: admin_poll_poll_option_path(@poll, option), method: :delete, html: { class: 'mt-2' } do |f|
-                = f.submit 'Удалить', class: 'px-2 py-1 rounded text-xs bg-red-500 text-white hover_bg-red-600 transition-colors cursor-pointer border-0'
+              .mt-2 data-controller="confirm-modal"
+                button.px-2.py-1.rounded.text-xs.bg-red-500.text-white.hover_bg-red-600.transition-colors.cursor-pointer.border-0 type="button" data-action="confirm-modal#open"
+                  | Удалить
+                dialog.rounded-xl.border.border-gray-200.shadow-xl.p-0 data-confirm-modal-target="dialog"
+                  .p-6
+                    h3.text-lg.font-semibold.text-gray-900.mb-2 Подтверждение удаления
+                    p.text-sm.text-gray-600.mb-6
+                      | Удалить вариант "#{option.title}"?
+                    .flex.justify-end.gap-3
+                      button.px-4.py-2.text-sm.font-medium.text-gray-600.bg-gray-100.rounded-lg.hover_bg-gray-200.transition-colors.cursor-pointer.border-0 type="button" data-action="confirm-modal#close" Отмена
+                      = button_to 'Да, удалить', admin_poll_poll_option_path(@poll, option), method: :delete, class: 'px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover_bg-red-700 transition-colors cursor-pointer border-0'
 
 .mb-6
   h4.text-lg.font-semibold.text-gray-900.mb-3 Подразделения-участники

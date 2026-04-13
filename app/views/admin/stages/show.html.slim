@@ -1,10 +1,60 @@
-.mb-6
-  h1.text-2xl.font-bold.text-gray-900 Рейтинг НПР с #{l(@stage.starts_at, format: :only_date)} по #{l(@stage.ends_at, format: :only_date)}
+= render 'shared/back_link', path: admin_stages_path, label: 'К списку стадий'
 
-h3.text-lg.font-semibold.text-gray-900.mb-3 Доступные отчёты
+.mb-6.flex.items-start.justify-between
+  div
+    h1.text-2xl.font-bold.text-gray-900 Рейтинг НПР с #{l(@stage.starts_at, format: :only_date)} по #{l(@stage.ends_at, format: :only_date)}
+    p.text-sm.text-gray-500.mt-1 = stage_semesters_list(@stage).capitalize
+  .flex.items-center.gap-2
+    = link_to "Редактировать", edit_admin_stage_path(@stage), class: "px-4 py-2 text-sm font-medium text-primary border border-primary rounded-lg hover_bg-primary-50 transition-colors duration-200 no-underline"
+    div data-controller="confirm-modal"
+      button.px-4.py-2.text-sm.font-medium.text-red-600.border.border-red-300.rounded-lg.hover_bg-red-50.transition-colors.duration-200.cursor-pointer.bg-transparent type="button" data-action="confirm-modal#open"
+        | Удалить
+      dialog.rounded-xl.border.border-gray-200.shadow-xl.p-0.backdrop_bg-black.backdrop_bg-opacity-40 data-confirm-modal-target="dialog"
+        .p-6
+          h3.text-lg.font-semibold.text-gray-900.mb-2 Подтверждение удаления
+          p.text-sm.text-gray-600.mb-6 Вы уверены, что хотите удалить эту стадию? Данные не будут потеряны, стадия будет скрыта.
+          .flex.justify-end.gap-3
+            button.px-4.py-2.text-sm.font-medium.text-gray-600.bg-gray-100.rounded-lg.hover_bg-gray-200.transition-colors.cursor-pointer.border-0 type="button" data-action="confirm-modal#close" Отмена
+            = button_to "Да, удалить", admin_stage_path(@stage), method: :delete, class: "px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover_bg-red-700 transition-colors cursor-pointer border-0"
 
-.bg-white.rounded-lg.border.border-gray-200.overflow-hidden
+/ Критерии оценивания
+.bg-white.rounded-xl.border.border-gray-200.p-6.mt-6
+  h3.text-lg.font-semibold.text-gray-900.mb-3 Критерии оценивания
+  - if @stage.questions.any?
+    .space-y-2
+      - @stage.questions.each do |question|
+        .flex.items-center.justify-between.px-4.py-3.rounded-lg.bg-gray-50
+          span.text-sm.font-medium.text-gray-900 = question.text
+          span.text-xs.text-gray-500 макс. оценка: #{question.max_rating}
+  - else
+    p.text-sm.text-gray-500 Критерии не назначены
+
+/ Параметры
+.bg-white.rounded-xl.border.border-gray-200.p-6.mt-6
+  h3.text-lg.font-semibold.text-gray-900.mb-3 Параметры
+
+  .grid.grid-cols-1.md_grid-cols-3.gap-4.text-sm
+    div
+      span.text-gray-500 Мин. участников:
+      span.font-medium.text-gray-900.ml-1 = @stage.lower_participants_limit
+
+    div
+      span.text-gray-500 Шкалирование:
+      - if @stage.with_scale?
+        span.font-medium.text-gray-900.ml-1 #{@stage.scale_min} — #{@stage.scale_max}
+      - else
+        span.text-gray-400.ml-1 выключено
+
+    div
+      span.text-gray-500 Обрезка:
+      - if @stage.with_truncation?
+        span.font-medium.text-gray-900.ml-1 #{@stage.lower_truncation_percent}% / #{@stage.upper_truncation_percent}%
+      - else
+        span.text-gray-400.ml-1 выключена
+
+/ Отчёты
+.bg-white.rounded-xl.border.border-gray-200.overflow-hidden.mt-6
   .px-4.py-3.bg-gray-50.border-b.border-gray-200.font-medium.text-sm Выгрузка по факультетам
   .p-4
     p.text-sm.text-gray-600.mb-3 Выгружает информацию о количестве участников по каждому факультету.
-    = link_to 'Скачать', admin_stage_path(@stage, format: :xlsx), class: 'inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium no-underline'
+    = link_to "Скачать", admin_stage_path(@stage, format: :xlsx), class: "inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium no-underline"

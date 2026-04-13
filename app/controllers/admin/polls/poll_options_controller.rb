@@ -40,7 +40,9 @@ module Admin
       end
 
       def create_params
-        params.require(:poll_option).permit(:title, :description, :image_data).merge(poll: @poll)
+        permitted = params.require(:poll_option).permit(:title, :description, :image)
+        permitted = permitted.except(:image) if permitted[:image].blank?
+        permitted.merge(poll: @poll)
       end
     end
   end

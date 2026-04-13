@@ -26,8 +26,10 @@ section.relative.overflow-hidden style="background: linear-gradient(135deg, #fde
           | #{current_user.name}!
         - if current_user.student?
           = link_to "Перейти к опросам", user_root_path, class: 'inline-flex items-center justify-center w-full px-6 py-3 bg-primary text-white rounded-xl hover_bg-primary-700 transition-colors duration-200 font-medium text-base'
-        - else
-          p.text-gray-600.text-sm Личный кабинет преподавателя всё ещё в разработке. Мы опубликуем анонс, когда всё будет готово :)
+        - elsif current_user.teacher?
+          = link_to "Перейти в кабинет", teacher_root_path, class: 'inline-flex items-center justify-center w-full px-6 py-3 bg-primary text-white rounded-xl hover_bg-primary-700 transition-colors duration-200 font-medium text-base'
+        - elsif current_user.admin?
+          = link_to "Перейти в админку", admin_root_path, class: 'inline-flex items-center justify-center w-full px-6 py-3 bg-primary text-white rounded-xl hover_bg-primary-700 transition-colors duration-200 font-medium text-base'
 
 - if @stage.present?
   .bg-blue-50.border-b.border-blue-100.px-5.py-4

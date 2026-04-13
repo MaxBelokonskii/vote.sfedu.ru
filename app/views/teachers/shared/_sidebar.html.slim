@@ -1,0 +1,11 @@
+nav.space-y-1
+  = active_link_to 'Главная', teacher_root_path, active: :exact, class: 'block px-3 py-2 rounded-lg text-sm text-gray-700 hover_bg-gray-100 transition-colors no-underline', class_active: 'bg-primary text-white hover_bg-primary-700'
+
+  .border-t.border-gray-200.my-2
+
+  = active_link_to 'Мои студенты', teacher_students_path, class: 'block px-3 py-2 rounded-lg text-sm text-gray-700 hover_bg-gray-100 transition-colors no-underline', class_active: 'bg-primary text-white hover_bg-primary-700'
+  = active_link_to 'Мои опросы', teacher_surveys_path, class: 'block px-3 py-2 rounded-lg text-sm text-gray-700 hover_bg-gray-100 transition-colors no-underline', class_active: 'bg-primary text-white hover_bg-primary-700'
+
+  .border-t.border-gray-200.my-2
+
+  = link_to 'Вернуться на сайт', root_path, class: 'block px-3 py-2 rounded-lg text-sm text-gray-700 hover_bg-gray-100 transition-colors no-underline'

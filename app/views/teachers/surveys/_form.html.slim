@@ -1,0 +1,36 @@
+/ Partial for question, used both for existing questions (rendered server-side)
+/ and as a <template> for new questions added via Stimulus.
+/
+/ Local: f (FormBuilder for survey)
+
+.space-y-6
+  .bg-gray-50.rounded-lg.border.border-gray-200.p-4
+    .grid.grid-cols-1.md_grid-cols-2.gap-4
+      div
+        = f.label :title, 'Название опроса', class: 'block text-sm font-medium text-gray-700 mb-1'
+        = f.text_field :title, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', placeholder: 'Например, "Анкета для первокурсников мехмата ЮФУ"'
+      div
+        = f.label :passcode, 'URI опроса', class: 'block text-sm font-medium text-gray-700 mb-1'
+        = f.text_field :passcode, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', placeholder: 'Например, "mmcs_freshman_2018"'
+
+    .mt-4
+      = f.label :active_until, 'Активен до', class: 'block text-sm font-medium text-gray-700 mb-1'
+      = f.date_field :active_until, value: (f.object.active_until || Date.today + 2.weeks), min: Date.today, class: 'rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary'
+
+  / Questions
+  div data-controller="nested-fields" data-nested-fields-index-value=(f.object.questions.size + 100)
+    .flex.items-center.justify-between.mb-3
+      h3.text-base.font-semibold.text-gray-900 Вопросы
+
+    .space-y-4 data-nested-fields-target="list"
+      = f.fields_for :questions do |ff|
+        = render 'question_fields', ff: ff
+
+    template data-nested-fields-target="template"
+      = fields_for 'survey[questions_attributes][NEW_INDEX]', Survey::Question.new(options: [Survey::Option.new]) do |ff|
+        = render 'question_fields', ff: ff, new_record: true
+
+    button.mt-3.inline-flex.items-center.gap-2.px-4.py-2.rounded-lg.border.border-gray-300.text-sm.font-medium.text-gray-700.hover_bg-gray-50.transition-colors.cursor-pointer.bg-transparent type="button" data-action="nested-fields#add"
+      svg.h-4.w-4 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+        path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"
+      | Добавить вопрос
