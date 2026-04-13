@@ -1,0 +1,21 @@
+= render 'shared/back_link', path: teacher_root_path, label: 'В кабинет'
+
+.mb-6
+  h1.text-2xl.font-bold.text-gray-900 Мои студенты
+  p.text-gray-500.text-sm.mt-1 Список студентов, связанных с вами через учебные дисциплины.
+
+- if @students.any?
+  .bg-white.rounded-lg.border.border-gray-200.overflow-hidden
+    table.w-full.text-sm.text-left
+      thead.bg-gray-50
+        tr
+          th.px-4.py-3.font-medium.text-gray-600 ID
+          th.px-4.py-3.font-medium.text-gray-600 Имя
+      tbody
+        - @students.each do |student|
+          tr.border-t.border-gray-200.hover_bg-gray-50
+            td.px-4.py-3 = student.id
+            td.px-4.py-3 = student.name
+- else
+  .p-8.bg-white.rounded-lg.border.border-gray-200.text-center
+    p.text-gray-500.text-sm Связанные студенты пока не найдены. Они появятся после синхронизации данных из 1С.

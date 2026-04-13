@@ -6,6 +6,7 @@ class Ability
 
     if user.teacher?
       can %i[read create update], Survey
+      can :index, Student
     end
 
     if user.student?

@@ -1,0 +1,12 @@
+/ Local: fo (FormBuilder for option)
+/         new_record (bool, optional)
+
+.flex.items-center.gap-2 data-nested-fields-entry=true
+  - unless local_assigns[:new_record]
+    = fo.hidden_field :id
+    = fo.hidden_field :_destroy, value: "0"
+
+  = fo.text_field :text, class: 'flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', placeholder: 'Вариант ответа'
+  button.shrink-0.p-2.text-gray-400.hover_text-red-500.transition-colors.cursor-pointer.bg-transparent.border-0 type="button" data-action="nested-fields#remove" title="Удалить вариант"
+    svg.h-4.w-4 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+      path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"

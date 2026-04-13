@@ -1,6 +1,5 @@
 module Teachers
-  class SurveysController < ApplicationController
-    before_action :authenticate_user!
+  class SurveysController < Teachers::BaseController
     load_and_authorize_resource
 
     def index
@@ -49,9 +48,11 @@ module Teachers
           :required,
           :multichoice,
           :free_answer,
+          :_destroy,
           options_attributes: [
             :id,
-            :text
+            :text,
+            :_destroy
           ]
         ]
       ]

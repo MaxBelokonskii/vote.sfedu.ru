@@ -1,0 +1,21 @@
+doctype html
+html lang="ru"
+  head
+    meta content=("text/html; charset=UTF-8") http-equiv="Content-Type" /
+    meta charset="utf-8" /
+    meta content="NOODP" name="ROBOTS" /
+    meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /
+    title Система анкетирования ЮФУ — Кабинет преподавателя
+    = csrf_meta_tags
+    = vite_client_tag
+    = vite_stylesheet_tag 'tailwind', media: 'all'
+  body.bg-gray-50.min-h-screen
+    = render 'shared/header'
+    = render 'shared/flashes'
+    main.max-w-screen-xl.mx-auto.px-4.py-6
+      .flex.flex-col.xl_flex-row.gap-6
+        aside.w-full.xl_w-56.shrink-0
+          = render 'teachers/shared/sidebar'
+        .flex-1.min-w-0
+          = yield
+    = vite_javascript_tag 'admin'
