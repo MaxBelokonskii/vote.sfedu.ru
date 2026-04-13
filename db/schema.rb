@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_10_091140) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_13_205056) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -372,7 +372,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_10_091140) do
     t.integer "kind", default: 0
     t.string "encrypted_snils"
     t.string "stale_external_id"
+    t.string "origin", default: "imported", null: false
+    t.datetime "deleted_at"
     t.index ["external_id"], name: "index_teachers_on_external_id"
+    t.index ["origin"], name: "index_teachers_on_origin"
   end
 
   create_table "teachers_rosters", force: :cascade do |t|

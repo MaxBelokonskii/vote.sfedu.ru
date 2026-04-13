@@ -7,13 +7,33 @@ class Teacher < ApplicationRecord
   has_many :teachers_rosters, dependent: :destroy
 
   enum kind: [:common, :physical_education, :foreign_language]
+  enum origin: {imported: "imported", manual: "manual"}, _prefix: :origin
+
+  scope :active, -> { where(deleted_at: nil) }
+  scope :deleted, -> { where.not(deleted_at: nil) }
+
+  validates :name, presence: true
+  validates :snils, format: {with: /\A\d{11}\z/, allow_blank: true, message: "должен содержать 11 цифр"}
+  validates :snils, presence: true, if: :origin_manual?
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[id name external_id kind created_at updated_at]
+    %w[id name external_id kind origin created_at updated_at]
   end
 
   def self.ransackable_associations(_auth_object = nil)
     []
+  end
+
+  def soft_delete!
+    update_column(:deleted_at, Time.current)
+  end
+
+  def deleted?
+    deleted_at.present?
+  end
+
+  def editable_by_admin?
+    origin_manual?
   end
 
   def stage_relations(stage)
