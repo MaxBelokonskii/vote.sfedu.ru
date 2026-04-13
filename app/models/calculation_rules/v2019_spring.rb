@@ -17,6 +17,8 @@ module CalculationRules
     end
 
     def self.converted_scale_ladder(stage:)
+      return [] if stage.scale_ladder.blank?
+
       stage.scale_ladder.map do |range|
         range_begin, range_end = range.split("...")
         exclude_end = !range_end.nil?

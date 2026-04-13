@@ -55,6 +55,7 @@ class Stage < ApplicationRecord
   def converted_scale_ladder
     return unless with_scale?
 
+    recalculate_scale_ladder! if scale_ladder.blank?
     calculation_rule_klass.converted_scale_ladder(stage: self)
   end
 
@@ -62,7 +63,7 @@ class Stage < ApplicationRecord
     return unless with_scale?
 
     ladder = calculation_rule_klass.recalculate_scale_ladder!(stage: self)
-    update_attribute(:scale_ladder, ladder)
+    update_column(:scale_ladder, ladder)
   end
 
   private

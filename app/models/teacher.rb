@@ -8,6 +8,14 @@ class Teacher < ApplicationRecord
 
   enum kind: [:common, :physical_education, :foreign_language]
 
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[id name external_id kind created_at updated_at]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    []
+  end
+
   def stage_relations(stage)
     students_teachers_relations.where(semester: stage.semesters)
   end
@@ -17,9 +25,12 @@ class Teacher < ApplicationRecord
     semesters = Semester.all.index_by(&:id)
     current_stage = Stage.current
 
-    students_by_semesters.map do |k, v|
+    students_by_semesters.filter_map do |k, v|
+      semester = semesters[k]
+      next if semester.nil?
+
       {
-        semester: semesters[k].full_title.capitalize,
+        semester: semester.full_title.capitalize,
         is_current: current_stage&.semester_ids&.include?(k) || false,
         count: v
       }
