@@ -3,7 +3,10 @@ module Admin
     class RawTeachersController < BaseController
       def index
         @student = Student.find(params[:student_id])
-        @teachers_data ||= teachers_from_soap
+        @teachers_data = teachers_from_soap
+      rescue ArgumentError, Savon::Error, Errno::ECONNREFUSED, SocketError => e
+        @teachers_data = []
+        @soap_error = e.message
       end
 
       private
