@@ -1,16 +1,41 @@
 = render 'shared/back_link', path: admin_teachers_path, label: 'К списку преподавателей'
 
-.mb-6
-  h1.text-2xl.font-bold.text-gray-900 = @teacher.name
+.mb-6.flex.items-start.justify-between.gap-4
+  div
+    .flex.items-center.gap-3.mb-2
+      h1.text-2xl.font-bold.text-gray-900 = @teacher.name
+      - if @teacher.origin_manual?
+        span.text-xs.px-2.py-0.5.rounded.bg-emerald-100.text-emerald-700 Создан вручную
+      - else
+        span.text-xs.px-2.py-0.5.rounded.bg-gray-100.text-gray-600 Из 1С
+    p.text-sm.text-gray-500 Тип: #{teacher_kind_label(@teacher)}
+
+  - if @teacher.editable_by_admin?
+    .flex.items-center.gap-2
+      = link_to 'Редактировать', edit_admin_teacher_path(@teacher), class: 'px-4 py-2 text-sm font-medium text-primary border border-primary rounded-lg hover_bg-primary-50 transition-colors no-underline'
+      div data-controller="confirm-modal"
+        button.px-4.py-2.text-sm.font-medium.text-red-600.border.border-red-300.rounded-lg.hover_bg-red-50.transition-colors.cursor-pointer.bg-transparent type="button" data-action="confirm-modal#open"
+          | Удалить
+        dialog.rounded-xl.border.border-gray-200.shadow-xl.p-0 data-confirm-modal-target="dialog"
+          .p-6
+            h3.text-lg.font-semibold.text-gray-900.mb-2 Подтверждение удаления
+            p.text-sm.text-gray-600.mb-6 Вы уверены, что хотите удалить этого преподавателя? Данные не будут потеряны, преподаватель будет скрыт.
+            .flex.justify-end.gap-3
+              button.px-4.py-2.text-sm.font-medium.text-gray-600.bg-gray-100.rounded-lg.hover_bg-gray-200.transition-colors.cursor-pointer.border-0 type="button" data-action="confirm-modal#close" Отмена
+              = button_to 'Да, удалить', admin_teacher_path(@teacher), method: :delete, class: 'px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover_bg-red-700 transition-colors cursor-pointer border-0'
+
+- unless @teacher.editable_by_admin?
+  .mb-6.p-3.bg-blue-50.border.border-blue-200.rounded-lg
+    p.text-sm.text-blue-800 Запись импортирована из 1С. Редактирование через UI недоступно.
 
 .bg-white.rounded-lg.border.border-gray-200.p-4.mb-6
   dl.grid.grid-cols-1.gap-2.text-sm class="sm_grid-cols-[200px_1fr]"
     dt.font-medium.text-gray-600 Hash для СНИЛСа
-    dd.text-gray-900 = @teacher.encrypted_snils
+    dd.text-gray-900 = @teacher.encrypted_snils.presence || '<i class="text-gray-400">не задан</i>'.html_safe
     dt.font-medium.text-gray-600 Тип
-    dd.text-gray-900 = @teacher.kind
+    dd.text-gray-900 = teacher_kind_label(@teacher)
     dt.font-medium.text-gray-600 Идентификатор в 1С
-    dd.text-gray-900 = @teacher.external_id || '<i class="text-gray-400">не передан</i>'.html_safe
+    dd.text-gray-900 = @teacher.external_id.presence || '<i class="text-gray-400">не передан</i>'.html_safe
 
 h3.text-lg.font-semibold.text-gray-900.mb-3 Видимость у студентов
 
@@ -25,10 +50,15 @@ p.text-sm.text-gray-600.mb-3
         th.px-4.py-3.font-medium.text-gray-600 Семестр
         th.px-4.py-3.font-medium.text-gray-600 Число студентов
     tbody
-      - @teacher.relations_by_semesters.each do |r|
-        tr.border-t.border-gray-200 class=(r[:is_current] ? 'italic' : '')
-          td.px-4.py-3 = r[:is_current] ? "<i>#{r[:semester]}</i>".html_safe : r[:semester]
-          td.px-4.py-3 = r[:count]
+      - relations = @teacher.relations_by_semesters
+      - if relations.any?
+        - relations.each do |r|
+          tr.border-t.border-gray-200 class=(r[:is_current] ? 'italic' : '')
+            td.px-4.py-3 = r[:is_current] ? "<i>#{r[:semester]}</i>".html_safe : r[:semester]
+            td.px-4.py-3 = r[:count]
+      - else
+        tr
+          td.px-4.py-8.text-center.text-gray-500 colspan='2' Нет связей со студентами
 
 h3.text-lg.font-semibold.text-gray-900.mb-3 Результаты по стадиям анкетирования
 

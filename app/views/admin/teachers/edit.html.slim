@@ -1,0 +1,7 @@
+= render 'shared/back_link', path: admin_teacher_path(@teacher), label: 'К преподавателю'
+
+.mb-6
+  h1.text-2xl.font-bold.text-gray-900 Редактирование преподавателя
+  p.text-gray-500.text-sm.mt-1 = @teacher.name
+
+= render 'form'
