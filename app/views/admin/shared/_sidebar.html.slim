@@ -23,8 +23,13 @@ nav.space-y-1
   .border-t.border-gray-200.my-2
 
   span.block.px-3.py-2.text-xs.font-semibold.text-gray-400.uppercase.tracking-wider Управление
-  span.block.px-3.py-2.text-sm.text-gray-400 Пользователи
-  span.block.px-3.py-2.text-sm.text-gray-400 Администраторы
+  - users_active = controller_path == 'admin/users' && params[:role] != 'admin'
+  - admins_active = controller_path == 'admin/users' && params[:role] == 'admin'
+  - base_sidebar = 'block px-3 py-2 rounded-lg text-sm transition-colors no-underline'
+  - active_sidebar = 'bg-primary text-white hover_bg-primary-700'
+  - inactive_sidebar = 'text-gray-700 hover_bg-gray-100'
+  = link_to 'Пользователи', admin_users_path, class: "#{base_sidebar} #{users_active ? active_sidebar : inactive_sidebar}"
+  = link_to 'Администраторы', admin_users_path(role: 'admin'), class: "#{base_sidebar} #{admins_active ? active_sidebar : inactive_sidebar}"
 
   .border-t.border-gray-200.my-2
 

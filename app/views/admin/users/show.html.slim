@@ -1,0 +1,75 @@
+= render 'shared/back_link', path: admin_users_path, label: 'К списку пользователей'
+
+.mb-6
+  h1.text-2xl.font-bold.text-gray-900 = @user.email.presence || @user.nickname
+  p.text-sm.text-gray-500.mt-1 ID: #{@user.id}
+
+h3.text-lg.font-semibold.text-gray-900.mb-3 Данные аккаунта
+
+.bg-white.rounded-lg.border.border-gray-200.p-4.mb-6
+  dl.grid.grid-cols-1.gap-2.text-sm class="sm_grid-cols-[220px_1fr]"
+    dt.font-medium.text-gray-600 E-Mail
+    dd.text-gray-900 = @user.email.presence || '<i class="text-gray-400">не передан</i>'.html_safe
+    dt.font-medium.text-gray-600 Логин
+    dd.text-gray-900 = @user.nickname
+    dt.font-medium.text-gray-600 Identity URL
+    dd.text-gray-900.break-all.text-xs.font-mono = @user.identity_url
+    dt.font-medium.text-gray-600 Имя
+    dd.text-gray-900 = @user.name.presence || '<i class="text-gray-400">не передано</i>'.html_safe
+    dt.font-medium.text-gray-600 Заходов на сайт
+    dd.text-gray-900 = @user.sign_in_count
+    dt.font-medium.text-gray-600 Последний вход
+    dd.text-gray-900
+      - if @user.last_sign_in_at
+        = l @user.last_sign_in_at
+        - if @user.last_sign_in_ip
+          span.text-xs.text-gray-500.ml-2 (IP: #{@user.last_sign_in_ip})
+      - else
+        i.text-gray-400 никогда
+    dt.font-medium.text-gray-600 Зарегистрирован
+    dd.text-gray-900 = l @user.created_at
+
+h3.text-lg.font-semibold.text-gray-900.mb-3 Связанная сущность
+
+.bg-white.rounded-lg.border.border-gray-200.p-4.mb-6
+  - if @user.kind.is_a?(Student)
+    .flex.items-center.justify-between
+      div
+        span.text-xs.px-2.py-0.5.rounded.bg-blue-100.text-blue-700 Студент
+        p.text-base.font-medium.text-gray-900.mt-2 = @user.kind.name
+      = link_to 'Открыть карточку студента', admin_student_path(@user.kind), class: 'px-3 py-1.5 text-sm text-primary border border-primary rounded-lg hover_bg-primary-50 transition-colors no-underline'
+  - elsif @user.kind.is_a?(Teacher)
+    .flex.items-center.justify-between
+      div
+        span.text-xs.px-2.py-0.5.rounded.bg-emerald-100.text-emerald-700 Преподаватель
+        p.text-base.font-medium.text-gray-900.mt-2 = @user.kind.name
+      = link_to 'Открыть карточку преподавателя', admin_teacher_path(@user.kind), class: 'px-3 py-1.5 text-sm text-primary border border-primary rounded-lg hover_bg-primary-50 transition-colors no-underline'
+  - else
+    p.text-sm.text-gray-500 Не связан со студентом или преподавателем
+
+h3.text-lg.font-semibold.text-gray-900.mb-3 Роль пользователя
+
+.bg-white.rounded-lg.border.border-gray-200.p-4
+  = form_with model: [:admin, @user], local: true do |f|
+    p.text-sm.text-gray-600.mb-3
+      | Текущая роль:
+      span.font-medium.text-gray-900.ml-1
+        - case @user.role
+        - when 'admin'
+          | Администратор
+        - when 'moderator'
+          | Модератор
+        - else
+          | Обычный
+    .flex.items-center.gap-3
+      = f.select :role, User.roles.keys.map { |r| [translate_role(r), r] }, {}, class: 'rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary'
+      = f.submit 'Сохранить', class: 'px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium cursor-pointer border-0'
+    p.text-xs.text-gray-500.mt-2
+      strong Обычный
+      | — стандартный пользователь.
+      |
+      strong Модератор
+      | — расширенные права.
+      |
+      strong Администратор
+      | — полный доступ к админке.
