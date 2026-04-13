@@ -1,3 +1,5 @@
+= render 'shared/back_link', path: admin_stages_path, label: 'К списку стадий'
+
 .mb-6.flex.items-start.justify-between
   div
     h1.text-2xl.font-bold.text-gray-900 Рейтинг НПР с #{l(@stage.starts_at, format: :only_date)} по #{l(@stage.ends_at, format: :only_date)}

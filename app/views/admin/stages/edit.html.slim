@@ -1,3 +1,5 @@
+= render 'shared/back_link', path: admin_stage_path(@stage), label: 'К стадии'
+
 .mb-6
   h1.text-2xl.font-bold.text-gray-900 Редактирование стадии
   p.text-gray-500.text-sm.mt-1 Рейтинг НПР с #{l(@stage.starts_at, format: :only_date)} по #{l(@stage.ends_at, format: :only_date)}

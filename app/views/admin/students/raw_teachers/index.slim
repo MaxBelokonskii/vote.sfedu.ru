@@ -1,26 +1,34 @@
+= render 'shared/back_link', path: admin_student_path(@student), label: 'К студенту'
+
 .mb-6
   h1.text-2xl.font-bold.text-gray-900 = @student.name
 
 h3.text-lg.font-semibold.text-gray-900.mb-3 Преподаватели студента из 1С
 
-.bg-white.rounded-lg.border.border-gray-200.overflow-hidden
-  table.w-full.text-sm.text-left
-    thead.bg-gray-50
-      tr
-        th.px-4.py-3.font-medium.text-gray-600 Имя
-        th.px-4.py-3.font-medium.text-gray-600 ID в 1С
-        th.px-4.py-3.font-medium.text-gray-600 СНИЛС
-        th.px-4.py-3.font-medium.text-gray-600 Статус
-        th.px-4.py-3.font-medium.text-gray-600 Действия
-    tbody
-      - @teachers_data.each do |teacher|
-        tr.border-t.border-gray-200.hover_bg-gray-50
-          td.px-4.py-3 = teacher[:name]
-          td.px-4.py-3
-            small.text-xs = teacher[:external_id] || '<i class="text-gray-400">Не передан</i>'.html_safe
-          td.px-4.py-3
-            small.text-xs = teacher[:snils] || '<i class="text-gray-400">Не передан</i>'.html_safe
-          td.px-4.py-3 = teacher[:record].valid? ? 'OK' : teacher[:record].errors.full_messages
-          td.px-4.py-3
-            - if teacher[:record].persisted?
-              = link_to 'Подробнее', admin_teacher_path(teacher[:record]), class: 'text-primary hover_underline'
+- if @soap_error.present?
+  .p-4.bg-amber-50.border.border-amber-200.rounded-lg
+    h4.text-sm.font-semibold.text-amber-800.mb-1 Данные из 1С недоступны
+    p.text-sm.text-amber-700 Не удалось подключиться к сервису 1С. Проверьте настройки SOAP или попробуйте позже.
+    p.text-xs.text-amber-600.mt-2.font-mono = @soap_error
+- else
+  .bg-white.rounded-lg.border.border-gray-200.overflow-hidden
+    table.w-full.text-sm.text-left
+      thead.bg-gray-50
+        tr
+          th.px-4.py-3.font-medium.text-gray-600 Имя
+          th.px-4.py-3.font-medium.text-gray-600 ID в 1С
+          th.px-4.py-3.font-medium.text-gray-600 СНИЛС
+          th.px-4.py-3.font-medium.text-gray-600 Статус
+          th.px-4.py-3.font-medium.text-gray-600 Действия
+      tbody
+        - @teachers_data.each do |teacher|
+          tr.border-t.border-gray-200.hover_bg-gray-50
+            td.px-4.py-3 = teacher[:name]
+            td.px-4.py-3
+              small.text-xs = teacher[:external_id] || '<i class="text-gray-400">Не передан</i>'.html_safe
+            td.px-4.py-3
+              small.text-xs = teacher[:snils] || '<i class="text-gray-400">Не передан</i>'.html_safe
+            td.px-4.py-3 = teacher[:record].valid? ? 'OK' : teacher[:record].errors.full_messages
+            td.px-4.py-3
+              - if teacher[:record].persisted?
+                = link_to 'Подробнее', admin_teacher_path(teacher[:record]), class: 'text-primary hover_underline'

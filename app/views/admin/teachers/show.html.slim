@@ -1,8 +1,10 @@
+= render 'shared/back_link', path: admin_teachers_path, label: 'К списку преподавателей'
+
 .mb-6
   h1.text-2xl.font-bold.text-gray-900 = @teacher.name
 
 .bg-white.rounded-lg.border.border-gray-200.p-4.mb-6
-  dl.grid.grid-cols-1.sm_grid-cols-[200px_1fr].gap-2.text-sm
+  dl.grid.grid-cols-1.gap-2.text-sm class="sm_grid-cols-[200px_1fr]"
     dt.font-medium.text-gray-600 Hash для СНИЛСа
     dd.text-gray-900 = @teacher.encrypted_snils
     dt.font-medium.text-gray-600 Тип

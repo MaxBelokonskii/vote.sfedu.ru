@@ -8,11 +8,10 @@
 - if @stages.any?
   .space-y-3
     - @stages.each do |stage|
-      .p-5.bg-white.rounded-xl.border.border-gray-200.hover_shadow-md.hover_border-gray-300.transition-all.duration-200.group
+      .p-5.bg-white.rounded-xl.border.border-gray-200.hover_shadow-md.hover_border-gray-300.transition-all.duration-200.group.cursor-pointer data-controller="clickable-card" data-clickable-card-url-value=admin_stage_path(stage) data-action="click->clickable-card#navigate"
         .flex.items-center.justify-between
           div
-            = link_to admin_stage_path(stage), class: "no-underline" do
-              h5.text-base.font-semibold.text-gray-900.group-hover_text-primary.transition-colors.duration-200 Рейтинг НПР с #{l(stage.starts_at, format: :only_date)} по #{l(stage.ends_at, format: :only_date)}
+            h5.text-base.font-semibold.text-gray-900.group-hover_text-primary.transition-colors.duration-200 Рейтинг НПР с #{l(stage.starts_at, format: :only_date)} по #{l(stage.ends_at, format: :only_date)}
             p.text-sm.text-gray-500.mt-1 = stage_semesters_list(stage).capitalize
           .flex.items-center.gap-3
             - if stage.current?
