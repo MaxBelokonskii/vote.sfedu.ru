@@ -13,5 +13,10 @@ module Teachers
     def ensure_teacher
       redirect_to root_path unless current_user&.teacher?
     end
+
+    def current_teacher
+      @current_teacher ||= current_user.kind if current_user&.kind.is_a?(Teacher)
+    end
+    helper_method :current_teacher
   end
 end

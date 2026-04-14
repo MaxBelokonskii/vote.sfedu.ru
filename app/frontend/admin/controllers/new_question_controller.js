@@ -50,14 +50,26 @@ export default class extends Controller {
   }
 
   addQuestionToList(question) {
-    const html = `
-      <label class="flex items-center gap-3 p-3 rounded-lg border border-primary bg-primary-50 cursor-pointer hover_bg-gray-50 transition-colors">
-        <input type="checkbox" name="stage[question_ids][]" value="${question.id}" checked class="rounded border-gray-300 text-primary focus_ring-primary">
-        <span class="text-sm text-gray-700">${question.text}</span>
-        <span class="text-xs text-gray-400 ml-auto">макс. ${question.max_rating}</span>
-      </label>
-    `
-    this.questionsListTarget.insertAdjacentHTML("beforeend", html)
+    const label = document.createElement("label")
+    label.className = "flex items-center gap-3 p-3 rounded-lg border border-primary bg-primary-50 cursor-pointer hover_bg-gray-50 transition-colors"
+
+    const checkbox = document.createElement("input")
+    checkbox.type = "checkbox"
+    checkbox.name = "stage[question_ids][]"
+    checkbox.value = question.id
+    checkbox.checked = true
+    checkbox.className = "rounded border-gray-300 text-primary focus_ring-primary"
+
+    const textSpan = document.createElement("span")
+    textSpan.className = "text-sm text-gray-700"
+    textSpan.textContent = question.text
+
+    const ratingSpan = document.createElement("span")
+    ratingSpan.className = "text-xs text-gray-400 ml-auto"
+    ratingSpan.textContent = `макс. ${question.max_rating}`
+
+    label.append(checkbox, textSpan, ratingSpan)
+    this.questionsListTarget.appendChild(label)
   }
 
   resetForm() {

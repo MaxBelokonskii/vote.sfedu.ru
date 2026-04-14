@@ -6,7 +6,8 @@ class Ability
 
     if user.teacher?
       can %i[read create update], Survey
-      can :index, Student
+      teacher = user.kind
+      can :index, Student, id: teacher.students_teachers_relations.select(:student_id) if teacher.is_a?(Teacher)
     end
 
     if user.student?
