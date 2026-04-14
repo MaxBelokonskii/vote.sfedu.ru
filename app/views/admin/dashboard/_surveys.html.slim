@@ -16,4 +16,4 @@
               = link_to survey[:title], survey_path(survey[:passcode]), class: 'text-primary hover_underline no-underline'
             td.px-4.py-3.text-gray-700 = survey[:creator_name]
             td.px-4.py-3 = survey[:respondents_count]
-            td.px-4.py-3.text-gray-500 = l(survey[:active_until])
+            td.px-4.py-3.text-gray-500 = survey[:active_until] ? l(survey[:active_until]) : "—"

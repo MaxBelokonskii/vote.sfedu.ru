@@ -22,61 +22,73 @@ module Admin
 
     private
 
+    def current_stage
+      @current_stage ||= Stage.current
+    end
+
     def kpi_metrics
       {
         students_count: Student.count,
         teachers_count: Teacher.active.count,
         manual_teachers_count: Teacher.active.origin_manual.count,
         students_participated: current_stage_student_participation,
-        active_polls_count: Poll.not_archived.where("starts_at <= ? AND ends_at >= ?", Time.current, Time.current).count,
+        active_polls_count: Poll.not_archived.active.count,
         surveys_count: Survey.count,
         active_surveys_count: Survey.where("active_until >= ?", Date.current).count
       }
     end
 
     def current_stage_section
-      stage = Stage.current
-      return nil unless stage
+      return nil unless current_stage
 
-      participations = stage.participations
+      participations = current_stage.participations
       unique_students = participations.distinct.count(:student_id)
       unique_teachers = participations.distinct.count(:teacher_id)
 
       teachers_below_limit = participations
         .group(:teacher_id)
-        .having("COUNT(*) < ?", stage.lower_participants_limit)
+        .having("COUNT(*) < ?", current_stage.lower_participants_limit)
         .count
         .size
 
       {
-        id: stage.id,
-        starts_at: stage.starts_at,
-        ends_at: stage.ends_at,
+        id: current_stage.id,
+        starts_at: current_stage.starts_at,
+        ends_at: current_stage.ends_at,
         participations_count: participations.count,
         unique_students: unique_students,
         unique_teachers: unique_teachers,
         teachers_below_limit: teachers_below_limit,
-        lower_participants_limit: stage.lower_participants_limit,
-        by_faculty: faculty_breakdown(stage)
+        lower_participants_limit: current_stage.lower_participants_limit,
+        by_faculty: faculty_breakdown(current_stage)
       }
     end
 
     def faculty_breakdown(stage)
-      Faculty.all.map do |faculty|
-        students_count = faculty.students.count
-        participants = faculty.participants(stage).size
+      faculty_ids = Faculty.pluck(:id, :name)
+      student_counts = GradeBook.group(:faculty_id).distinct.count(:student_id)
+      participant_counts = Participation
+        .where(stage: stage)
+        .joins(student: :grade_books)
+        .group("grade_books.faculty_id")
+        .distinct
+        .count("participations.student_id")
+
+      faculty_ids.map do |id, name|
+        students_count = student_counts[id] || 0
+        participants = participant_counts[id] || 0
         {
-          name: faculty.name,
+          name: name,
           students_count: students_count,
           participants_count: participants,
-          coverage: (students_count.positive? ? (participants * 100.0 / students_count).round(1) : 0)
+          coverage: students_count.positive? ? (participants * 100.0 / students_count).round(1) : 0
         }
       end.sort_by { |row| -row[:coverage] }
     end
 
     def active_polls_section
-      Poll.not_archived
-        .where("starts_at <= ? AND ends_at >= ?", Time.current, Time.current)
+      Poll.not_archived.active
+        .includes(:options)
         .limit(5)
         .map { |poll| poll_summary(poll) }
     end
@@ -118,11 +130,11 @@ module Admin
     def participation_trend_30d
       start_date = 30.days.ago.to_date
       raw = Participation.where("created_at >= ?", start_date.beginning_of_day)
-        .group("DATE(created_at)")
+        .group(Arel.sql("DATE(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Moscow')"))
         .count
 
       (start_date..Date.current).map do |date|
-        {date: date, count: raw[date] || raw[date.to_s] || 0}
+        {date: date, count: raw[date] || 0}
       end
     end
 
@@ -154,11 +166,10 @@ module Admin
         }
       ]
 
-      stage = Stage.current
-      if stage
+      if current_stage
         checks << {
           label: "Преподаватели без оценок в текущей стадии",
-          count: teachers_without_participations_in(stage),
+          count: teachers_without_participations_in(current_stage),
           level: :warning
         }
       end
@@ -181,11 +192,10 @@ module Admin
     end
 
     def current_stage_student_participation
-      stage = Stage.current
-      return {count: 0, total: Student.count, stage_active: false} unless stage
+      return {count: 0, total: Student.count, stage_active: false} unless current_stage
 
       {
-        count: stage.participations.distinct.count(:student_id),
+        count: current_stage.participations.distinct.count(:student_id),
         total: Student.count,
         stage_active: true
       }
