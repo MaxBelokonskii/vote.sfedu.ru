@@ -1,7 +1,7 @@
 class Admin::TeachersController < Admin::BaseController
-  load_and_authorize_resource
-
+  before_action :load_active_teacher, only: [:show, :edit, :update, :destroy]
   before_action :ensure_manual, only: [:edit, :update, :destroy]
+  authorize_resource
 
   def index
     @q = Teacher.active.ransack(params[:q])
@@ -9,7 +9,7 @@ class Admin::TeachersController < Admin::BaseController
   end
 
   def show
-    @results = Stage.all.map { |stage|
+    @results = Stage.active.map { |stage|
       {
         stage: stage,
         results: stage.calculation_rule_klass.new(@teacher, stage).call
@@ -24,7 +24,6 @@ class Admin::TeachersController < Admin::BaseController
   def create
     @teacher = Teacher.new(teacher_params.merge(origin: :manual))
     if @teacher.save
-      @teacher.encrypt_snils! if @teacher.snils.present?
       redirect_to admin_teacher_path(@teacher), notice: "Преподаватель создан"
     else
       render :new, status: :unprocessable_entity
@@ -36,7 +35,6 @@ class Admin::TeachersController < Admin::BaseController
 
   def update
     if @teacher.update(teacher_params)
-      @teacher.encrypt_snils! if @teacher.snils.present?
       redirect_to admin_teacher_path(@teacher), notice: "Преподаватель обновлён"
     else
       render :edit, status: :unprocessable_entity
@@ -52,6 +50,12 @@ class Admin::TeachersController < Admin::BaseController
 
   def teacher_params
     params.require(:teacher).permit(:name, :kind, :snils, :external_id)
+  end
+
+  def load_active_teacher
+    @teacher = Teacher.active.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to admin_teachers_path, alert: "Преподаватель не найден"
   end
 
   def ensure_manual
