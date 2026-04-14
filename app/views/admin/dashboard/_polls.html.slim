@@ -11,7 +11,7 @@
             div.flex-1.min-w-0
               = link_to poll[:name], admin_poll_path(poll[:id]), class: 'text-sm font-semibold text-gray-900 hover_text-primary transition-colors no-underline'
               p.text-xs.text-gray-500.mt-1 до #{l(poll[:ends_at], format: :only_date)}
-            span.text-xs.font-medium.text-gray-600.shrink-0 = pluralize(poll[:total_votes], 'голос', 'голоса', 'голосов')
+            span.text-xs.font-medium.text-gray-600.shrink-0 #{poll[:total_votes]} голос.
 
           - if poll[:top_options].any?
             .space-y-1.5
