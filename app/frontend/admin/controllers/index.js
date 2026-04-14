@@ -7,11 +7,13 @@ import NewQuestionController from "./new_question_controller"
 import ConfirmModalController from "./confirm_modal_controller"
 import ClickableCardController from "./clickable_card_controller"
 import NestedFieldsController from "./nested_fields_controller"
+import ChartController from "./chart_controller"
 
 application.register("toggle-fields", ToggleFieldsController)
 application.register("new-question", NewQuestionController)
 application.register("confirm-modal", ConfirmModalController)
 application.register("clickable-card", ClickableCardController)
 application.register("nested-fields", NestedFieldsController)
+application.register("chart", ChartController)
 
 export { application }
