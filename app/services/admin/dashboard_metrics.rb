@@ -139,7 +139,7 @@ module Admin
       checks = [
         {
           label: "Студенты без зачётных книжек",
-          count: Student.without_grade_books.size,
+          count: Student.without_grade_books.length,
           level: :warning
         },
         {
