@@ -1,5 +1,6 @@
 class Admin::UsersController < Admin::BaseController
-  load_and_authorize_resource
+  authorize_resource
+  before_action :load_user, only: [:show, :update]
 
   def index
     @q = User.ransack(params[:q])
@@ -24,5 +25,9 @@ class Admin::UsersController < Admin::BaseController
 
   def user_params
     params.require(:user).permit(:role)
+  end
+
+  def load_user
+    @user = User.find(params[:id])
   end
 end

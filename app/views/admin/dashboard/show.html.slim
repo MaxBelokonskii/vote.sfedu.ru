@@ -1,0 +1,21 @@
+.mb-8
+  h1.text-2xl.font-bold.text-gray-900 Дашборд администратора
+  p.text-gray-500.text-sm.mt-1 Обзор ключевых метрик и состояния системы. Данные обновляются раз в 5 минут.
+
+= render 'kpi_cards', kpi: @metrics[:kpi], current_stage: @metrics[:current_stage]
+
+.grid.grid-cols-1.lg_grid-cols-2.gap-6.mt-8
+  = render 'current_stage', stage: @metrics[:current_stage]
+  = render 'polls', polls: @metrics[:polls]
+
+.grid.grid-cols-1.lg_grid-cols-2.gap-6.mt-6
+  = render 'participation_chart', trend: @metrics[:participation_trend]
+  = render 'teacher_kinds_chart', kinds: @metrics[:teacher_kinds]
+
+.grid.grid-cols-1.lg_grid-cols-2.gap-6.mt-6
+  = render 'data_quality', checks: @metrics[:data_quality]
+  = render 'user_activity', activity: @metrics[:user_activity]
+
+- if @metrics[:surveys].any?
+  .mt-6
+    = render 'surveys', surveys: @metrics[:surveys]

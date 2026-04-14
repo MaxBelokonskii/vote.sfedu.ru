@@ -1,0 +1,19 @@
+.bg-white.rounded-xl.border.border-gray-200.p-6
+  h3.text-base.font-semibold.text-gray-900.mb-4 Последние опросы
+
+  .bg-white.rounded-lg.overflow-hidden
+    table.w-full.text-sm.text-left
+      thead.bg-gray-50
+        tr
+          th.px-4.py-3.font-medium.text-gray-600 Название
+          th.px-4.py-3.font-medium.text-gray-600 Автор
+          th.px-4.py-3.font-medium.text-gray-600 Ответов
+          th.px-4.py-3.font-medium.text-gray-600 Активен до
+      tbody
+        - surveys.each do |survey|
+          tr.border-t.border-gray-200.hover_bg-gray-50
+            td.px-4.py-3
+              = link_to survey[:title], survey_path(survey[:passcode]), class: 'text-primary hover_underline no-underline'
+            td.px-4.py-3.text-gray-700 = survey[:creator_name]
+            td.px-4.py-3 = survey[:respondents_count]
+            td.px-4.py-3.text-gray-500 = survey[:active_until] ? l(survey[:active_until]) : "—"

@@ -1,0 +1,28 @@
+.bg-white.rounded-xl.border.border-gray-200.p-6
+  .flex.items-center.justify-between.mb-4
+    h3.text-base.font-semibold.text-gray-900 Активные голосования
+    = link_to 'Все', admin_polls_path, class: 'text-sm text-primary hover_underline no-underline'
+
+  - if polls.any?
+    .space-y-4
+      - polls.each do |poll|
+        .p-4.bg-gray-50.rounded-lg.border.border-gray-200
+          .flex.items-start.justify-between.gap-2.mb-3
+            div.flex-1.min-w-0
+              = link_to poll[:name], admin_poll_path(poll[:id]), class: 'text-sm font-semibold text-gray-900 hover_text-primary transition-colors no-underline'
+              p.text-xs.text-gray-500.mt-1 до #{l(poll[:ends_at], format: :only_date)}
+            span.text-xs.font-medium.text-gray-600.shrink-0 #{poll[:total_votes]} голос.
+
+          - if poll[:top_options].any?
+            .space-y-1.5
+              - poll[:top_options].each do |option|
+                div
+                  .flex.items-center.justify-between.text-xs.mb-1
+                    span.text-gray-700.truncate.pr-2 = option[:text]
+                    span.text-gray-500.shrink-0 #{option[:percentage]}%
+                  .w-full.bg-gray-200.rounded-full.h-1.5.overflow-hidden
+                    div.h-full.bg-emerald-500 style="width: #{option[:percentage]}%;"
+  - else
+    .text-center.py-8
+      p.text-gray-500.text-sm.mb-4 Нет активных голосований
+      = link_to 'Создать голосование', new_admin_poll_path, class: 'inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium no-underline'

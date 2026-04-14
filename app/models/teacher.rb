@@ -12,9 +12,13 @@ class Teacher < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :deleted, -> { where.not(deleted_at: nil) }
 
+  before_save :encrypt_snils_if_changed
+
   validates :name, presence: true
   validates :snils, format: {with: /\A\d{11}\z/, allow_blank: true, message: "должен содержать 11 цифр"}
   validates :snils, presence: true, if: :origin_manual?
+  validates :encrypted_snils, uniqueness: {allow_blank: true, message: "преподаватель с таким СНИЛС уже существует"}
+  validate :snils_checksum_valid, if: -> { origin_manual? && snils.present? }
 
   def self.ransackable_attributes(_auth_object = nil)
     %w[id name external_id kind origin created_at updated_at]
@@ -67,5 +71,17 @@ class Teacher < ApplicationRecord
 
   def encrypt_snils!
     update(encrypted_snils: Snils.encrypt(snils))
+  end
+
+  private
+
+  def encrypt_snils_if_changed
+    return unless snils.present? && snils_changed?
+    self.encrypted_snils = Snils.encrypt(snils)
+  end
+
+  def snils_checksum_valid
+    check = SnilsCheck.new(snils)
+    errors.add(:snils, "неверная контрольная сумма СНИЛС") unless check.valid?
   end
 end

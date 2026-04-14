@@ -1,0 +1,43 @@
+.grid.grid-cols-1.md_grid-cols-2.lg_grid-cols-3.gap-4
+  .bg-white.rounded-xl.border.border-gray-200.p-5
+    p.text-xs.font-semibold.text-gray-500.uppercase.tracking-wider Студенты
+    p.text-3xl.font-bold.text-gray-900.mt-2 = number_with_delimiter(kpi[:students_count])
+
+  .bg-white.rounded-xl.border.border-gray-200.p-5
+    p.text-xs.font-semibold.text-gray-500.uppercase.tracking-wider Преподаватели
+    p.text-3xl.font-bold.text-gray-900.mt-2 = number_with_delimiter(kpi[:teachers_count])
+    - if kpi[:manual_teachers_count].positive?
+      p.text-xs.text-gray-500.mt-1 из них #{kpi[:manual_teachers_count]} вручную
+
+  .bg-white.rounded-xl.border.border-gray-200.p-5
+    p.text-xs.font-semibold.text-gray-500.uppercase.tracking-wider Текущая стадия
+    - if current_stage
+      p.text-lg.font-semibold.text-gray-900.mt-2
+        | #{l(current_stage[:starts_at], format: :only_date)} — #{l(current_stage[:ends_at], format: :only_date)}
+      p.text-sm.text-gray-500.mt-1 #{current_stage[:participations_count]} участий
+    - else
+      p.text-3xl.font-bold.text-gray-400.mt-2 —
+      p.text-xs.text-gray-500.mt-1 Нет активной стадии
+
+  .bg-white.rounded-xl.border.border-gray-200.p-5
+    p.text-xs.font-semibold.text-gray-500.uppercase.tracking-wider Активные голосования
+    p.text-3xl.font-bold.text-gray-900.mt-2 = kpi[:active_polls_count]
+
+  .bg-white.rounded-xl.border.border-gray-200.p-5
+    p.text-xs.font-semibold.text-gray-500.uppercase.tracking-wider Опросы
+    p.text-3xl.font-bold.text-gray-900.mt-2 = kpi[:surveys_count]
+    - if kpi[:active_surveys_count].positive?
+      p.text-xs.text-gray-500.mt-1 активных: #{kpi[:active_surveys_count]}
+
+  - sp = kpi[:students_participated]
+  .bg-white.rounded-xl.border.border-gray-200.p-5
+    p.text-xs.font-semibold.text-gray-500.uppercase.tracking-wider Студентов приняли участие
+    - if sp[:stage_active]
+      p.text-3xl.font-bold.text-gray-900.mt-2 #{sp[:count]} / #{sp[:total]}
+      - pct = sp[:total].positive? ? (sp[:count] * 100.0 / sp[:total]).round(1) : 0
+      .w-full.bg-gray-200.rounded-full.h-1.5.overflow-hidden.mt-2
+        div.h-full.bg-primary style="width: #{[pct, 100].min}%;"
+      p.text-xs.text-gray-500.mt-1 #{pct}% охват
+    - else
+      p.text-3xl.font-bold.text-gray-400.mt-2 —
+      p.text-xs.text-gray-500.mt-1 Нет активной стадии

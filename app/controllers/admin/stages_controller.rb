@@ -1,5 +1,6 @@
 class Admin::StagesController < Admin::BaseController
-  load_and_authorize_resource
+  before_action :load_active_stage, only: [:show, :edit, :update, :destroy]
+  authorize_resource
 
   def index
     @stages = Stage.active.order(starts_at: :desc)
@@ -73,6 +74,12 @@ class Admin::StagesController < Admin::BaseController
       semester_ids: [],
       question_ids: []
     )
+  end
+
+  def load_active_stage
+    @stage = Stage.active.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to admin_stages_path, alert: "Стадия не найдена"
   end
 
   def load_form_collections

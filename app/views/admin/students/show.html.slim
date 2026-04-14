@@ -63,5 +63,5 @@ p.text-sm.text-gray-600.mb-3
     tbody
       - @student.relations_by_semesters.each do |r|
         tr.border-t.border-gray-200 class=(r[:is_current] ? 'italic' : '')
-          td.px-4.py-3 = r[:is_current] ? "<i>#{r[:semester]}</i>".html_safe : r[:semester]
+          td.px-4.py-3 = r[:is_current] ? content_tag(:i, r[:semester]) : r[:semester]
           td.px-4.py-3 = r[:count]

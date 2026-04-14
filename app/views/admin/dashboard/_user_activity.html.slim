@@ -1,0 +1,20 @@
+.bg-white.rounded-xl.border.border-gray-200.p-6
+  .flex.items-center.justify-between.mb-4
+    h3.text-base.font-semibold.text-gray-900 Активность пользователей
+    = link_to 'Пользователи', admin_users_path, class: 'text-sm text-primary hover_underline no-underline'
+
+  .space-y-3
+    .flex.items-center.justify-between.p-3.bg-gray-50.rounded-lg
+      div
+        p.text-xs.text-gray-500 Всего пользователей
+        p.text-lg.font-semibold.text-gray-900 = number_with_delimiter(activity[:total_users])
+
+    .flex.items-center.justify-between.p-3.bg-emerald-50.rounded-lg
+      div
+        p.text-xs.text-emerald-700 Входили за 7 дней
+        p.text-lg.font-semibold.text-emerald-900 = number_with_delimiter(activity[:sign_ins_7d])
+
+    .flex.items-center.justify-between.p-3.bg-blue-50.rounded-lg
+      div
+        p.text-xs.text-blue-700 Входили за 30 дней
+        p.text-lg.font-semibold.text-blue-900 = number_with_delimiter(activity[:sign_ins_30d])
