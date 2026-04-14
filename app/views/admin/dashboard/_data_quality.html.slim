@@ -1,0 +1,10 @@
+.bg-white.rounded-xl.border.border-gray-200.p-6
+  h3.text-base.font-semibold.text-gray-900.mb-4 Качество данных
+
+  .space-y-2
+    - checks.each do |check|
+      .flex.items-center.justify-between.p-3.border.rounded-lg class=dashboard_check_classes(check[:level], check[:count])
+        .flex.items-center.gap-2
+          span.font-bold = dashboard_check_icon(check[:count])
+          span.text-sm = check[:label]
+        span.text-sm.font-bold = check[:count]

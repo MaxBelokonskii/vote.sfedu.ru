@@ -1,0 +1,27 @@
+- labels = ['Общий', 'Физкультура', 'Иностранный язык']
+- values = [kinds[:common], kinds[:physical_education], kinds[:foreign_language]]
+- total = values.sum
+- chart_data = {
+-   labels: labels,
+-   datasets: [{
+-     data: values,
+-     backgroundColor: ['#1565C0', '#FFB300', '#4CAF50'],
+-     borderWidth: 2,
+-     borderColor: '#FFFFFF'
+-   }]
+- }
+- chart_options = {
+-   plugins: {
+-     legend: { position: 'bottom', labels: { padding: 12, font: { size: 12 } } }
+-   },
+-   cutout: '60%'
+- }
+
+.bg-white.rounded-xl.border.border-gray-200.p-6
+  h3.text-base.font-semibold.text-gray-900.mb-2 Типы преподавателей
+  p.text-xs.text-gray-500.mb-4 Всего активных: #{total}
+  .relative style="height: 240px;"
+    - if total.positive?
+      canvas data-controller="chart" data-chart-type-value="doughnut" data-chart-data-value=chart_data.to_json data-chart-options-value=chart_options.to_json
+    - else
+      .flex.items-center.justify-center.h-full.text-gray-400.text-sm Нет данных

@@ -31,7 +31,7 @@ Rails.application.routes.draw do
 
   # Admin
   namespace :admin do
-    root to: "base#index"
+    root to: "dashboard#show"
 
     namespace :support do
       resource :merge_faculties, only: [:show] do

@@ -1,0 +1,28 @@
+- labels = trend.map { |p| p[:date].strftime('%d.%m') }
+- values = trend.map { |p| p[:count] }
+- chart_data = {
+-   labels: labels,
+-   datasets: [{
+-     label: 'Участий',
+-     data: values,
+-     borderColor: '#1565C0',
+-     backgroundColor: 'rgba(21, 101, 192, 0.1)',
+-     fill: true,
+-     tension: 0.3,
+-     pointRadius: 2,
+-     pointHoverRadius: 5
+-   }]
+- }
+- chart_options = {
+-   plugins: { legend: { display: false } },
+-   scales: {
+-     y: { beginAtZero: true, ticks: { precision: 0 } },
+-     x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10 } }
+-   }
+- }
+
+.bg-white.rounded-xl.border.border-gray-200.p-6
+  h3.text-base.font-semibold.text-gray-900.mb-2 Динамика участий
+  p.text-xs.text-gray-500.mb-4 За последние 30 дней — общее количество #{values.sum}
+  .relative style="height: 240px;"
+    canvas data-controller="chart" data-chart-type-value="line" data-chart-data-value=chart_data.to_json data-chart-options-value=chart_options.to_json
