@@ -27,7 +27,7 @@ module Admin
         students_count: Student.count,
         teachers_count: Teacher.active.count,
         manual_teachers_count: Teacher.active.origin_manual.count,
-        admins_count: User.where(role: :admin).count,
+        students_participated: current_stage_student_participation,
         active_polls_count: Poll.not_archived.where("starts_at <= ? AND ends_at >= ?", Time.current, Time.current).count,
         surveys_count: Survey.count,
         active_surveys_count: Survey.where("active_until >= ?", Date.current).count
@@ -177,6 +177,17 @@ module Admin
         sign_ins_7d: User.where("last_sign_in_at >= ?", 7.days.ago).count,
         sign_ins_30d: User.where("last_sign_in_at >= ?", 30.days.ago).count,
         total_users: User.count
+      }
+    end
+
+    def current_stage_student_participation
+      stage = Stage.current
+      return {count: 0, total: Student.count, stage_active: false} unless stage
+
+      {
+        count: stage.participations.distinct.count(:student_id),
+        total: Student.count,
+        stage_active: true
       }
     end
   end

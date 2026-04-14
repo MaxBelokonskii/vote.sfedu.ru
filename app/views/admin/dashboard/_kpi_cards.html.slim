@@ -29,6 +29,15 @@
     - if kpi[:active_surveys_count].positive?
       p.text-xs.text-gray-500.mt-1 активных: #{kpi[:active_surveys_count]}
 
+  - sp = kpi[:students_participated]
   .bg-white.rounded-xl.border.border-gray-200.p-5
-    p.text-xs.font-semibold.text-gray-500.uppercase.tracking-wider Администраторы
-    p.text-3xl.font-bold.text-gray-900.mt-2 = kpi[:admins_count]
+    p.text-xs.font-semibold.text-gray-500.uppercase.tracking-wider Студентов приняли участие
+    - if sp[:stage_active]
+      p.text-3xl.font-bold.text-gray-900.mt-2 #{sp[:count]} / #{sp[:total]}
+      - pct = sp[:total].positive? ? (sp[:count] * 100.0 / sp[:total]).round(1) : 0
+      .w-full.bg-gray-200.rounded-full.h-1.5.overflow-hidden.mt-2
+        div.h-full.bg-primary style="width: #{[pct, 100].min}%;"
+      p.text-xs.text-gray-500.mt-1 #{pct}% охват
+    - else
+      p.text-3xl.font-bold.text-gray-400.mt-2 —
+      p.text-xs.text-gray-500.mt-1 Нет активной стадии
