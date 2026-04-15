@@ -24,4 +24,25 @@ Rails.application.configure do
   config.action_mailer.default_url_options = {host: ENV.fetch("APPLICATION_HOST")}
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = {database: {writing: :primary}}
+
+  # When RAILS_FORCE_SSL=true (default), Rails inserts ActionDispatch::SSL
+  # which does three things: HTTP→HTTPS redirect, HSTS header, and Secure
+  # cookie flag. In production nginx terminates SSL, so:
+  #   - HTTP→HTTPS redirect is handled by nginx (no double redirect needed)
+  #   - HSTS header is set by nginx (see docker/nginx/nginx.conf)
+  #   - BUT: Secure cookie flag is NOT covered by nginx — it must be set here.
+  #
+  # Therefore: set RAILS_FORCE_SSL=false in docker-stack.yml (nginx handles
+  # redirects/HSTS) and explicitly mark session cookies as secure below.
+  config.force_ssl = ENV.fetch("RAILS_FORCE_SSL", "true") == "true"
+
+  # Explicitly set the Secure and HttpOnly flags on the session cookie so that
+  # session tokens are never sent over plain HTTP, regardless of force_ssl.
+  # This is necessary because setting force_ssl=false disables ActionDispatch::SSL
+  # entirely, which would otherwise set these flags automatically.
+  config.session_store :cookie_store,
+    key: "_vote_session",
+    secure: true,
+    httponly: true,
+    same_site: :lax
 end

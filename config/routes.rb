@@ -8,7 +8,10 @@ Rails.application.routes.draw do
 
   devise_for :users, path: "", controllers: {omniauth_callbacks: "auth/omniauth_callbacks"}
 
-  get "login_as", to: "debug#login_as" if ENV["DEBUG_LOGIN_INTO_ACCOUNT"]
+  # Debug login only available in development — NEVER in production.
+  if Rails.env.development? && ENV["DEBUG_LOGIN_INTO_ACCOUNT"]
+    get "login_as", to: "debug#login_as"
+  end
 
   namespace :student, module: "students" do
     root to: "root#show"

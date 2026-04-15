@@ -1,0 +1,202 @@
+# Docker Swarm Stack — production deployment
+#
+# Deploy:   docker stack deploy -c docker-stack.yml vote
+# Scale:    docker service scale vote_web=4
+# Update:   docker service update --image <new-image> vote_web
+#
+# NOTE: Docker Swarm does not support depends_on. Ensure the database
+# is healthy and migrations have completed before scaling web replicas.
+# The migrate service is a separate one-shot task (see Makefile / DEPLOYMENT.md).
+
+version: "3.9"
+
+services:
+  # -------------------------------------------------------------------------
+  # PostgreSQL
+  # -------------------------------------------------------------------------
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      placement:
+        constraints:
+          - node.role == manager
+    networks:
+      - internal
+
+  # -------------------------------------------------------------------------
+  # MinIO (S3-compatible object storage)
+  # -------------------------------------------------------------------------
+  minio:
+    image: minio/minio
+    command: server /data
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - internal
+    # MinIO console (port 9001) is intentionally NOT exposed publicly.
+    # Access via SSH tunnel: ssh -L 9001:localhost:9001 user@server
+
+  # -------------------------------------------------------------------------
+  # MinIO bucket initialisation (run once on first deploy)
+  # -------------------------------------------------------------------------
+  minio-init:
+    image: minio/mc
+    entrypoint: >
+      /bin/sh -c "
+        until mc alias set local http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD; do
+          echo 'Waiting for MinIO...'; sleep 2;
+        done &&
+        mc mb --ignore-existing local/$$S3_BUCKET
+      "
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY}
+      S3_BUCKET: ${S3_BUCKET}
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+    networks:
+      - internal
+
+  # -------------------------------------------------------------------------
+  # Nginx — reverse proxy, SSL termination, load balancer
+  # -------------------------------------------------------------------------
+  nginx:
+    image: nginx:1.25-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      # Mount SSL certificates (see DEPLOYMENT.md for setup instructions).
+      - nginx_ssl:/etc/nginx/ssl:ro
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 5s
+        failure_action: rollback
+    networks:
+      - internal
+      - public
+    depends_on:
+      - web
+
+  # -------------------------------------------------------------------------
+  # Rails web (Puma) — horizontally scalable
+  # -------------------------------------------------------------------------
+  web:
+    image: ${DOCKER_IMAGE:-vote-app:latest}
+    command: bundle exec puma -p 3000 -C ./config/puma.rb
+    env_file: .env.production
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      S3_ENDPOINT: http://minio:9000
+      RAILS_ENV: production
+      # Tell Rails that SSL is terminated at nginx — avoid double redirect.
+      RAILS_FORCE_SSL: "false"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/up || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    deploy:
+      # Starting replicas — autoscaler (scripts/autoscale.sh) adjusts this.
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        # Rolling update: one replica at a time.
+        parallelism: 1
+        delay: 15s
+        failure_action: rollback
+        order: start-first       # Start new replica before stopping old one.
+      rollback_config:
+        parallelism: 0           # Roll back all at once on failure.
+        failure_action: pause
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    stop_grace_period: 35s
+    networks:
+      - internal
+
+  # -------------------------------------------------------------------------
+  # Solid Queue worker
+  # -------------------------------------------------------------------------
+  worker:
+    image: ${DOCKER_IMAGE:-vote-app:latest}
+    command: bundle exec rake solid_queue:start
+    env_file: .env.production
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      S3_ENDPOINT: http://minio:9000
+      RAILS_ENV: production
+      RAILS_FORCE_SSL: "false"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+    stop_grace_period: 60s
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: overlay
+    internal: true
+  public:
+    driver: overlay
+
+volumes:
+  postgres_data:
+  minio_data:
+  nginx_ssl:
+    external: true   # Created manually: docker volume create nginx_ssl
