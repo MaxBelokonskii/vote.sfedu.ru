@@ -24,4 +24,11 @@ Rails.application.configure do
   config.action_mailer.default_url_options = {host: ENV.fetch("APPLICATION_HOST")}
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = {database: {writing: :primary}}
+
+  # Enforce HTTPS for all requests. Nginx terminates SSL but the app also
+  # sets Strict-Transport-Security and secure cookie flags via this setting.
+  # When SSL is terminated at nginx, set RAILS_FORCE_SSL=false to skip the
+  # redirect (nginx handles it), but keep the header/cookie benefits via
+  # the middleware stack.
+  config.force_ssl = ENV.fetch("RAILS_FORCE_SSL", "true") == "true"
 end
