@@ -19,6 +19,19 @@ IMAGE="${REGISTRY:+${REGISTRY}/}vote-app:${IMAGE_TAG}"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }
 
+# Load .env.production into the calling shell so ${POSTGRES_USER} etc.
+# are available when constructing DATABASE_URL below.
+# --env-file in `docker run` only passes vars to the container, not here.
+if [[ -f .env.production ]]; then
+  # shellcheck disable=SC1091
+  set -o allexport
+  source .env.production
+  set +o allexport
+else
+  log "ERROR: .env.production not found. Cannot construct DATABASE_URL."
+  exit 1
+fi
+
 log "=== Deploying ${IMAGE} ==="
 
 # 1. Build and push image (skip if CI already did it)
@@ -31,19 +44,28 @@ if [[ "${SKIP_BUILD:-false}" != "true" ]]; then
   fi
 fi
 
-# 2. Run database migrations as a one-shot service
-log "Running database migrations..."
-docker run --rm \
-  --network "${APP_NAME}_internal" \
-  --env-file .env.production \
-  -e DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}" \
-  -e RAILS_ENV=production \
-  "$IMAGE" \
-  bundle exec rails db:migrate
+# Helper: run a one-shot Rails command in the app image connected to the DB.
+run_rails() {
+  docker run --rm \
+    --network "${APP_NAME}_internal" \
+    --env-file .env.production \
+    -e DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}" \
+    -e RAILS_ENV=production \
+    "$IMAGE" \
+    "$@"
+}
+
+# 2. Run schema migrations
+log "Running schema migrations (db:migrate)..."
+run_rails bundle exec rails db:migrate
+
+# 3. Run data migrations (data_migrate gem — documented in CLAUDE.md)
+log "Running data migrations (db:migrate:data)..."
+run_rails bundle exec rails db:migrate:data
 
 log "Migrations complete."
 
-# 3. Rolling update of web replicas (one at a time)
+# 4. Rolling update of web replicas (one at a time)
 log "Updating web service (rolling)..."
 docker service update \
   --image "$IMAGE" \
@@ -53,7 +75,7 @@ docker service update \
   --update-failure-action rollback \
   "${APP_NAME}_web"
 
-# 4. Update worker service
+# 5. Update worker service
 log "Updating worker service..."
 docker service update \
   --image "$IMAGE" \

@@ -41,5 +41,12 @@ module VoteSfeduRu
     config.generators.system_tests = nil
 
     config.exceptions_app = routes
+
+    # Trust the nginx reverse proxy so that ActionDispatch::RemoteIp resolves
+    # the real client IP from X-Forwarded-For rather than using REMOTE_ADDR
+    # (which is the nginx container overlay IP behind Docker Swarm).
+    # The Docker Swarm overlay network uses 10.0.0.0/8; adjust if your setup differs.
+    config.action_dispatch.trusted_proxies =
+      ActionDispatch::RemoteIp::TRUSTED_PROXIES + [IPAddr.new("10.0.0.0/8")]
   end
 end

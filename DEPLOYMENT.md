@@ -112,10 +112,12 @@ cp /etc/letsencrypt/live/vote.sfedu.ru/fullchain.pem $VOLUME_PATH/
 cp /etc/letsencrypt/live/vote.sfedu.ru/privkey.pem  $VOLUME_PATH/
 
 # Автообновление сертификата (Let's Encrypt выдаёт на 90 дней)
-echo "0 3 * * * certbot renew --quiet && \
+# Используем (crontab -l; echo "...") | crontab - чтобы ДОБАВИТЬ задачу,
+# а не перезаписать весь crontab.
+(crontab -l 2>/dev/null; echo "0 3 * * * certbot renew --quiet && \
   cp /etc/letsencrypt/live/vote.sfedu.ru/fullchain.pem $VOLUME_PATH/ && \
   cp /etc/letsencrypt/live/vote.sfedu.ru/privkey.pem $VOLUME_PATH/ && \
-  docker service update --force vote_nginx" | crontab -
+  docker service update --force vote_nginx") | crontab -
 ```
 
 ### Вариант B: Свой сертификат
@@ -262,6 +264,15 @@ docker run --rm \
   -e RAILS_ENV=production \
   vote-app:latest \
   bundle exec rails db:create db:migrate
+
+# Запустить data-миграции (data_migrate gem, документировано в CLAUDE.md)
+source .env.production && docker run --rm \
+  --network vote_internal \
+  --env-file .env.production \
+  -e DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}" \
+  -e RAILS_ENV=production \
+  vote-app:latest \
+  bundle exec rails db:migrate:data
 
 # Создать первого администратора
 docker run --rm -it \
@@ -436,8 +447,8 @@ echo "Backup created: ${BACKUP_DIR}/db_${DATE}.sql.gz"
 EOF
 chmod +x /opt/vote/scripts/backup.sh
 
-# Добавить в cron (ежедневно в 2:00)
-echo "0 2 * * * source /opt/vote/.env.production && bash /opt/vote/scripts/backup.sh" | crontab -
+# Добавить в cron (ежедневно в 2:00) — append, не перезаписать crontab
+(crontab -l 2>/dev/null; echo "0 2 * * * source /opt/vote/.env.production && bash /opt/vote/scripts/backup.sh") | crontab -
 ```
 
 ### Восстановление из бэкапа
@@ -545,7 +556,7 @@ docker stack rm vote
 - [ ] SSL-сертификат получен и размещён в `nginx_ssl` volume
 - [ ] `.env.production` заполнен всеми значениями
 - [ ] Образ собран: `docker build -t vote-app:latest .`
-- [ ] База создана и мигрирована: `rails db:create db:migrate`
+- [ ] База создана и мигрирована: `rails db:create db:migrate && rails db:migrate:data`
 - [ ] Первый администратор создан
 - [ ] Стек запущен: `docker stack deploy -c docker-stack.yml vote`
 - [ ] Все сервисы в статусе Running
