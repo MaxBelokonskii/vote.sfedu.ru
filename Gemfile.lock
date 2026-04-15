@@ -549,13 +549,6 @@ GEM
       nori (~> 2.4)
       wasabi (>= 3.7, < 6)
     securerandom (0.4.1)
-    sentry-rails (6.5.0)
-      railties (>= 5.2.0)
-      sentry-ruby (~> 6.5.0)
-    sentry-ruby (6.5.0)
-      bigdecimal
-      concurrent-ruby (~> 1.0, >= 1.0.2)
-      logger
     shoulda-matchers (7.0.1)
       activesupport (>= 7.1)
     shrine (3.6.0)
@@ -708,8 +701,6 @@ DEPENDENCIES
   ruby-openid
   sass-rails (>= 6.0)
   savon
-  sentry-rails
-  sentry-ruby
   shoulda-matchers
   shrine (~> 3.0)
   simplecov
