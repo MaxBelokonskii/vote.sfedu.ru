@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  # Health check endpoint for load balancers and container orchestration.
+  # Returns 200 OK when the app is booted and DB connection is healthy.
+  get "up", to: "rails/health#show", as: :rails_health_check
+
   root "pages#index"
   get "about", to: "pages#about", as: :page
 
