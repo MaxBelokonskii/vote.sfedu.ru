@@ -132,8 +132,10 @@ RSpec.describe CalculationRules::V2019Spring do
     it "returns mean_rating when scale disabled" do
       no_scale_stage = create(:stage, :with_semester, :with_questions, questions_count: 1, lower_participants_limit: 0, with_scale: false, with_truncation: false)
       q = no_scale_stage.questions.first
-      Answer.create!(question: q, stage: no_scale_stage, teacher: teacher, ratings: [0, 0, 0, 0, 0, 0, 0, 0, 0, 10])
+      answer = Answer.create!(question: q, stage: no_scale_stage, teacher: teacher)
+      answer.update_column(:ratings, [0, 0, 0, 0, 0, 0, 0, 0, 0, 10])
       result = described_class.new(teacher, no_scale_stage).call
+      expect(result[:mean_rating_of_stage]).to eq(10.0)
       expect(result[:final_rating_of_stage]).to eq(result[:mean_rating_of_stage])
     end
   end
