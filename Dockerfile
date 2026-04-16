@@ -8,7 +8,8 @@ FROM ruby:3.4.3-alpine
 RUN apk update && apk upgrade && \
     apk add --no-cache binutils tar \
                        curl bash \
-                       build-base nodejs npm tzdata postgresql-dev gcompat
+                       build-base nodejs npm tzdata postgresql-dev gcompat \
+                       yaml-dev
 
 WORKDIR /app
 
@@ -22,14 +23,10 @@ RUN bundle config set without "development test" && \
     bundle install -j "$(getconf _NPROCESSORS_ONLN)" --retry 5
 
 # ---------------------------------------------------------------------------
-# Node / Vite asset build
+# Node dependencies (cached separately from app source)
 # ---------------------------------------------------------------------------
 COPY package.json package-lock.json ./
-
-# Install all packages (including devDependencies) for the Vite build step,
-# then immediately remove node_modules to keep the final image lean.
-# Devtools are not present at runtime.
-RUN npm ci && npx vite build && rm -rf node_modules
+RUN npm ci
 
 ENV NODE_ENV=production \
     RAILS_ENV=production \
@@ -41,13 +38,20 @@ ENV NODE_ENV=production \
 # ---------------------------------------------------------------------------
 COPY . ./
 
-# Precompile Sprockets assets.
+# ---------------------------------------------------------------------------
+# Asset build: Vite (Vue SPA) + Sprockets
+# ---------------------------------------------------------------------------
 # SECRET_KEY_BASE=dummy is safe here because precompile never starts the
 # app server and does not touch the database.
 RUN SECRET_KEY_BASE=dummy \
     RAILS_ENV=production \
     DATABASE_URL=postgresql://dummy:dummy@localhost/dummy \
-    ./bin/rails assets:precompile
+    APPLICATION_HOST=dummy \
+    S3_BUCKET=dummy \
+    S3_ACCESS_KEY_ID=dummy \
+    S3_SECRET_ACCESS_KEY=dummy \
+    ./bin/rails assets:precompile && \
+    rm -rf node_modules
 
 # ---------------------------------------------------------------------------
 # Runtime

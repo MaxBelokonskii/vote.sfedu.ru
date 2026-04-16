@@ -9,9 +9,9 @@ Rails.application.configure do
     policy.img_src :self, :data, "https:"
     # 'unsafe-inline' for styles is needed by Tailwind JIT / Vuetify.
     policy.style_src :self, :unsafe_inline
-    # Scripts: self + Vite HMR in development. Remove 'unsafe-eval' in
-    # production; Vuetify and Vite bundles do not require it at runtime.
-    policy.script_src :self
+    # Scripts: 'unsafe-eval' is required because Vue.js compiles in-DOM
+    # templates at runtime (common.js mounts on #common-app with HTML content).
+    policy.script_src :self, :unsafe_eval
     policy.connect_src :self
     policy.object_src :none
     policy.base_uri :self
