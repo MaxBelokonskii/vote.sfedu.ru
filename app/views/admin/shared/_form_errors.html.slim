@@ -1,0 +1,6 @@
+- if record.errors.any?
+  .mb-6.p-4.bg-red-50.border.border-red-200.rounded-lg
+    h3.text-sm.font-semibold.text-red-800.mb-2 Пожалуйста, исправьте ошибки:
+    ul.list-disc.list-inside.space-y-1
+      - record.errors.full_messages.each do |message|
+        li.text-sm.text-red-700 = message

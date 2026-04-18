@@ -1,0 +1,25 @@
+= form_with model: [:admin, @poll], local: true do |f|
+  = render 'admin/shared/form_errors', record: @poll
+
+  .mb-4
+    label.block.text-sm.font-medium.text-gray-700.mb-1 Укажите название для голосования
+    = f.text_field :name, class: admin_input_classes(@poll, :name)
+
+  .grid.grid-cols-1.md_grid-cols-2.gap-4.mb-4
+    div
+      label.block.text-sm.font-medium.text-gray-700.mb-1 Дата начала
+      = f.text_field :starts_at, class: admin_input_classes(@poll, :starts_at), type: "date", min: (Time.current + 1.day).strftime("%Y-%m-%d"), value: (@poll.starts_at&.strftime("%Y-%m-%d"))
+    div
+      label.block.text-sm.font-medium.text-gray-700.mb-1 Дата завершения
+      = f.text_field :ends_at, class: admin_input_classes(@poll, :ends_at), type: "date", min: (Time.current + 2.days).strftime("%Y-%m-%d"), value: (@poll.ends_at&.strftime("%Y-%m-%d"))
+
+  .mb-4
+    label.block.text-sm.font-medium.text-gray-700.mb-1 Выберите, на каких факультетах проводится голосование
+    = f.collection_select :faculty_ids, @faculties, :id, :name, {}, class: admin_input_classes(@poll, :faculties), multiple: true, style: "height: 400px;"
+    p.text-xs.text-gray-500.mt-1
+      | С помощью <code>Ctrl+Левая кнопка мыши</code>/<code>Cmd+Левая кнопка мыши</code> можно выбрать
+      |  несколько вариантов, а с помощью <code>Ctrl+A</code>/<code>Cmd+A</code> – все варианты из списка
+
+  .flex.items-center.gap-3
+    = f.submit(f.object.persisted? ? 'Сохранить' : 'Создать голосование', class: 'px-6 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium cursor-pointer border-0')
+    = link_to 'Отмена', (f.object.persisted? ? admin_poll_path(f.object) : admin_polls_path), class: 'px-4 py-2 text-sm font-medium text-gray-600 hover_text-gray-900 transition-colors no-underline'

@@ -17,6 +17,6 @@ RSpec.describe Poll::FacultyParticipant do
     faculty = create(:faculty)
     Poll::FacultyParticipant.create!(poll: poll, faculty: faculty)
 
-    expect(poll.faculties).to include(faculty)
+    expect(poll.faculties.reload).to include(faculty)
   end
 end

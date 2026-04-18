@@ -55,7 +55,13 @@ Rails.application.routes.draw do
     resources :students do
       resources :raw_teachers, only: [:index], module: :students
     end
-    resources :teachers
+    resources :teachers do
+      collection do
+        get :import
+        post :import
+        get :import_template
+      end
+    end
     resources :questions
     resources :faculties
     resources :users, only: [:index, :show, :update]

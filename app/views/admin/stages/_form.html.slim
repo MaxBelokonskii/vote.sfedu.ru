@@ -1,10 +1,5 @@
 = form_with model: [:admin, @stage], local: true do |f|
-  - if @stage.errors.any?
-    .mb-6.p-4.bg-red-50.border.border-red-200.rounded-lg
-      h3.text-sm.font-semibold.text-red-800.mb-2 Пожалуйста, исправьте ошибки:
-      ul.list-disc.list-inside.space-y-1
-        - @stage.errors.full_messages.each do |message|
-          li.text-sm.text-red-700 = message
+  = render 'admin/shared/form_errors', record: @stage
 
   / Section 1: Dates & Semesters
   .bg-white.rounded-xl.border.border-gray-200.p-6.mb-6
@@ -13,13 +8,14 @@
     .grid.grid-cols-1.md_grid-cols-2.gap-4.mb-6
       div
         label.block.text-sm.font-medium.text-gray-700.mb-1 Дата начала
-        = f.datetime_local_field :starts_at, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary'
+        = f.datetime_local_field :starts_at, class: admin_input_classes(@stage, :starts_at)
       div
         label.block.text-sm.font-medium.text-gray-700.mb-1 Дата окончания
-        = f.datetime_local_field :ends_at, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary'
+        = f.datetime_local_field :ends_at, class: admin_input_classes(@stage, :ends_at)
 
+    - semesters_border = admin_field_error?(@stage, :semesters) ? 'border-red-400 bg-red-50' : 'border-gray-200'
     label.block.text-sm.font-medium.text-gray-700.mb-2 Семестры
-    .grid.grid-cols-1.md_grid-cols-2.xl_grid-cols-3.gap-2
+    .grid.grid-cols-1.md_grid-cols-2.xl_grid-cols-3.gap-2.p-2.rounded-lg class="border #{semesters_border}"
       - @semesters.each do |semester|
         label.flex.items-center.gap-3.p-3.rounded-lg.border.border-gray-200.cursor-pointer.hover_bg-gray-50.transition-colors
           = f.check_box :semester_ids, { multiple: true, checked: f.object.semester_ids.include?(semester.id), class: 'rounded border-gray-300 text-primary focus_ring-primary' }, semester.id, nil
@@ -29,7 +25,8 @@
   .bg-white.rounded-xl.border.border-gray-200.p-6.mb-6 data-controller="new-question"
     h2.text-base.font-semibold.text-gray-900.mb-4 Критерии оценивания
 
-    .grid.grid-cols-1.md_grid-cols-2.gap-2.mb-4 data-new-question-target="questionsList"
+    - questions_border = admin_field_error?(@stage, :questions) ? 'border-red-400 bg-red-50' : 'border-gray-200'
+    .grid.grid-cols-1.md_grid-cols-2.gap-2.mb-4.p-2.rounded-lg data-new-question-target="questionsList" class="border #{questions_border}"
       - @questions.each do |question|
         label.flex.items-center.gap-3.p-3.rounded-lg.border.border-gray-200.cursor-pointer.hover_bg-gray-50.transition-colors
           = f.check_box :question_ids, { multiple: true, checked: f.object.question_ids.include?(question.id), class: 'rounded border-gray-300 text-primary focus_ring-primary' }, question.id, nil
@@ -61,7 +58,7 @@
 
     .mb-4
       label.block.text-sm.font-medium.text-gray-700.mb-1 Минимальное число участников
-      = f.number_field :lower_participants_limit, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', min: 0
+      = f.number_field :lower_participants_limit, class: admin_input_classes(@stage, :lower_participants_limit), min: 0
 
     .mb-4 data-controller="toggle-fields"
       label.flex.items-center.gap-3.cursor-pointer.mb-3
@@ -72,10 +69,10 @@
       .grid.grid-cols-1.md_grid-cols-2.gap-4 data-toggle-fields-target="container" class="#{scale_hidden}"
         div
           label.block.text-sm.font-medium.text-gray-700.mb-1 Минимум шкалы
-          = f.number_field :scale_min, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', disabled: !f.object.with_scale
+          = f.number_field :scale_min, class: admin_input_classes(@stage, :scale_min), disabled: !f.object.with_scale
         div
           label.block.text-sm.font-medium.text-gray-700.mb-1 Максимум шкалы
-          = f.number_field :scale_max, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', disabled: !f.object.with_scale
+          = f.number_field :scale_max, class: admin_input_classes(@stage, :scale_max), disabled: !f.object.with_scale
 
     .mb-4 data-controller="toggle-fields"
       label.flex.items-center.gap-3.cursor-pointer.mb-3
@@ -86,10 +83,10 @@
       .grid.grid-cols-1.md_grid-cols-2.gap-4 data-toggle-fields-target="container" class="#{trunc_hidden}"
         div
           label.block.text-sm.font-medium.text-gray-700.mb-1 Нижний процент усечения
-          = f.number_field :lower_truncation_percent, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', min: 0, max: 100, disabled: !f.object.with_truncation
+          = f.number_field :lower_truncation_percent, class: admin_input_classes(@stage, :lower_truncation_percent), min: 0, max: 100, disabled: !f.object.with_truncation
         div
           label.block.text-sm.font-medium.text-gray-700.mb-1 Верхний процент усечения
-          = f.number_field :upper_truncation_percent, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', min: 0, max: 100, disabled: !f.object.with_truncation
+          = f.number_field :upper_truncation_percent, class: admin_input_classes(@stage, :upper_truncation_percent), min: 0, max: 100, disabled: !f.object.with_truncation
 
   / Submit
   .flex.items-center.gap-3
