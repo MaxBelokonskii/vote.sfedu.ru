@@ -42,11 +42,14 @@ module VoteSfeduRu
 
     config.exceptions_app = routes
 
-    # Trust the nginx reverse proxy so that ActionDispatch::RemoteIp resolves
-    # the real client IP from X-Forwarded-For rather than using REMOTE_ADDR
-    # (which is the nginx container overlay IP behind Docker Swarm).
-    # The Docker Swarm overlay network uses 10.0.0.0/8; adjust if your setup differs.
+    # Trust the Docker bridge network (внешний reverse-proxy заказчика
+    # шлёт запросы на опубликованный хост-порт, а внутри контейнера
+    # REMOTE_ADDR — это IP шлюза Docker-сети, обычно из 172.16.0.0/12).
+    # ActionDispatch::RemoteIp достанет реальный IP клиента из X-Forwarded-For.
+    # Если ваш proxy ходит из другого диапазона, переопределите через
+    # TRUSTED_PROXY_CIDR (например, "10.1.2.0/24").
+    trusted_cidr = ENV.fetch("TRUSTED_PROXY_CIDR", "172.16.0.0/12")
     config.action_dispatch.trusted_proxies =
-      ActionDispatch::RemoteIp::TRUSTED_PROXIES + [IPAddr.new("10.0.0.0/8")]
+      ActionDispatch::RemoteIp::TRUSTED_PROXIES + [IPAddr.new(trusted_cidr)]
   end
 end

@@ -63,6 +63,22 @@ RSpec.describe MicrosoftGraph::Delivery do
       expect { delivery.deliver!(mail) }.to raise_error(MicrosoftGraph::DeliveryError, /401/)
     end
 
+    it "кидает DeliveryError если ответ 200 без access_token" do
+      stub_request(:post, token_url)
+        .to_return(status: 200, body: '{"error":"invalid_client"}', headers: {"Content-Type" => "application/json"})
+
+      expect { delivery.deliver!(mail) }.to raise_error(MicrosoftGraph::DeliveryError, /Некорректный ответ OAuth2/)
+    end
+
+    it "обрезает тело ответа в сообщении об ошибке" do
+      long_body = "x" * 1000
+      stub_request(:post, token_url).to_return(status: 500, body: long_body)
+
+      expect { delivery.deliver!(mail) }.to raise_error(MicrosoftGraph::DeliveryError) { |e|
+        expect(e.message.length).to be < 500
+      }
+    end
+
     it "кидает DeliveryError если sendMail вернул ошибку" do
       stub_request(:post, token_url).to_return(status: 200, body: '{"access_token":"T"}')
       stub_request(:post, send_url).to_return(status: 500, body: "oops")
