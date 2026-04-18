@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
@@ -15,14 +16,13 @@ services:
 
   minio:
     image: minio/minio
+    restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID:-minioadmin}
       MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY:-minioadmin}
     volumes:
       - minio_data:/data
-    ports:
-      - "9001:9001"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 5s
@@ -34,7 +34,7 @@ services:
     depends_on:
       minio:
         condition: service_healthy
-    restart: on-failure
+    restart: "no"
     entrypoint: >
       /bin/sh -c "
         mc alias set local http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD} &&
@@ -45,30 +45,26 @@ services:
       MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY:-minioadmin}
       S3_BUCKET: ${S3_BUCKET:-vote-uploads}
 
-  # Separate migration service: runs before web and worker, ensuring
-  # schema is always up-to-date before any app container starts traffic.
-  # This is the cornerstone of zero-downtime rolling deployments:
-  # migrations run once, not inside every web replica.
   migrate:
-    build: .
+    image: ${DOCKER_IMAGE:-vote-app:latest}
     command: bundle exec rails db:migrate
     depends_on:
       db:
         condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
     env_file: .env
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER:-vote}:${POSTGRES_PASSWORD:-vote}@db:5432/${POSTGRES_DB:-vote_production}
       RAILS_ENV: production
-    # Run once and exit — not a long-running service.
     restart: "no"
 
   web:
-    build: .
-    # Migrations are now handled by the `migrate` service.
-    # Web containers boot cleanly without touching the schema.
+    image: ${DOCKER_IMAGE:-vote-app:latest}
+    restart: unless-stopped
     command: bundle exec puma -p 3000 -C ./config/puma.rb
     ports:
-      - "3000:3000"
+      - "${WEB_HOST_PORT:-3000}:3000"
     depends_on:
       db:
         condition: service_healthy
@@ -81,21 +77,17 @@ services:
       DATABASE_URL: postgres://${POSTGRES_USER:-vote}:${POSTGRES_PASSWORD:-vote}@db:5432/${POSTGRES_DB:-vote_production}
       S3_ENDPOINT: http://minio:9000
       RAILS_ENV: production
-    # Health check against the /up endpoint (added in routes.rb).
-    # Container is only marked healthy — and only receives traffic —
-    # once Rails has fully booted and the DB connection is verified.
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3000/up || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 6
       start_period: 30s
-    # Allow 30 s for in-flight requests to drain on SIGTERM before
-    # Docker force-kills the container (matches puma force_shutdown_after).
     stop_grace_period: 35s
 
   worker:
-    build: .
+    image: ${DOCKER_IMAGE:-vote-app:latest}
+    restart: unless-stopped
     command: bundle exec rake solid_queue:start
     depends_on:
       db:
@@ -107,8 +99,6 @@ services:
       DATABASE_URL: postgres://${POSTGRES_USER:-vote}:${POSTGRES_PASSWORD:-vote}@db:5432/${POSTGRES_DB:-vote_production}
       S3_ENDPOINT: http://minio:9000
       RAILS_ENV: production
-    # Give Solid Queue time to finish processing in-flight jobs before
-    # the container is killed during a rolling deploy.
     stop_grace_period: 60s
 
 volumes:
