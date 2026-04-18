@@ -25,15 +25,12 @@ Rails.application.configure do
   config.active_job.queue_adapter = :solid_queue
   config.solid_queue.connects_to = {database: {writing: :primary}}
 
-  # When RAILS_FORCE_SSL=true (default), Rails inserts ActionDispatch::SSL
-  # which does three things: HTTP→HTTPS redirect, HSTS header, and Secure
-  # cookie flag. In production nginx terminates SSL, so:
-  #   - HTTP→HTTPS redirect is handled by nginx (no double redirect needed)
-  #   - HSTS header is set by nginx (see docker/nginx/nginx.conf)
-  #   - BUT: Secure cookie flag is NOT covered by nginx — it must be set here.
-  #
-  # Therefore: set RAILS_FORCE_SSL=false in docker-stack.yml (nginx handles
-  # redirects/HSTS) and explicitly mark session cookies as secure below.
+  # SSL-терминация происходит на внешнем reverse proxy заказчика.
+  # Proxy должен передавать заголовок X-Forwarded-Proto=https — тогда
+  # ActionDispatch::SSL не инициирует повторный редирект, но добавит
+  # HSTS и пометит cookies как Secure. Если proxy не добавляет заголовок,
+  # выключите force_ssl через RAILS_FORCE_SSL=false и настройте редирект
+  # с HSTS на стороне proxy.
   config.force_ssl = ENV.fetch("RAILS_FORCE_SSL", "true") == "true"
 
   # Explicitly set the Secure and HttpOnly flags on the session cookie so that
