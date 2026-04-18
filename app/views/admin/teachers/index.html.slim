@@ -3,7 +3,9 @@
     div
       h1.text-2xl.font-bold.text-gray-900 Преподаватели
       p.text-gray-600.text-sm.mt-1 Просмотр преподавателей из 1С и управление добавленными вручную.
-    = link_to 'Новый преподаватель', new_admin_teacher_path, class: 'inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium no-underline'
+    .flex.flex-wrap.items-center.gap-2
+      = link_to 'Новый преподаватель', new_admin_teacher_path, class: 'inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium no-underline'
+      = link_to 'Загрузить из Excel', import_admin_teachers_path, class: 'inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover_bg-gray-50 transition-colors text-sm font-medium no-underline'
 
 = search_form_for @q, url: admin_teachers_path do |f|
   .grid.grid-cols-1.md_grid-cols-4.gap-3.mb-4

@@ -1,0 +1,59 @@
+= render 'shared/back_link', path: admin_teachers_path, label: 'К списку преподавателей'
+
+.mb-6
+  h1.text-2xl.font-bold.text-gray-900 Загрузка преподавателей из Excel
+  p.text-gray-600.text-sm.mt-1 Поддерживаются файлы xlsx и csv с колонками ФИО, СНИЛС, ID в 1С.
+
+- if flash.now[:alert]
+  .mb-4.p-4.bg-red-50.border.border-red-200.rounded-lg
+    p.text-sm.text-red-700 = flash.now[:alert]
+
+.bg-white.rounded-xl.border.border-gray-200.p-6.mb-6
+  = form_tag import_admin_teachers_path, multipart: true, class: 'flex flex-col gap-4' do
+    .flex.flex-col.gap-2
+      label.block.text-sm.font-medium.text-gray-700 Файл (xlsx или csv)
+      = file_field_tag :file, accept: '.xlsx,.csv', class: 'text-sm text-gray-600'
+      p.text-xs.text-gray-500
+        | Обязательные колонки: ФИО, СНИЛС. Колонка «ID в 1С» — опциональна.
+        | Преподаватели с существующим СНИЛС будут пропущены.
+    .flex.items-center.gap-3
+      = submit_tag 'Загрузить', class: 'px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium cursor-pointer border-0'
+      = link_to 'Скачать шаблон', import_template_admin_teachers_path, class: 'px-4 py-2 text-sm font-medium text-primary hover_underline no-underline'
+
+- if @result
+  .bg-white.rounded-xl.border.border-gray-200.p-6
+    h2.text-lg.font-semibold.text-gray-900.mb-4 Итоги загрузки
+    .grid.grid-cols-1.md_grid-cols-3.gap-4.mb-6
+      .p-4.bg-emerald-50.border.border-emerald-200.rounded-lg
+        .text-sm.text-emerald-700 Создано
+        .text-2xl.font-bold.text-emerald-800 = @result.created.size
+      .p-4.bg-amber-50.border.border-amber-200.rounded-lg
+        .text-sm.text-amber-700 Пропущено (дубликаты)
+        .text-2xl.font-bold.text-amber-800 = @result.skipped.size
+      .p-4.bg-red-50.border.border-red-200.rounded-lg
+        .text-sm.text-red-700 Ошибки
+        .text-2xl.font-bold.text-red-800 = @result.failed.size
+
+    - if @result.failed.any?
+      h3.text-sm.font-semibold.text-gray-900.mb-2 Ошибки
+      .bg-red-50.border.border-red-200.rounded-lg.p-4.mb-4
+        ul.list-disc.list-inside.space-y-1
+          - @result.failed.each do |err|
+            li.text-sm.text-red-700
+              | Строка #{err.row}: #{err.messages.join(', ')}
+
+    - if @result.skipped.any?
+      h3.text-sm.font-semibold.text-gray-900.mb-2 Пропуски
+      .bg-amber-50.border.border-amber-200.rounded-lg.p-4.mb-4
+        ul.list-disc.list-inside.space-y-1
+          - @result.skipped.each do |skip|
+            li.text-sm.text-amber-800
+              | Строка #{skip.row}: #{skip.reason}
+
+    - if @result.created.any?
+      h3.text-sm.font-semibold.text-gray-900.mb-2 Созданные преподаватели
+      .bg-emerald-50.border.border-emerald-200.rounded-lg.p-4
+        ul.list-disc.list-inside.space-y-1
+          - @result.created.each do |teacher|
+            li.text-sm.text-emerald-800
+              = link_to teacher.name, admin_teacher_path(teacher), class: 'text-primary hover_underline no-underline'
