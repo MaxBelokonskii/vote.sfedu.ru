@@ -4,13 +4,15 @@
   h1.text-2xl.font-bold.text-gray-900 Новый кандидат / вариант ответа
 
 = form_for(@poll_option, url: admin_poll_poll_options_path(@poll)) do |f|
+  = render 'admin/shared/form_errors', record: @poll_option
+
   .mb-4
     label.block.text-sm.font-medium.text-gray-700.mb-1 Имя кандидата / название варианта ответа
-    = f.text_field :title, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary'
+    = f.text_field :title, class: admin_input_classes(@poll_option, :title)
 
   .mb-4
     label.block.text-sm.font-medium.text-gray-700.mb-1 Краткое описание
-    = f.text_area :description, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary min-h-[100px]'
+    = f.text_area :description, class: admin_input_classes(@poll_option, :description, extra: 'min-h-[100px]')
 
   .mb-4
     label.block.text-sm.font-medium.text-gray-700.mb-1 Фотография (необязательно)

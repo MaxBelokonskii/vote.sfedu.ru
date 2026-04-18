@@ -2,47 +2,47 @@ module Admin
   module Polls
     class PollOptionsController < Admin::BaseController
       authorize_resource class: "Poll::Option"
+      before_action :load_poll
+      before_action :ensure_not_started, only: [:new, :create, :destroy]
 
       def new
-        @poll = Poll.find(params[:poll_id])
         @poll_option = Poll::Option.new
       end
 
       def create
-        @poll = Poll.find(params[:poll_id])
-        ::Polls::AsAdmin::AddOptionToPoll.new.call(create_params.to_h) do |monad|
-          monad.success do
-            respond_with(:success, "Вариант ответа успешно добавлен к голосованию")
-          end
-          monad.failure(:poll_not_started) do
-            respond_with(:error, "Нельзя добавлять варианты к существующему голосованию")
-          end
-          monad.failure do
-            respond_with(:error, "Во время сохранения варианта ответа возникли ошибки")
-          end
+        @poll_option = Poll::Option.new(create_params.merge(poll: @poll))
+        if @poll_option.save
+          flash[:success] = "Вариант ответа успешно добавлен к голосованию"
+          redirect_to admin_poll_path(@poll)
+        else
+          render :new, status: :unprocessable_entity
         end
       end
 
       def destroy
-        @poll = Poll.find(params[:poll_id])
-
         @poll_option = Poll::Option.find(params[:id])
         @poll_option.destroy
 
-        respond_with(:success, "Вариант ответа успешно удален из голосования")
+        flash[:success] = "Вариант ответа успешно удален из голосования"
+        redirect_to admin_poll_path(@poll)
       end
 
       private
 
-      def respond_with(kind, msg)
-        flash[kind] = msg
+      def load_poll
+        @poll = Poll.find(params[:poll_id])
+      end
+
+      def ensure_not_started
+        return unless @poll.started?
+        flash[:error] = "Нельзя изменять варианты уже начавшегося голосования"
         redirect_to admin_poll_path(@poll)
       end
 
       def create_params
         permitted = params.require(:poll_option).permit(:title, :description, :image)
         permitted = permitted.except(:image) if permitted[:image].blank?
-        permitted.merge(poll: @poll)
+        permitted
       end
     end
   end
