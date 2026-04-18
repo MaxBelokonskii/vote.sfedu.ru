@@ -69,8 +69,8 @@ class Admin::TeachersController < Admin::BaseController
 
     @result = Teachers::AsAdmin::ImportFromFile.call(file_path: file.tempfile.path, extension: ext)
     render :import
-  rescue ArgumentError => e
-    flash.now[:alert] = e.message
+  rescue ArgumentError, Roo::Error => e
+    flash.now[:alert] = "Не удалось обработать файл: #{e.message}"
     @result = nil
     render :import, status: :unprocessable_entity
   end
@@ -91,6 +91,9 @@ class Admin::TeachersController < Admin::BaseController
     send_data io.string,
       filename: "teachers_template.xlsx",
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  rescue => e
+    Rails.logger.error("Не удалось сгенерировать шаблон преподавателей: #{e.class}: #{e.message}")
+    redirect_to import_admin_teachers_path, alert: "Не удалось сгенерировать шаблон"
   end
 
   private

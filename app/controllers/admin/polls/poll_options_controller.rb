@@ -20,7 +20,7 @@ module Admin
       end
 
       def destroy
-        @poll_option = Poll::Option.find(params[:id])
+        @poll_option = @poll.options.find(params[:id])
         @poll_option.destroy
 
         flash[:success] = "Вариант ответа успешно удален из голосования"

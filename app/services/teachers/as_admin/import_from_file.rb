@@ -49,6 +49,10 @@ module Teachers
             failed << Error.new(row: row_number, messages: ["СНИЛС не указан"])
             next
           end
+          unless snils.match?(/\A\d{11}\z/)
+            failed << Error.new(row: row_number, messages: ["СНИЛС должен содержать 11 цифр"])
+            next
+          end
 
           encrypted = Snils.encrypt(snils)
           if Teacher.exists?(encrypted_snils: encrypted)
@@ -87,7 +91,10 @@ module Teachers
 
         raise ArgumentError, "Не найдены обязательные колонки: #{missing_columns(column_map).join(", ")}" if missing_columns(column_map).any?
 
-        (2..sheet.last_row).map do |i|
+        last_row = sheet.last_row
+        return [] if last_row.nil? || last_row < 2
+
+        (2..last_row).map do |i|
           row = sheet.row(i)
           {
             name: cell_value(row[column_map[:name]]),

@@ -11,7 +11,7 @@ describe Teachers::AsAdmin::ImportFromFile do
     file
   end
 
-  after { tempfile.close!; tempfile.unlink rescue nil } # rubocop:disable Style/RescueModifier
+  after { tempfile.close! }
 
   subject(:result) do
     described_class.call(file_path: tempfile.path, extension: "csv")
