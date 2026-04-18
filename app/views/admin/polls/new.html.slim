@@ -3,24 +3,4 @@
 .mb-6
   h1.text-2xl.font-bold.text-gray-900 Новое голосование
 
-= form_for(@poll, url: admin_polls_path) do |f|
-  .mb-4
-    label.block.text-sm.font-medium.text-gray-700.mb-1 Укажите название для голосования
-    = f.text_field :name, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary'
-
-  .grid.grid-cols-1.md_grid-cols-2.gap-4.mb-4
-    div
-      label.block.text-sm.font-medium.text-gray-700.mb-1 Дата начала
-      = f.text_field :starts_at, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', type: "date", min: (Time.current + 1.day).strftime("%Y-%m-%d")
-    div
-      label.block.text-sm.font-medium.text-gray-700.mb-1 Дата завершения
-      = f.text_field :ends_at, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', type: "date", min: (Time.current + 2.days).strftime("%Y-%m-%d")
-
-  .mb-4
-    label.block.text-sm.font-medium.text-gray-700.mb-1 Выберите, на каких факультетах проводится голосование
-    = f.collection_select :faculty_ids, @faculties, :id, :name, {}, class: 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus_ring-2 focus_ring-primary focus_border-primary', multiple: true, style: "height: 400px;"
-    p.text-xs.text-gray-500.mt-1
-      | С помощью <code>Ctrl+Левая кнопка мыши</code>/<code>Cmd+Левая кнопка мыши</code> можно выбрать
-      |  несколько вариантов, а с помощью <code>Ctrl+A</code>/<code>Cmd+A</code> – все варианты из списка
-
-  = f.submit 'Создать голосование', class: 'px-4 py-2 bg-primary text-white rounded-lg hover_bg-primary-700 transition-colors text-sm font-medium cursor-pointer border-0'
+= render 'form'

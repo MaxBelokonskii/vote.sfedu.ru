@@ -1,31 +1,35 @@
 module Admin
   class PollsController < Admin::BaseController
     load_and_authorize_resource
+    before_action :ensure_editable, only: [:edit, :update]
 
     def new
       @poll = Poll.new
-      @faculties = Faculty.all.order(name: :asc)
+      load_form_collections
     end
 
     def create
-      ::Polls::AsAdmin::CreatePoll.new.call(create_params.to_h) do |monad|
-        monad.success do |result|
-          respond_with(:success, "Голосование успешно создано")
-          redirect_to admin_poll_path(result[:poll])
-        end
-        monad.failure(:starts_in_future) do
-          respond_with(:error, "Пожалуйста, укажите дату не раньше завтрашней")
-        end
-        monad.failure(:dates_are_valid) do
-          respond_with(:error, "Пожалуйста, убедитесь, что дата начала предшествует дате завершения")
-        end
-        monad.failure(:all_faculties_are_present) do
-          respond_with(:error, "Пожалуйста, убедитесь, что вы выбрали факультеты, которые могут участвовать в голосовании")
-        end
-        monad.failure do
-          respond_with(:error, "Во время сохранения опроса возникли ошибки")
-          redirect_to new_admin_poll_path
-        end
+      @poll = Poll.new(poll_params)
+      if @poll.save
+        flash[:success] = "Голосование успешно создано"
+        redirect_to admin_poll_path(@poll)
+      else
+        load_form_collections
+        render :new, status: :unprocessable_entity
+      end
+    end
+
+    def edit
+      load_form_collections
+    end
+
+    def update
+      if @poll.update(poll_params)
+        flash[:success] = "Голосование успешно обновлено"
+        redirect_to admin_poll_path(@poll)
+      else
+        load_form_collections
+        render :edit, status: :unprocessable_entity
       end
     end
 
@@ -63,11 +67,18 @@ module Admin
       flash[kind] = msg
     end
 
-    def create_params
+    def load_form_collections
+      @faculties = Faculty.all.order(name: :asc)
+    end
+
+    def ensure_editable
+      return if @poll.editable_by_admin?
+      redirect_to admin_poll_path(@poll), alert: "Редактировать можно только предстоящее неархивное голосование"
+    end
+
+    def poll_params
       parameters = params.require(:poll).permit(:name, :starts_at, :ends_at, faculty_ids: [])
-
-      parameters[:faculty_ids] = parameters[:faculty_ids].map(&:presence).compact.map(&:to_i)
-
+      parameters[:faculty_ids] = Array(parameters[:faculty_ids]).map(&:presence).compact.map(&:to_i)
       parameters
     end
   end

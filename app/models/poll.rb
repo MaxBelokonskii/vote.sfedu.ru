@@ -5,6 +5,12 @@ class Poll < ApplicationRecord
   has_many :answers, class_name: "Poll::Answer", dependent: :destroy
   has_many :participations, class_name: "Poll::Participation", dependent: :destroy
 
+  validates :name, presence: true
+  validates :starts_at, presence: true
+  validates :ends_at, presence: true
+  validate :ends_at_after_starts_at
+  validate :at_least_one_faculty
+
   scope :active, -> { where("starts_at < ?", Time.current).where("ends_at > ?", Time.current) }
   scope :not_archived, -> { where(archived_at: nil) }
 
@@ -39,4 +45,19 @@ class Poll < ApplicationRecord
   end
 
   alias_method :past?, :finished?
+
+  def editable_by_admin?
+    upcoming? && !archived?
+  end
+
+  private
+
+  def ends_at_after_starts_at
+    return if starts_at.blank? || ends_at.blank?
+    errors.add(:ends_at, "должна быть позже даты начала") if ends_at <= starts_at
+  end
+
+  def at_least_one_faculty
+    errors.add(:faculties, "должен быть выбран хотя бы один факультет") if faculties.empty?
+  end
 end

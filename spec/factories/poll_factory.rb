@@ -4,6 +4,10 @@ FactoryBot.define do
     starts_at { Time.current - 1.week }
     ends_at { Time.current + 1.week }
 
+    after(:build) do |poll|
+      poll.faculties << build(:faculty) if poll.faculties.empty?
+    end
+
     trait :with_options do
       transient do
         options_count { 5 }
